@@ -1,0 +1,10 @@
+/*posicionamento, cor e tamanho do botão de parcelas*/
+.parcelas {
+    margin-top: 20px;
+    width: 400px;
+    border: 2px solid #faed27;
+    border-radius: 15px;
+    background-color: #353333;
+    color: #faed27;
+    margin-left: 80px;
+}

@@ -1,0 +1,54 @@
+/*Estilização dos cards*/
+.kanban {
+    background-color: #faed27;
+    height: 250px;
+    width: 200px;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+/*Alinhando os cards na tela*/
+.cards-kanban {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    background-color: #535050;
+}
+
+/*Margem no nome da area do kanban "a fazer, fazendo, feito..."*/
+.status-tarefa {
+    margin-left: 10px;
+}
+
+/*cor de fundo dos cards*/
+.status-tarefa {
+    color: #faed27;
+}
+
+/*fonte do "add link"*/
+.card-link {
+    font-size: 14px;
+}
+
+/*titulo do card*/
+.title-cardkanban {
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #e0d425;
+    padding: 5px;
+}
+
+.interacao {
+    display: flex;
+    background-color: #535050;
+}
+
+.cartoes-kanban {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    max-height: 634px;
+}

@@ -1,0 +1,27 @@
+.pg-1 {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0px;
+    justify-content: flex-start;
+    align-items: center;
+    background-image: url(fundo-menu.png);
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 700px;
+    padding-left: 200px;
+}
+
+.text-intro {
+    margin-right: 20px;
+    width: 45%;
+    width: 45%;
+}
+
+
+
+.txt-1 {
+    font-size: 61px;
+    color: #333C43;
+}

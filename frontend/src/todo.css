@@ -1,0 +1,63 @@
+/*tamaho e cor dos cards*/
+.cards-tarefa {
+    background-color: #413F3F;
+    color: #faed27;
+    border-radius: 15px 0 0 0;
+    height: 125px;
+}
+
+/*cores das etiquetas nos cards*/
+.blueTask {
+    background-color: blue;
+}
+
+.redTask {
+    background-color: red;
+}
+
+.greenTask {
+    background-color: green;
+}
+
+.purpleTask {
+    background-color: purple;
+}
+
+/*tamanho da div onde ficam os cards*/
+.back-cards {
+    width: 100%;
+    height: 634px;
+    background-color: #535050;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.interacao {
+    width: 100%;
+    height: 100%;
+}
+
+
+/*Tirando margem de todos os "p" da página*/
+p {
+    margin: 0;
+}
+
+/*Alinhando as tags coloridas de etiqueta nos cards*/
+.titulo-important {
+    display: flex;
+    align-items: center;
+}
+
+/*Definindo tamanho e borda das tags coloridas de etiquetas nos cards*/
+.blueTask,
+.redTask,
+.greenTask,
+.purpleTask {
+    width: 30px;
+    height: 15px;
+    border-radius: 15px;
+    margin-left: 10px;
+}

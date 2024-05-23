@@ -1,0 +1,62 @@
+.botoes-linha {
+    display: flex;
+    justify-content: space-between;
+    /* Coloca os botões lado a lado */
+    margin: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.botoes-participantes {
+    width: 120px;
+    background: #faed27;
+    color: black;
+    border-radius: 10px;
+    margin: 5px;
+    border: none;
+}
+
+.botoes-participantes:hover {
+    background-color: #535050 !important;
+}
+
+
+.planos label.botoes-participantes.btn.btn-primary:hover {
+    background-color: black;
+    color: #faed27;
+}
+
+.planos label.botoes-participantes.btn.btn-primary {
+    background-color: #faed27
+}
+
+
+.botao_equipe {
+    display: flex;
+    justify-content: center;
+}
+
+.botao-equipe {
+    background-color: #faed27;
+    border-color: #c4c4c4;
+    color: black;
+    border-radius: 10px;
+}
+
+.container-equipe {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.container-botoesequipe {
+    display: flex;
+    flex-direction: column;
+}
+
+.botoes-participantes.selected {
+    background-color: #dd4814;
+}

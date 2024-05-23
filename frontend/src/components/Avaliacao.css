@@ -1,0 +1,73 @@
+/*Alinhar e dar cor para o fundo da página*/
+#avl {
+
+    display: flex;
+    justify-content: center;
+    background-color: black;
+}
+
+/*Alinhar, dar cor, tamanho e borda no título*/
+.titulo {
+    text-align: center;
+    color: #faed27;
+    padding: 80px;
+    font-size: 45px;
+
+}
+
+/*Centralizando a div principal*/
+.avl-geral {
+    flex-direction: row;
+    justify-content: center;
+    display: flex;
+    margin: 50px;
+}
+
+/*Dar borda para a div-avaliações*/
+.avaliações {
+    padding: 38px;
+    border: 2px solid #c1c1c1;
+    border-radius: 16px;
+    margin: 1%;
+    height: 315px;
+    width: 350px;
+
+}
+
+/*Preencher a página inteira*/
+.av {
+    height: 800px;
+    max-width: 100%;
+}
+
+/*Definir o tamanho da foto dos usuários*/
+.usuário {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+/*Alinhar a foto e nome de usuário*/
+.avaliações .nome {
+    display: flex;
+    align-items: flex-start;
+}
+
+/*Alinhar o nome com a foto dar cor e borda no nome*/
+.nome-usuario {
+    margin: 0;
+    margin-bottom: 16px;
+    color: #faed27;
+}
+
+/*Dar fundo para a textarea*/
+.mensagem-avl {
+    background-color: black;
+    color: #c1c1c1;
+}
+
+.nome {
+    color: #c1c1c1;
+}
+
+/*Fim avaliações*/

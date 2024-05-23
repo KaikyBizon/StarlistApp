@@ -1,0 +1,59 @@
+/*Deixando os itens do usuario lado a lado*/
+.perfil-usuario {
+    display: flex;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+    justify-content: space-between;
+    background-color: #7b7a7adc;
+}
+
+/*dropdown para definir cargo*/
+.drop-cargo {
+    display: flex;
+    align-items: center;
+}
+
+/*Imagem do usuário*/
+.perfil-usuario img {
+    width: 40px;
+    height: 40px;
+}
+
+/*Nome da equipe*/
+.nome-equipe-addparticipante {
+    display: flex;
+    justify-content: center;
+}
+
+
+.perfil-addparticipante {
+    display: flex;
+}
+
+.perfil-addparticipante p {
+    margin-left: 5px;
+}
+
+.color-addparticipante {
+    background-color: #919191 !important;
+}
+
+.botao-enviar-addparticipante {
+    background: #000000 !important;
+    border: 0 !important;
+    border-radius: 15px !important;
+    color: #faed27 !important;
+}
+
+.botao-fechar-addparticipante {
+    border-radius: 15px !important;
+}
+
+/*Select de função do participante*/
+#cargo {
+    background-color: #4a49499f;
+    border: 0;
+    border-radius: 20px;
+    padding: 3px;
+}

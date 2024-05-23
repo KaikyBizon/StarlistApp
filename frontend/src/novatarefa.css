@@ -1,0 +1,24 @@
+/*mexendo nos itens da NavBar*/
+.nav-utensilios {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*Posicionamento do botão "+" na tela principal*/
+.abrir-task {
+    display: flex;
+    align-items: center;
+}
+
+/*Texto "Nova tarefa" ao lado do botão "+"*/
+.abrir-task p {
+    color: #c1c1c1;
+    width: 50px;
+    display: flex;
+    margin: 0;
+    margin-left: 10px;
+}
+
+.drop-options:hover, .drop-options:focus{
+    color: #c1c1c1 !important;
+}

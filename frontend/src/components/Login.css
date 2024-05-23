@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+
+.geral {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+    background-color: #faed27
+}
+
+.fundo-secundario {
+    display: flex;
+    width: 80%;
+    height: 500px;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #696969;
+    border-radius: 15px;
+}
+
+.login-area {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+}
+
+#register-login a {
+    display: flex;
+    justify-content: center;
+    color: #faed27;
+}
+
+.img-login img {
+    height: 400px;
+    width: 400px;
+}
+
+.login-area input:focus {
+    outline: 0;
+}
+
+.bem_vindo h1 {
+    color: #faed27;
+    text-align: center;
+}
+
+
+.login-area input {
+    display: block;
+    margin: 20px 0;
+    width: 400px;
+    height: 30px;
+    border: 0;
+    border-bottom: 2px solid #faed27;
+    background: transparent;
+    color: #faed27;
+    cursor: pointer;
+}
+
+.btn-login {
+    display: flex;
+    margin: 25px 5px;
+}
+
+.dados a {
+    font-size: small;
+    color: #faed27;
+}
+
+.botoes {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.btn-login .btn-entrar {
+    background-color: #faed27;
+    border: 0;
+    cursor: pointer;
+    border-radius: 30px;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dados input::placeholder {
+    color: #faed27;
+    opacity: 0.8;
+}
+
+.btn-login .btn-entrar:hover {
+    opacity: 0.7;
+}
+
+#register-login h1 {
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-validation {
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    text-align: center;
+    color: #b51919;
+}

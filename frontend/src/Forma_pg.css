@@ -1,0 +1,64 @@
+/*Tamanho da div da forma de pagamento*/
+.forma_pagar {
+    margin: 40px;
+    display: flex;
+    align-items: center;
+}
+
+/*cor e posicionamento do h1*/
+.pagar_titulo {
+    color: #faed27;
+    margin-left: 40px;
+    margin-bottom: 30px;
+}
+
+.pagar_botoes {
+    display: flex;
+}
+
+/*definindo cor e tamanho dos botões da forma de pagamento*/
+.pagar_botao {
+    background-color: #353333;
+    width: 100px;
+    height: 45px;
+    color: #faed27;
+    border: 2px solid #faed27;
+    border-radius: 20px;
+    margin-right: 40px;
+}
+
+/*definindo cor do hover dos botões da forma de pagamento*/
+.pagar_botao:hover {
+    background-color: #faed27;
+    color: #353333;
+}
+
+/*posicionamento da div do botão de finalizar a compra*/
+.botao_compra {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/*cor do botão de finalizar compra */
+.finalizar_compra {
+    background-color: #353333;
+    color: #faed27;
+}
+
+/*cor do hover do botão de finalizar compra*/
+.finalizar_compra:hover {
+    background-color: #faed27;
+    color: #353333;
+}
+
+/*Hover dos botões de opções de pagamento*/
+.pagar_botao:hover {
+    background-color: #faed27 !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+}
+
+.pagar_botao.selected {
+    background-color: #faed27;
+}

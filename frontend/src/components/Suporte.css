@@ -1,0 +1,102 @@
+#suporte {
+    background-image: url(fundo-suporte.png);
+    height: 700px;
+    padding: 50px;
+}
+
+.reclamaçoes {
+    width: 400px;
+    height: 400px;
+    margin-right: 900px;
+    margin-top: 80px;
+    text-align: center;
+}
+
+input:focus {
+    box-shadow: 0 0 0 0;
+    outline: 0;
+    color: white;
+}
+
+.btn-todos mensagem {
+    box-shadow: 0 0 0 0;
+    outline: 0;
+    color: white;
+}
+
+.Suporte {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reclamaçoes #titulo_suporte {
+    color: #FAED27;
+    font-size: 45px;
+}
+
+/*inicio botões*/
+.btn-todos {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    border: 3px solid #535050;
+    background-color: #c1c1c1;
+    cursor: pointer;
+}
+
+.e-mail {
+    width: 350px;
+    height: 50px;
+    border-radius: 10px;
+
+}
+
+.mensagem {
+    width: 350px;
+    height: 200px;
+    border-radius: 10px;
+
+}
+
+.botão {
+    width: 150px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background-color: #FAED27;
+    color: #414141;
+}
+
+.botão:hover {
+    color: #FAED27;
+    background-color: #696969;
+}
+
+/*fim botões*/
+/*fim imagem*/
+
+#sobre h1 {
+    font-weight: 20pt;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #faed27;
+}
+
+body::-webkit-scrollbar {
+    width: 12px;
+    /* largura da scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+    background: #696969;
+    /* cor do fundo da scrollbar */
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #FAED27;
+    /* cor do scroll flutuante */
+    border: 3px solid #696969;
+    /* borda da scrollbar*/
+}

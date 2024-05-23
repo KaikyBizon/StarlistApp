@@ -1,0 +1,36 @@
+.txt-cabeca {
+    font-family: monospace;
+    font-weight: normal;
+
+}
+
+.tabela-titulo {
+    background-color: #535050;
+}
+
+.txt-cabeca, .linha-tabela {
+    background-color: #535050 !important; 
+    color: #c1c1c1 !important;
+}
+
+
+
+table.table.table-hover {
+    width: 1000px;
+
+}
+
+.tabela {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    background-color: #535050;
+    border-bottom: 1px solid #faed27;
+}
+
+
+.linha-tabela {
+    height: 45px;
+    align-items: center;
+}

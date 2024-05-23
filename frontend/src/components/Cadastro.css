@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+
+#fundo {
+    background-image: url(fundo-login.png);
+    background-size: 1550px;
+    height: 750px;
+}
+
+.amarelo {
+    color: rgb(255, 197, 0);
+}
+
+#geral {
+    display: flex;
+    height: 645px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#geral .msg {
+    font-size: 35pt;
+    color: #000000;
+}
+
+.login,
+.btn-cadastro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+#right-login input {
+    display: flex;
+    justify-content: center;
+    max-width: 300px;
+}
+
+.textos input {
+    display: block;
+    width: 300px;
+    margin-top: 40px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #000000;
+
+
+}
+
+.titulo {
+    color: #000000;
+    font-weight: 30pt;
+}
+
+.textos input::placeholder {
+    color: #000000;
+    font-size: 8pt;
+    opacity: 0.8;
+}
+
+.textos input:focus {
+    outline: 0;
+    color: #000000;
+}
+
+.btn-cadastro,
+#btn-submit,
+#btn-cancel {
+    cursor: pointer;
+    border-radius: 30px;
+    border: 0;
+    padding: 12px 30px;
+    background-color: rgb(255, 197, 0);
+}
+
+.btn-cadastro:hover,
+#btn-submit:hover,
+#btn-cancel:hover {
+    color: rgb(255, 197, 0);
+    background-color: #000000;
+}
+
+.botoes {
+    display: flex;
+    justify-content: space-around;
+}
+
+.error-validation {
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    text-align: center;
+    color: #b51919;
+}
+
+.erro {
+    color: red;
+    font-size: 14px;
+    padding: 0;
+    width: 300px;
+}
