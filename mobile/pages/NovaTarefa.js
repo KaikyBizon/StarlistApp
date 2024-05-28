@@ -27,7 +27,7 @@ export default function NovaTarefa({ navigation }) {
         });
     };
 
-    const [formValues, setFormValues] = useState({
+    const [dadosTask, setDadosTask] = useState({
         titulo: '',
         data: formatDate(date),
         hora: formatTime(date),
@@ -43,16 +43,16 @@ export default function NovaTarefa({ navigation }) {
     };
 
     const handleSubmit = async (e) => {
-        console.log(formValues)
+        console.log(dadosTask)
         /*e.preventDefault();
     
         try {
-          const resposta = await fetch('http://localhost:5000/receber-dados', {
+          const resposta = await fetch('http://10.135.60.15:8085/receber-dados' {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formValues),
+            body: JSON.stringify(dadosTask),
           });
     
           const resultado = await resposta.json();
@@ -109,13 +109,13 @@ export default function NovaTarefa({ navigation }) {
                         onPress={() => showMode("date")}
                         style={styles.button}
                     >
-                        <Text style={styles.buttonText}>{formValues.data}</Text>
+                        <Text style={styles.buttonText}>{dadosTask.data}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => showMode("time")}
                         style={styles.button}
                     >
-                        <Text style={styles.buttonText}>{formValues.hora}</Text>
+                        <Text style={styles.buttonText}>{dadosTask.hora}</Text>
                     </TouchableOpacity>
                     {show && (
                         <DateTimePicker
@@ -133,7 +133,7 @@ export default function NovaTarefa({ navigation }) {
                     <Text style={styles.label}>ETIQUETA</Text>
                     <View style={[styles.inputs, styles.pickerContainer]}>
                         <Picker
-                            selectedValue={formValues.etiqueta}
+                            selectedValue={dadosTask.etiqueta}
                             style={styles.picker}
                             itemStyle={styles.pickerItem}
                             onValueChange={(itemValue) => handleChange('etiqueta', itemValue)}
