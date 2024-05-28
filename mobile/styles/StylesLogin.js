@@ -43,5 +43,12 @@ export default styles = StyleSheet.create({
         color: '#CECECE',
         fontFamily: 'Kanit_500Medium',
     },
-
+    containerError: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    error: {
+        color: 'red',
+        fontSize: 15
+    }
 });

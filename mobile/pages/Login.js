@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import styles from '../styles/StylesLogin';
-import { View, TextInput, KeyboardAvoidingView, TouchableOpacity, Text, Image, } from "react-native";
-import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit'
+import { View, TextInput, KeyboardAvoidingView, TouchableOpacity, Text, Image } from "react-native";
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 
 function LoginForm({ navigation }) {
     const [formValues, setFormValues] = useState({
         email: '',
         senha: ''
-    })
+    });
+
+    const [mensagensErro, setMensagensErro] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -18,7 +20,6 @@ function LoginForm({ navigation }) {
         });
     }, [navigation]);
 
-
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -26,34 +27,32 @@ function LoginForm({ navigation }) {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        console.log(formValues)
-        navigation.navigate('home')
-        /*e.preventDefault();
+    const handleSubmit = async () => {
 
         try {
-            const resposta = await fetch('http://localhost:5000/receber-dados', {
+            const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: email, senha: senha }),
+                body: JSON.stringify({
+                    email: formValues.email,
+                    senha: formValues.senha
+                }),
             });
             const resultado = (await resposta.json()).login_status;
+            console.log(resultado)
 
-            if (resposta.ok) {
-               console.log(resposta)
-
-
+            if (resposta.ok && resultado === 'success') {
                 // Dados foram processados com sucesso
+                navigation.navigate('home');
             } else {
                 // Atualiza o estado com as mensagens de erro para exibição no formulário
-                setMensagensErro(resultado.mensagens);
-
+                setMensagensErro(resultado.mensagens || 'Dados incorretos');
             }
         } catch (error) {
-            setError('Erro ao realizar login');
-        }*/
+            console.error('Erro ao realizar login', error);
+        }
     };
 
     const [fontLoaded] = useFonts({
@@ -66,25 +65,34 @@ function LoginForm({ navigation }) {
 
     return (
         <KeyboardAvoidingView style={styles.blackground} behavior="padding">
-
             <View keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Image style={styles.logo} resizeMode='contain' source={require('../assets/images/logo_starlistMobile.png')} />
-
+                <View style={styles.containerError}>
+                    {mensagensErro ? <Text style={styles.error}>{mensagensErro}</Text> : null}
+                </View>
                 <Text style={styles.login}>E-mail</Text>
-                <TextInput style={styles.inputs} placeholder="roberto.carlos@example.com" value={formValues.email} onChangeText={(text) => handleChange('email', text)} />
+                <TextInput
+                    style={styles.inputs}
+                    placeholder="roberto.carlos@example.com"
+                    value={formValues.email}
+                    onChangeText={(text) => handleChange('email', text)}
+                />
 
                 <Text style={styles.login}>Senha</Text>
-                <TextInput style={styles.inputs} secureTextEntry={true} placeholder="******" value={formValues.senha} onChangeText={(text) => handleChange('senha', text)} />
+                <TextInput
+                    style={styles.inputs}
+                    secureTextEntry={true}
+                    placeholder="******"
+                    value={formValues.senha}
+                    onChangeText={(text) => handleChange('senha', text)}
+                />
                 <Text style={styles.login}>Esqueci minha senha</Text>
-
-                <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
-                    <Text style={styles.submitTxt}>SIGN IN</Text>
+                <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit} disabled={!formValues.email || !formValues.senha}>
+                    <Text style={styles.submitTxt}>ENTRAR</Text>
                 </TouchableOpacity>
-
             </View>
-
         </KeyboardAvoidingView>
-    )
+    );
 }
 
 export default LoginForm;

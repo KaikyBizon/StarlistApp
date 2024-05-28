@@ -77,7 +77,7 @@ def login(dados):
 
     if user is not None and email == user[0] and senha == user[1]:
         email, senha, id, nome_usuario, data_nasc = user
-        return {'email': email, 'id': id, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
+        return 'success'
     else:
         return {'error': 'Credenciais inválidas'}, 401
 
