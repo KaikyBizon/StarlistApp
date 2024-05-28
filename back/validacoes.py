@@ -76,9 +76,9 @@ def confirmar_senha(senha, confirme):
 # Esta função verifica a data de nascimento de uma pessoa e caso ela tenha menos de 15 anos, irá retornar um erro
 
 
-def validar_data_nascimento(data_nascimento):
+def validar_data_nascimento(dataNascimento):
     try:
-        data_nasc = datetime.strptime(data_nascimento, '%Y-%m-%d')
+        data_nasc = datetime.strptime(dataNascimento, '%Y-%m-%d')
         # verifica a idade apenas pelo ano
         idade = datetime.now().year - data_nasc.year
 

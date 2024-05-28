@@ -17,6 +17,5 @@ def atualizar_cadastro(alteracao):
     val = (alteracao)
     cursor.execute(sql, val)
     conex.commit()
-    print("Dados alterados com sucesso")
     conex.close()
     return {'erro': False, 'mensagem_alter': 'Alteração realizada com sucesso.'}

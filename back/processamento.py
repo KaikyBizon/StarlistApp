@@ -1,6 +1,7 @@
 from leitura_login_bd import selecionar_dados_cadastro
 from delete_bd import excluir_usuario
 from update_bd import atualizar_cadastro, select_atualizar
+from gravar_bd import inserir_usuario
 from validacoes import (
     validar_nome,
     validar_email,
@@ -13,22 +14,21 @@ from validacoes import (
 def processar_dados(dados):
     dados_processados = dados
 
-    cadastro = []
+    cadastro = [
+        dados_processados.get('dataNascimento'),
+        dados_processados.get('nome'),
+        dados_processados.get('email'),
+        dados_processados.get('senha')
+    ]
 
-    cadastro.append(dados_processados.get('dataNascimento'))
-    cadastro.append(dados_processados.get('nome'))
-    cadastro.append(dados_processados.get('email'))
-    cadastro.append(dados_processados.get('senha'))
-
-    alteracao = []
-
-    alteracao.append(dados_processados.get('dataNascimento'))
-    alteracao.append(dados_processados.get('nome'))
-    alteracao.append(dados_processados.get('email'))
-    alteracao.append(dados_processados.get('id'))
+    alteracao = [
+        dados_processados.get('dataNascimento'),
+        dados_processados.get('nome'),
+        dados_processados.get('email'),
+        dados_processados.get('id')
+    ]
 
     mensagens_erro = []
-
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
     mensagens_erro.append(validar_data_nascimento(
@@ -39,11 +39,8 @@ def processar_dados(dados):
 
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-    # if mensagens_erro:
-    # return{'erro': True, 'mensagens': mensagens_erro}
-    # else:
-    # inserir_usuario(cadastro)
-    #   return{'erro': False, 'mensagem': 'Dados processados com sucesso!'}
+    if not mensagens_erro and dados.get('acao') == 'cadastro':
+        inserir_usuario(cadastro)
 
     return mensagens_erro, cadastro, alteracao
 
@@ -55,9 +52,10 @@ def showDados(id):
         email, nome_usuario, data_nasc = resultado_select  # Desempacotar os resultados
         # Exibir os resultados (pode ser removido em produção)
 
-        return {'email': email, 'nome_usuario':nome_usuario, 'data_nasc': data_nasc}  # Retornar os resultados
+        # Retornar os resultados
+        return {'email': email, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
     else:
-        return None # Se não houver resultados, retornar None ou uma mensagem de erro
+        return None  # Se não houver resultados, retornar None ou uma mensagem de erro
 
 
 def update(alteracao, mensagens_erro, dados):

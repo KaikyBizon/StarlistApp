@@ -27,8 +27,8 @@ function LoginForm({ navigation }) {
         }));
     };
 
-    const handleSubmit = async () => {
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
             const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
                 method: 'POST',

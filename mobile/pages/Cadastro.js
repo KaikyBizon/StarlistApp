@@ -10,6 +10,7 @@ import { TextInputMask } from 'react-native-masked-text';
 export default function Cadastro({ navigation }) {
 
   const [formValues, setFormValues] = useState({
+    acao: 'cadastro',
     nome: '',
     email: '',
     senha: '',
@@ -27,10 +28,10 @@ export default function Cadastro({ navigation }) {
 
   const [mensagensErro, setMensagensErro] = useState([]);
   const handleSubmit = async (e) => {
-    /*e.preventDefault();
+    e.preventDefault();
 
     try {
-      const resposta = await fetch('http://localhost:5000/receber-dados', {
+      const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,21 +39,17 @@ export default function Cadastro({ navigation }) {
         body: JSON.stringify(formValues),
       });
 
-      const resultado = await resposta.json();
+      const resultado = (await resposta.json()).dados_processados;
 
-      if (resultado.erro) {
-        // Exibe mensagens de erro no console.log ou em algum local visível
-        console.error('Erro no servidor:', resultado.mensagens);
-
-        // Atualiza o estado com as mensagens de erro para exibição no formulário
-        setMensagensErro(resultado.mensagens);
+      if (!resposta.ok || resultado.mensagens_erro) {
+        // Assume que a estrutura de erro vem no campo 'mensagens_erro'
+        setMensagensErro(resultado.mensagens_erro);
       } else {
-        window.alert("Cadastro realizado")
-        navigation.navigate('CALENDÁRIO')
+        navigation.navigate("home")
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
-    }*/
+    }
   };
 
   React.useLayoutEffect(() => {
@@ -78,18 +75,43 @@ export default function Cadastro({ navigation }) {
       <View style={styles.containerInputs}>
         <Text style={styles.label}>NOME</Text>
         <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('nome', text)} placeholder='Nome Completo' name="nome" value={formValues.nome} />
-
+        <View style={styles.containerError}>
+          {mensagensErro.map((mensagem, index) => (
+            <Text key={index}>{mensagem.mensagem_nome}</Text>
+          ))}
+        </View>
         <Text style={styles.label}>E-MAIL</Text>
         <TextInput style={styles.inputs} autoCorrect={false} keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleChange('email', text)} placeholder='E-mail' name="email" value={formValues.email} />
+        <View style={styles.containerError}>
+          {mensagensErro.map((mensagem, index) => (
+            <Text key={index}>{mensagem.mensagem_email}</Text>
+          ))}
+        </View>
 
         <Text style={styles.label}>SENHA</Text>
         <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('senha', text)} placeholder='Senha' name="senha" value={formValues.senha} />
+        <View style={styles.containerError}>
+          {mensagensErro.map((mensagem, index) => (
+            <Text key={index}>{mensagem.mensagem_senha}</Text>
+          ))}
+        </View>
 
         <Text style={styles.label}>CONFIRME SUA SENHA</Text>
         <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' name="confirme" value={formValues.confirme} />
+        <View style={styles.containerError}>
+          {mensagensErro.map((mensagem, index) => (
+            <Text key={index}>{mensagem.confirme}</Text>
+          ))}
+        </View>
 
         <Text style={styles.label}>DATA DE NASCIMENTO</Text>
         <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY', }} name="dataNas" value={formValues.dataNascimento} placeholder='Data de nascimento' />
+        <View style={styles.containerError}>
+          {mensagensErro.map((mensagem, index) => (
+            <Text key={index}>{mensagem.mensagem_dataNascimento}</Text>
+          ))}
+        </View>
+
 
         <Text style={styles.temconta}>Já tem uma conta? <Text style={styles.facalogin} onPress={() => navigation.navigate('Login')}>Faça login</Text></Text>
 

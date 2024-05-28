@@ -13,7 +13,7 @@ function LoginForm({ onLogin }) {
     e.preventDefault();
 
     try {
-      const resposta = await fetch('http://localhost:5000/receber-dados', {
+      const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
