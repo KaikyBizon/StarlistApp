@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import styles from '../styles/StylesPerfil';
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import Menu from '../components/Menu';
+import styles from '../styles/StylesPerfil';
 
-function Perfil() {
+function Perfil({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
@@ -17,13 +17,8 @@ function Perfil() {
   };
 
   const formatDate = (text) => {
-    // Remove qualquer caractere que não seja número
     let cleaned = ('' + text).replace(/\D/g, '');
-
-    // Limita a string a 8 caracteres (ddMMyyyy)
     cleaned = cleaned.substring(0, 8);
-
-    // Formata a string inserindo as barras
     let formatted = cleaned;
     if (cleaned.length > 2) {
       formatted = cleaned.substring(0, 2) + '/' + cleaned.substring(2);
@@ -31,7 +26,6 @@ function Perfil() {
     if (cleaned.length > 4) {
       formatted = cleaned.substring(0, 2) + '/' + cleaned.substring(2, 4) + '/' + cleaned.substring(4);
     }
-
     return formatted;
   };
 
@@ -46,34 +40,41 @@ function Perfil() {
 
       <View style={styles.profileContainer}>
         <Image source={require('../assets/images/icone_usuario.png')} style={styles.logo} />
+
         <View style={styles.profileInfo}>
           <Text style={styles.userName}>Thainá Eduarda</Text>
           <Text style={styles.userId}>ID: 23</Text>
         </View>
+
       </View>
 
       <View style={styles.viewInputPerfil}>
         <Text style={styles.inputPerfil}>Nome</Text>
+
         <TextInput
           style={styles.textinputPerfil}
           placeholder="Thaina Eduarda Alexandre"
           value={name}
           onChangeText={setName}
         />
+
       </View>
 
       <View style={styles.viewInputPerfil}>
         <Text style={styles.inputPerfil}>E-mail</Text>
+
         <TextInput
           style={styles.textinputPerfil}
           placeholder="thainaeduarda123@gmail.com"
           value={email}
           onChangeText={setEmail}
         />
+
       </View>
 
       <View style={styles.viewInputPerfil}>
         <Text style={styles.inputPerfil}>Data de nascimento</Text>
+
         <TextInput
           style={styles.textinputPerfil}
           placeholder="18/05/2007"
@@ -81,6 +82,7 @@ function Perfil() {
           onChangeText={handleDobChange}
           keyboardType='numeric'
         />
+
       </View>
 
       <View style={styles.buttonContainer}>
@@ -91,7 +93,13 @@ function Perfil() {
         <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
           <Text style={styles.buttonTextDelete}>Deletar</Text>
         </TouchableOpacity>
+
       </View>
+
+      <TouchableOpacity style={styles.buttonSair} onPress={() => navigation.navigate('Bemvindo')}>
+        <Text style={styles.buttonTextSair}>Sair</Text>
+      </TouchableOpacity>
+      
     </View>
   );
 }

@@ -79,6 +79,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       },
 
+      buttonSair: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginHorizontal: 5,
+        marginTop: 10,
+        backgroundColor: '#696969',
+      },
+
+      buttonTextSair: {
+        color: '#c1c1c1',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+
       inputPerfil: {
         color: '#faed27',
       },
