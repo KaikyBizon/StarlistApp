@@ -62,7 +62,7 @@ def confirmar_senha(senha, confirme):
         # Retorno
         # erro-string-Retorna quando o campo confirmar senha não estiver igual ao da senha
         # erro-string-Retorna quando o campo confirmar senha estiver igual ao da senha
-        return {'erro': True, 'mensagem_confirmar': 'Este campo deve ser igual ao anterior.'}
+        return {'erro': True, 'mensagem_confirmar': 'Este campo deve ser igual ao da senha.'}
     return {'erro': False, 'mensagem_confirmar': ''}
 
 # validar_data_nascimento
