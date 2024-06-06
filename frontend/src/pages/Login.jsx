@@ -21,7 +21,7 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ function LoginForm() {
         // Atualiza o estado com as mensagens de erro para exibição no formulário
         setMensagensErro(resultado[0].error);
       } else {
-        console.log(resultado)
         localStorage.setItem('ID', resultado.id);
         localStorage.setItem('email', resultado.email);
         localStorage.setItem('nome_usuario', resultado.nome_usuario);

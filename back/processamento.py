@@ -2,6 +2,7 @@ from actionsBD.leitura_login_bd import selecionar_dados_cadastro
 from actionsBD.delete_bd import excluir_usuario
 from actionsBD.update_bd import atualizar_cadastro, select_atualizar
 from actionsBD.gravar_bd import inserir_usuario
+from actionsBD.createTask_bd import criarTarefa
 from validacoes import (
     validar_nome,
     validar_email,
@@ -80,3 +81,15 @@ def deletar_usuario(dados):
         id_deletar = dados.get('id')
         excluir_usuario(id_deletar)
         return {'mensagem': 'Usuário excluído com sucesso'}
+
+
+def salvarTarefa(dados):
+    tarefa = [
+        dados.get('titulo'),
+        dados.get('descricao'),
+        dados.get('data'),
+        dados.get('horario')
+    ]
+    print(tarefa)
+    if not None in tarefa:
+        criarTarefa(tarefa)

@@ -1,6 +1,5 @@
 import conexao
 
-
 def criarTarefa():
     conex = conexao.conectar()
     cursor = conex.cursor()
