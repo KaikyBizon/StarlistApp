@@ -1,4 +1,4 @@
-import '../components/SobreNos.css'
+import './SobreNos.css'
 function SobreNos(){
     return(
         <>

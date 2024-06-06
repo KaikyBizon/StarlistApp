@@ -1,4 +1,4 @@
-import "../EscolherPlano.css"
+import "../StylesPages/EscolherPlano.css"
 import { useNavigate } from 'react-router-dom';
 
 

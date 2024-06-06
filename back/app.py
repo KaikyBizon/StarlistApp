@@ -38,4 +38,4 @@ def dados_atuais():
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(port=8085, host='10.135.60.8', debug=True, threaded=True)
+    app.run(port=8085, host='10.135.60.9', debug=True, threaded=True)

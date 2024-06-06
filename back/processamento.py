@@ -1,7 +1,7 @@
-from leitura_login_bd import selecionar_dados_cadastro
-from delete_bd import excluir_usuario
-from update_bd import atualizar_cadastro, select_atualizar
-from gravar_bd import inserir_usuario
+from actionsBD.leitura_login_bd import selecionar_dados_cadastro
+from actionsBD.delete_bd import excluir_usuario
+from actionsBD.update_bd import atualizar_cadastro, select_atualizar
+from actionsBD.gravar_bd import inserir_usuario
 from validacoes import (
     validar_nome,
     validar_email,
@@ -50,9 +50,6 @@ def showDados(id):
     resultado_select = select_atualizar(id)
     if resultado_select is not None:  # Verificar se há resultados
         email, nome_usuario, data_nasc = resultado_select  # Desempacotar os resultados
-        # Exibir os resultados (pode ser removido em produção)
-
-        # Retornar os resultados
         return {'email': email, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
     else:
         return None  # Se não houver resultados, retornar None ou uma mensagem de erro
@@ -70,14 +67,12 @@ def update(alteracao, mensagens_erro, dados):
 def login(dados):
     email = dados.get('email')
     senha = dados.get('senha')
-
     user = selecionar_dados_cadastro(email, senha)
-
-    if user is not None and email == user[0] and senha == user[1]:
+    if user and email == user[0] and senha == user[1]:
         email, senha, id, nome_usuario, data_nasc = user
-        return 'success'
+        return {'email': email, 'id': id, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
     else:
-        return {'error': 'Credenciais inválidas'}, 401
+        return {'error': 'Email ou senha inválido'}, 401
 
 
 def deletar_usuario(dados):

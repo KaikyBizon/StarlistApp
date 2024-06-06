@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import '../AddParticipantes.css'
+import '../StylesPages/AddParticipantes.css'
 
 function AddParticipantes() {
     const [show, setShow] = useState(false);

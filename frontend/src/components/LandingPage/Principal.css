@@ -4,7 +4,7 @@
     margin-top: 0px;
     justify-content: flex-start;
     align-items: center;
-    background-image: url(fundo-menu.png);
+    background-image: url(../../../public/images/fundo-menu.png);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;

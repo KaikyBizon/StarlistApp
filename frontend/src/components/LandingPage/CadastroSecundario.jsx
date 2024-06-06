@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import '../components/CadastroSecundario.css'
-function CadastroSegundario(){
+import './CadastroSecundario.css'
+function CadastroSecundario(){
     return(
         <>
            <section className="cadastro">
@@ -24,4 +24,4 @@ function CadastroSegundario(){
     )
 }
 
-export { CadastroSegundario };
+export { CadastroSecundario };

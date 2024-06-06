@@ -1,4 +1,4 @@
-import '../components/Principal.css'
+import './Principal.css'
 function Principal() {
     return (
         <>

@@ -1,4 +1,4 @@
-import '../components/Planos.css';
+import './Planos.css';
 import { Link } from 'react-router-dom';
 function Planos() {
     return (

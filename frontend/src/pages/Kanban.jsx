@@ -2,7 +2,7 @@ import Card from 'react-bootstrap/Card';
 import Geral from '../components/Geral';
 import Menu from '../components/Menu';
 import Options from '../components/Options';
-import '/src/kanban.css'
+import '../StylesPages/kanban.css'
 
 function Kanban() {
     return (

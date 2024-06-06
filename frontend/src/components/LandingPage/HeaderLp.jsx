@@ -1,5 +1,4 @@
-import '../App.css'
-import '../components/HeaderLp.css'
+import './HeaderLp.css'
 import { Link } from 'react-router-dom';
 function HeaderLp() {
     return (
@@ -7,7 +6,7 @@ function HeaderLp() {
 
             <header className="cabeca">
                 <div>
-                    <img id="logo" src="/public/images/logo_starlist.png" alt="starefinha" />
+                    <img id="logo" src="/public/images/logo_starlist.png" alt="Starlist" />
                 </div>
 
                 {/*Itens do Menu*/}

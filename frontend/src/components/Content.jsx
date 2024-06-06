@@ -42,7 +42,6 @@ const Content = props => (
                     <Route path='/Forma_pg' element={<Forma_pg />} />
                 </Routes>
             </div>
-
         </section>
     </main>
 );

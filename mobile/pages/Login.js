@@ -30,7 +30,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,14 +41,14 @@ function LoginForm({ navigation }) {
                 }),
             });
             const resultado = (await resposta.json()).login_status;
-            console.log(resultado)
 
-            if (resposta.ok && resultado === 'success') {
-                // Dados foram processados com sucesso
-                navigation.navigate('home');
-            } else {
+            if (resposta.ok && resultado !== 'success') {
                 // Atualiza o estado com as mensagens de erro para exibição no formulário
                 setMensagensErro(resultado.mensagens || 'Dados incorretos');
+            } else {
+                // Dados foram processados com sucesso
+                navigation.navigate('home');
+
             }
         } catch (error) {
             console.error('Erro ao realizar login', error);

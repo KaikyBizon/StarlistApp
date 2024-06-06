@@ -1,5 +1,6 @@
 import conexao
 
+
 def inserir_usuario(cadastro):
     conex = conexao.conectar()
     cursor = conex.cursor()

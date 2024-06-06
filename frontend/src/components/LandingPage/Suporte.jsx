@@ -1,4 +1,4 @@
-import '../components/Suporte.css'
+import './Suporte.css'
 function Suporte(){
     return(
         <>

@@ -1,4 +1,4 @@
-import '../components/Conheca.css'
+import './Conheca.css'
 function Conheca() {
     return (
         <>
