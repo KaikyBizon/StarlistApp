@@ -80,7 +80,7 @@ def deletar_usuario(dados):
     if dados.get('acao') == 'excluir_usuario':
         id_deletar = dados.get('id')
         excluir_usuario(id_deletar)
-        return {'mensagem': 'Usuário excluído com sucesso'}
+        return {'mensagem': {'delete_status':'Usuário excluído com sucesso'}}
 
 
 def salvarTarefa(dados):

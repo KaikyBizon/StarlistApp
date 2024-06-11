@@ -35,7 +35,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ function LoginForm({ navigation }) {
                 <Text style={styles.login}>E-mail</Text>
                 <TextInput
                     style={styles.inputsLogin}
-                    placeholder="roberto.carlos@example.com"
+                    placeholder="Digite seu e-mail"
                     value={formValues.email}
                     onChangeText={(text) => handleChange('email', text)}
                 />
@@ -96,7 +96,7 @@ function LoginForm({ navigation }) {
                 <TextInput
                     style={styles.inputsLogin}
                     secureTextEntry={true}
-                    placeholder="******"
+                    placeholder="Digite sua senha"
                     value={formValues.senha}
                     onChangeText={(text) => handleChange('senha', text)}
                 />
