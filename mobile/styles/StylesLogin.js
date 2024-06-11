@@ -14,7 +14,7 @@ export default styles = StyleSheet.create({
         flex: 1,
         width: '90%',
     },
-    inputs: {
+    inputsLogin: {
         backgroundColor: '#CECECE',
         color: '#8F8E8E',
         marginBottom: 15,
@@ -40,7 +40,7 @@ export default styles = StyleSheet.create({
         fontFamily: 'Kanit_500Medium',
     },
     login: {
-        color: '#CECECE',
+        color: '#ffffff',
         fontFamily: 'Kanit_500Medium',
     },
     containerError: {
@@ -50,5 +50,74 @@ export default styles = StyleSheet.create({
     error: {
         color: 'red',
         fontSize: 15
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: '#696969',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+    },
+    button: {
+        borderRadius: 12,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonCancel: {
+        backgroundColor: '#f44336',
+        marginRight: 10,
+    },
+    buttonReset: {
+        backgroundColor: '#faed27',
+    },
+    textStyle: {
+        color: '#696969',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    textStyleCancelar: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#cecece',
+    },
+    inputs: {
+        backgroundColor: '#CECECE',
+        color: '#8F8E8E',
+        marginBottom: 15,
+        fontSize: 17,
+        borderRadius: 10,
+        padding: 10,
+        fontFamily: 'Kanit_500Medium',
+        width: 280,
+    },
+    forgotPassword: {
+        color: '#696969'
+    },
+    
 });
