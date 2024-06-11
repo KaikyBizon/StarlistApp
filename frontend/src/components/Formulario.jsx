@@ -6,9 +6,49 @@ import Modal from 'react-bootstrap/Modal';
 
 function Formulario() {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
+  const [dadosTask, setDadosTask] = useState({
+    titulo: '',
+    descricao: '',
+    data: '',
+    horario: '',
+  })
+
+  const handleChange = (name, value) => {
+    setDadosTask((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      });
+
+      const resultado = (await resposta.json()).dados_processados;
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        // Assume que a estrutura de erro vem no campo 'mensagens_erro'
+        setMensagensErro(resultado.mensagens_erro);
+      } else {
+        navigation.navigate("home")
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
+
 
   return (
     <>
@@ -34,9 +74,9 @@ function Formulario() {
                 type="text"
                 placeholder="Nome do evento"
                 autoFocus
+                name='titulo'
+                value={dadosTask.titulo}
               />
-              {/*Input para colocar horário do evento*/}
-              <Form.Control type="time" />
             </Form.Group>
             <Form.Group
               className="mb-3 descricao"
@@ -44,27 +84,19 @@ function Formulario() {
             >
               {/*Textarea para colocar descrição do evento*/}
               <Form.Label>Descrição</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Control as="textarea" rows={3} name='descricao'
+                value={dadosTask.descricao} />
             </Form.Group>
             <Form.Group
               className="mb-3 data-evento"
               controlId="exampleForm.ControlTextarea1"
             >
               {/*Input para colocar data do evento*/}
-              <Form.Control type="date" />
+              <Form.Control type="date" name='data'
+                value={dadosTask.data} />
               {/*Input para colocar lembrete*/}
-              <Form.Control type="time" />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Requisitar participante</Form.Label>
-              <InputGroup className="mb-3">
-                <Form.Control
-                  placeholder="Recipient's username"
-                  aria-label="Recipient's username"
-                  aria-describedby="basic-addon2"
-                />
-                <InputGroup.Text id="basic-addon2">@starlist.com</InputGroup.Text>
-              </InputGroup>
+              <Form.Control type="time" name='hora'
+                value={dadosTask.hora} />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -74,7 +106,7 @@ function Formulario() {
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <Button variant="primary save-task" onClick={handleClose}>
+          <Button variant="primary save-task" onClick={handleChange}>
             Salvar tarefa
           </Button>
         </Modal.Footer>

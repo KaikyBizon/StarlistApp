@@ -1,7 +1,7 @@
 import Cardgerenciar from "../components/Cardgerenciar"
 import Menu from '../components/menu';
 import Options from '../components/Options';
-import '../gerenciarpart.css'
+import '../StylesPages/gerenciarpart.css'
 
 function Gerenciarpart() {
     return (

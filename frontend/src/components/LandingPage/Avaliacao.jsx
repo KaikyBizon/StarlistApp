@@ -1,4 +1,4 @@
-import '../components/Avaliacao.css'
+import './Avaliacao.css'
 function Avaliacao() {
     return (
         <>

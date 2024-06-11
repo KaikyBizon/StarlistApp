@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Formulario from './Formulario.jsx';
-import '/src/novatarefa.css'
+import '../StylesPages/novatarefa.css'
 import AddParticipantes from './AddParticipantes.jsx';
 import { Link } from 'react-router-dom'
 

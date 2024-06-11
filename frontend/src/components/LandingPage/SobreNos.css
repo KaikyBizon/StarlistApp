@@ -1,6 +1,6 @@
 #sobre {
     display: flex;
-    background-image: url(telasobrenos.png);
+    background-image: url(../../../public/images/telasobrenos.png);
     text-align: center;
     align-items: center;
     height: 700px;

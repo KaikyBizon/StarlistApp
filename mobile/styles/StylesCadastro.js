@@ -56,6 +56,44 @@ const styles = StyleSheet.create({
         color: "#191919",
         textDecorationLine: 'underline',
     },
-})
+    modalView: {
+      margin: 20,
+      backgroundColor: '#726C6F',
+      borderRadius: 10,
+      padding: 35,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+      fontSize: 20,
+      fontWeight: 'bold',
+      color:'#9d9d9d'
+    },
+    modalErrorText: {
+      marginBottom: 10,
+      textAlign: 'center',
+      color: '#faed27',
+    },
+    closeButton: {
+      backgroundColor: '#FAED27',
+      borderRadius: 9,
+      padding: 8,
+      elevation: 2,
+    },
+    closeButtonText: {
+      color: '#726C6F',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+});
 
 export default styles

@@ -3,12 +3,12 @@ export default function Navbar() {
         <header className="menu">
             {/*logo do menu*/}
             <div className="logo">
-                <img src="/public/logo_starlist.png" alt="logo" />
+                <img src="/public/images/logo_starlist.png" alt="logo" />
             </div>
             {/*barra de pesquisa*/}
             <div className="search">
                 <input type="search" name="Pesquisa" id="pesquisar" placeholder="Buscar" />
-                <img src="/public/lupa.png" alt="lupa" />
+                <img src="/public/images/lupa.png" alt="lupa" />
             </div>
             {/*icones do menu*/}
             <div className="icones">

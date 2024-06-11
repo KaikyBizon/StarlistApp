@@ -1,7 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import { Expulsar } from './Expulsar';
 import AltCargo from './AltCargo';
-import '../gerenciarpart.css'
+import '../StylesPages/gerenciarpart.css'
 
 function Cardgerenciar() {
     return (

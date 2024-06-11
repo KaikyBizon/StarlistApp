@@ -1,4 +1,4 @@
-import '../AlterarDadosCadastro.css';
+import '../StylesPages/AlterarDadosCadastro.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -7,8 +7,6 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Options from '../components/Options'
 import Navbar from '../components/Navbar'
-import Menu from '../components/Menu';
-import { Link } from 'react-router-dom'
 
 const AlterarDadosCadastro = () => {
     const [nomeUsuario, setNomeUsuario] = useState('');
@@ -24,7 +22,7 @@ const AlterarDadosCadastro = () => {
     useEffect(() => {
         const showDados = async () => {
             try {
-                const resposta = await fetch('http://localhost:5000/dados-atuais', {
+                const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -60,7 +58,7 @@ const AlterarDadosCadastro = () => {
     const handleDelete = async () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
-            const resposta = await fetch('http://localhost:5000/delete-usuario', {
+            const resposta = await fetch('http://10.135.60.7:8085/delete-usuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +80,7 @@ const AlterarDadosCadastro = () => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://localhost:5000/receber-dados', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -155,11 +153,9 @@ const AlterarDadosCadastro = () => {
                         ))}
                     </ul>
                     <div className="botoes_alterar_dados">
-                        <Link to="/login">
                             <Button className='botao_salvar_dados' variant="primary" type="submit" onClick={handleSubmit}>
                                 Salvar
                             </Button>
-                        </Link>
                         <Button className='botao_deletar_dados' variant="danger" onClick={handleDelete}>
                             Deletar
                         </Button>

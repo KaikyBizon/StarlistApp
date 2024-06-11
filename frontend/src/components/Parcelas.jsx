@@ -1,5 +1,5 @@
 import Form from 'react-bootstrap/Form';
-import '../Parcelas.css'
+import '../StylesPages/Parcelas.css'
 
 function Parcelamento() {
   return (

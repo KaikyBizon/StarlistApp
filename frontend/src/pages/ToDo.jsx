@@ -2,7 +2,7 @@ import Card from 'react-bootstrap/Card';
 import Geral from '../components/Geral';
 import Menu from '../components/menu';
 import Options from '../components/Options';
-import '../todo.css'
+import '../StylesPages/todo.css'
 
 function ToDo() {
     return (

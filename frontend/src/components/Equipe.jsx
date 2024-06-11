@@ -1,4 +1,4 @@
-import '../Equipe.css';
+import '../StylesPages/Equipe.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ToggleButton from 'react-bootstrap/ToggleButton';

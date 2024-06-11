@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import '../Forma_pg.css'
+import '../StylesPages/Forma_pg.css'
 
 function Forma_pg() {
     const navigate = useNavigate();

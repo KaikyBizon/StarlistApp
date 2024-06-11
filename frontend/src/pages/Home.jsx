@@ -1,12 +1,12 @@
-import { HeaderLp } from '../components/HeaderLp'
-import { Principal } from '../components/Principal';
-import { Conheca } from '../components/Conheca';
-import { SobreNos } from '../components/SobreNos';
-import { Avaliacao } from '../components/Avaliacao';
-import { Planos } from '../components/Planos';
-import { CadastroSegundario } from '../components/CadastroSegundario';
-import { Suporte } from '../components/Suporte';
-import { Rodape } from '../components/Rodape';
+import { HeaderLp } from '../components/LandingPage/HeaderLp'
+import { Principal } from '../components/LandingPage/Principal';
+import { Conheca } from '../components/LandingPage/Conheca';
+import { SobreNos } from '../components/LandingPage/SobreNos';
+import { Avaliacao } from '../components/LandingPage/Avaliacao';
+import { Planos } from '../components/LandingPage/Planos';
+import { CadastroSecundario } from '../components/LandingPage/CadastroSecundario';
+import { Suporte } from '../components/LandingPage/Suporte';
+import { Rodape } from '../components/LandingPage/Rodape';
 
 function Home() {
     return (
@@ -17,7 +17,7 @@ function Home() {
             <SobreNos />
             <Avaliacao />
             <Planos />
-            <CadastroSegundario />
+            <CadastroSecundario />
             <Suporte />
             <Rodape />
         </>
