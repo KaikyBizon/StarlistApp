@@ -3,6 +3,7 @@ from actionsBD.delete_bd import excluir_usuario
 from actionsBD.update_bd import atualizar_cadastro, select_atualizar
 from actionsBD.gravar_bd import inserir_usuario
 from actionsBD.createTask_bd import criarTarefa
+from actionsBD.selectTask import selecionar_dados_tarefa
 from validacoes import (
     validar_nome,
     validar_email,
@@ -29,6 +30,15 @@ def processar_dados(dados):
         dados_processados.get('id')
     ]
 
+    tarefa = [
+        dados_processados.get('titulo'),
+        dados_processados.get('descricao'),
+        dados_processados.get('data'),
+        dados_processados.get('hora'),
+        dados_processados.get('etiqueta'),
+        dados_processados.get('usuario_id')
+    ]
+
     mensagens_erro = []
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
@@ -40,10 +50,18 @@ def processar_dados(dados):
 
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
+    # Adicionar novo cadastro
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
 
-    return mensagens_erro, cadastro, alteracao
+    # Adicionar tarefa ao banco de dados
+    if tarefa:
+        criarTarefa(tarefa)
+
+    id_usuario = dados_processados.get('usuario_id')
+    dados_tarefa = selecionar_dados_tarefa(id_usuario)
+
+    return mensagens_erro, cadastro, alteracao, dados_tarefa
 
 
 def showDados(id):
@@ -80,16 +98,4 @@ def deletar_usuario(dados):
     if dados.get('acao') == 'excluir_usuario':
         id_deletar = dados.get('id')
         excluir_usuario(id_deletar)
-        return {'mensagem': 'Usuário excluído com sucesso'}
-
-
-def salvarTarefa(dados):
-    tarefa = [
-        dados.get('titulo'),
-        dados.get('descricao'),
-        dados.get('data'),
-        dados.get('horario')
-    ]
-    print(tarefa)
-    if not None in tarefa:
-        criarTarefa(tarefa)
+        return {'mensagem': {'delete_status':'Usuário excluído com sucesso'}}
