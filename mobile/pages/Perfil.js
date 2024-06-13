@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Menu from '../components/Menu';
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesPerfil';
 
 function Perfil({ navigation }) {
@@ -24,7 +25,7 @@ function Perfil({ navigation }) {
       setUserId(id)
       console.log(id)
       try {
-        const resposta = await fetch('http://10.135.60.30:8085/dados-atuais', {
+        const resposta = await fetch('http://10.135.60.15:8085/dados-atuais', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ function Perfil({ navigation }) {
 
       const formattedDob = formatToISODate(dob); // Formatar para aaaa-mm-dd
 
-      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +124,7 @@ function Perfil({ navigation }) {
     try {
       const id = userId; // Já é uma string
 
-      const resposta = await fetch('http://10.135.60.30:8085/deletar-perfil', {
+      const resposta = await fetch('http://10.135.60.15:8085/deletar-perfil', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,7 +151,15 @@ function Perfil({ navigation }) {
       console.error('Erro ao deletar perfil!', error);
       Alert.alert('Erro', 'Erro ao deletar perfil!');
     }
-  };
+  }; 
+
+  const [fontLoaded] = useFonts({
+    Kanit_500Medium,
+});
+
+if (!fontLoaded) {
+    return null;
+}
 
   return (
     <View style={styles.containerProfile}>

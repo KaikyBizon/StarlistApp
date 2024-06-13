@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Text, View, Image, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { Feather } from '@expo/vector-icons';
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesTelaPlano';
 
 const data = [
@@ -30,6 +31,14 @@ const data = [
 export function CarouselCardItem({ item, index, navigation }) {
     // Split the textPlanos string into an array of items
     const planItems = item.textPlanos.split(';').filter(item => item.trim() !== '');
+
+    const [fontLoaded] = useFonts({
+        Kanit_500Medium,
+    });
+
+    if (!fontLoaded) {
+        return null;
+    }
 
     return (
         <View>

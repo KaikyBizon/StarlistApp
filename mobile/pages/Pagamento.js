@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, TouchableOpacity, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, Image, KeyboardAvoidingView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import styles from '../styles/StylesPagamento';
 import { Feather } from '@expo/vector-icons';
@@ -12,6 +12,11 @@ export default function Pagamento({ navigation }) {
     const [cvv, setCvv] = useState('');
     const [cpf, setCpf] = useState('');
     const [pixCode, setPixCode] = useState(null); // State to store Pix code and QR code visibility
+  
+    const handledPayment = () => {
+        Alert.alert("Pagamento Concluído", "Seu pagamento foi realizado com sucesso!");
+        navigation.navigate('home');
+    }
 
     const validateNumericInput = (text) => {
         const numericValue = text.replace(/[^0-9]/g, '');
@@ -102,7 +107,7 @@ export default function Pagamento({ navigation }) {
             </View>
             <Text style={styles.txtInfo}>CPF</Text>
             <TextInput style={styles.input} keyboardType="numeric" placeholder="123.456.789-00" value={formataCPF(cpf)} onChangeText={text => setCpf(text)} maxLength={14} />
-            <TouchableOpacity style={styles.btnPagar}>
+            <TouchableOpacity style={styles.btnPagar} onPress={handledPayment}>
                 <Text style={styles.txtPagar}>Pagar e concluir</Text>
             </TouchableOpacity>
         </View>

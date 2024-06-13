@@ -1,9 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, Image, ScrollView } from 'react-native';
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesKanBan';
 import Menu from '../components/Menu';
 
-export default function KanBan() {
+export default function KanBan() { 
+
+  const [fontLoaded] = useFonts({
+    Kanit_500Medium,
+});
+
+if (!fontLoaded) {
+    return null;
+}
 
   return (
     <View style={styles.background}>

@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     EscolhaPlano: {
         color: '#404040',
         fontSize: 17,
+        fontFamily: 'Kanit_500Medium',
     },
     LogoPlanos: {
         width: 170,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     },
     titleHeaderPlanos: {
         color: "#494547",
-
+        fontFamily: 'Kanit_500Medium',
     },
     carroselTitle: {
         marginTop: "10%",
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
         color: '#FFF100',
         fontWeight: 'bold',
         textAlign: 'center',
-
+        fontFamily: 'Kanit_500Medium',
     },
     carroselText: {
         width: 300,
@@ -70,8 +71,8 @@ const styles = StyleSheet.create({
     },
     textPlanos: {
         paddingBottom: 20,
-        color: '#CECECE'
-
+        color: '#CECECE',
+        fontFamily: 'Kanit_500Medium',
     },
     botaoCarrosel: {
         width: 200,
@@ -87,7 +88,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     CarroselTextoButton: {
-        color: '#FFF100'
+        color: '#FFF100',
+        fontFamily: 'Kanit_500Medium',
     },
     containerVoltar: {
         flexDirection: 'row',

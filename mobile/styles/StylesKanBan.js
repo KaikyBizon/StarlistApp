@@ -21,7 +21,8 @@ export default styles = StyleSheet.create({
     txtData: {
         color: '#faed27',
         fontSize: 25,
-        marginLeft: 15
+        marginLeft: 15,
+        fontFamily: 'Kanit_500Medium',
     },
     tarefa: {
         height: 140,
@@ -49,20 +50,23 @@ export default styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 15,
         marginTop: 5,
-        marginBottom: 5
+        marginBottom: 5,
+        fontFamily: 'Kanit_500Medium',
     },
     txtInfo: {
         fontSize: 15,
         color:'#726c6f',
         width: 200,
         marginLeft: 15,
-        marginBottom: 10
+        marginBottom: 10,
+        fontFamily: 'Kanit_500Medium',
     }, 
     txtHora: {
         fontSize: 15,
         color:'#726c6f',
         width: 200,
-        marginLeft: 15
+        marginLeft: 15,
+        fontFamily: 'Kanit_500Medium',
     },
     detalheTarefa: {
         width: '50%',
@@ -86,7 +90,8 @@ export default styles = StyleSheet.create({
     txtRodape: {
         color: '#FAED27',
         fontSize: 25,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'Kanit_500Medium',
     },
     add: {
         width: 60,
