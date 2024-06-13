@@ -104,6 +104,7 @@ function Perfil({ navigation }) {
       const resultado = (await resposta.json()).update_status;
 
       if (resultado) {
+        setNomeUsuario(name);
         Alert.alert('Sucesso', 'Dados salvos com sucesso!');
       } else {
         Alert.alert('Erro', 'Erro ao salvar dados!');
