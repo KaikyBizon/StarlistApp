@@ -57,8 +57,6 @@ export default function Pagamento({ navigation }) {
         setPixCode('05101520StarList');
     };
 
-
-
     const renderPixPayment = () => (
         <View>
             {pixCode ? (
@@ -77,7 +75,6 @@ export default function Pagamento({ navigation }) {
             )}
         </View>
     );
-
 
     const renderCardPayment = () => (
         <View style={styles.dadosCartao}>
@@ -108,13 +105,13 @@ export default function Pagamento({ navigation }) {
         </View>
     );
 
-
     return (
         <KeyboardAvoidingView style={styles.background}>
             <View style={styles.containerVoltar}>
                 <Feather style={styles.btnVoltar} size={40} name="chevron-left" color="#fff" onPress={() => navigation.goBack()} />
             </View>
             <View style={styles.backgroundContainer}>
+                <Image style={styles.logo} resizeMode='contain' source={require('../assets/images/logo_starlist-texto.png')} />
                 <View style={styles.container}>
                     <View style={styles.metodoPagamento}>
                         <Text style={styles.txtInfo}>Escolha a opção de pagamento</Text>

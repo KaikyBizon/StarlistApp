@@ -3,26 +3,34 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        backgroundColor: '#faed27',
+        backgroundColor: '#9d9d9d',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logo: {
+        width: 200,
+        height: 100,
+        marginBottom: 20,
     },
     containerVoltar: {
-        width: '20%',
-        height: '15%',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
+        position: 'absolute',
+        top: 30,
+        left: 10,
     },
     btnVoltar: {
         backgroundColor: '#9d9d9d',
         borderRadius: 25,
+        padding: 5,
     },
     backgroundContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%',
     },
     container: {
-        width: '90%',
-        backgroundColor: '#f7f7f7',
+        width: '80%',
+        backgroundColor: '#696969',
         borderRadius: 10,
         padding: 20,
         shadowColor: '#000',
@@ -35,13 +43,15 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     txtInfo: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#c9c9c9',
+        textAlign: 'center',
     },
     btnEscolha: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         marginBottom: 20,
     },
     btnMetodo: {
@@ -57,6 +67,7 @@ const styles = StyleSheet.create({
     },
     txtBotao: {
         fontSize: 16,
+        color: '#696969',
     },
     codigoQr: {
         alignItems: 'center',
@@ -64,14 +75,17 @@ const styles = StyleSheet.create({
     infoPagamento: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: '#c9c9c9',
     },
     codigoPix: {
         fontSize: 18,
         marginVertical: 10,
+        color: '#fff',
     },
     infoQr: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: '#c9c9c9',
     },
     imagemQr: {
         marginVertical: 10,
@@ -90,6 +104,7 @@ const styles = StyleSheet.create({
     txtPagar: {
         fontSize: 18,
         fontWeight: 'bold',
+        color: '#696969',
     },
     dadosCartao: {
         marginTop: 20,
