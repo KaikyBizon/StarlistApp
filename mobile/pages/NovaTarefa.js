@@ -1,16 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
-import styles from '../styles/StylesNovaTarefa.js'
-import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit'
+import styles from '../styles/StylesNovaTarefa.js';
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import MenuScreen from '../components/Menu.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NovaTarefa({ navigation }) {
-    const [date, setDate] = useState(new Date())
-    const [show, setShow] = useState(false)
-    const [mode, setMode] = useState('date')
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);
+    const [mode, setMode] = useState('date');
+    const [usuarioId, setUsuarioId] = useState(null);
 
     const formatDate = (date) => {
         return date.toLocaleDateString('pt-BR', {
@@ -27,49 +29,103 @@ export default function NovaTarefa({ navigation }) {
         });
     };
 
+    const formatDateForApi = (date) => {
+        const year = date.getFullYear();
+        const month = (`0${date.getMonth() + 1}`).slice(-2);
+        const day = (`0${date.getDate()}`).slice(-2);
+        return `${year}-${month}-${day}`;
+    };
+
+    const getUsuarioId = async () => {
+        try {
+            const id = await AsyncStorage.getItem('ID');
+            if (id !== null) {
+                return parseInt(id, 10); // Converter o ID para número
+            }
+            return null;
+        } catch (error) {
+            console.error('ID do usuário não encontrado', error);
+            return null;
+        }
+    };
+
+    useEffect(() => {
+        const fetchUsuarioId = async () => {
+            const id = await getUsuarioId();
+            setUsuarioId(id);
+        };
+
+        fetchUsuarioId();
+    }, []);
+
     const [dadosTask, setDadosTask] = useState({
         titulo: '',
-        data: formatDate(date),
-        hora: formatTime(date),
+        data: formatDate(new Date()),
+        hora: formatTime(new Date()),
         etiqueta: '',
-        descricao: ''
-    })
+        descricao: '',
+        usuario_id: null,
+    });
+
+    useEffect(() => {
+        const fetchUsuarioId = async () => {
+            const id = await getUsuarioId();
+            setUsuarioId(id);
+        };
+
+        fetchUsuarioId();
+    }, []);
+
+    useEffect(() => {
+        setDadosTask((prevState) => ({
+            ...prevState,
+            usuario_id: usuarioId,
+        }));
+    }, [usuarioId]);
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formattedData = {
+            ...dadosTask,
+            data: formatDateForApi(new Date(date)) // Formatar a data para o formato aaaa-mm-dd
+        };
+        try {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formattedData),
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok || resultado.mensagens_erro) {
+                setMensagensErro(resultado.mensagens_erro);
+            } else {
+                setShow(false);
+                setDadosTask((prevState) => ({
+                    titulo: '',
+                    descricao: '',
+                    data: prevState.data,
+                    hora: prevState.hora,
+                    etiqueta: '',
+                    usuario_id: usuarioId // Reset the usuario_id as well
+                }));
+                navigation.goBack();
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+        }
+    };
 
     const handleChange = (name, value) => {
-        setFormValues((prevValues) => ({
+        setDadosTask((prevValues) => ({
             ...prevValues,
             [name]: value,
         }));
-    };
-
-    const handleSubmit = async (e) => {
-        console.log(dadosTask)
-        /*e.preventDefault();
-    
-        try {
-          const resposta = await fetch('http://10.135.60.15:8085/receber-dados' {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dadosTask),
-          });
-    
-          const resultado = await resposta.json();
-    
-          if (resultado.erro) {
-            // Exibe mensagens de erro no console.log ou em algum local visível
-            console.error('Erro no servidor:', resultado.mensagens);
-    
-            // Atualiza o estado com as mensagens de erro para exibição no formulário
-            setMensagensErro(resultado.mensagens);
-          } else {
-            window.alert("Cadastro realizado")
-            navigation.navigate('CALENDÁRIO')
-          }
-        } catch (error) {
-          console.error('Erro ao enviar dados:', error);
-        }*/
     };
 
     const onChange = (event, selectedDate) => {
@@ -92,7 +148,6 @@ export default function NovaTarefa({ navigation }) {
         return null;
     }
 
-
     return (
         <KeyboardAvoidingView style={styles.background}>
             <MenuScreen />
@@ -102,7 +157,12 @@ export default function NovaTarefa({ navigation }) {
             <View style={styles.containerInputs}>
                 <View style={styles.inputsLabel}>
                     <Text style={styles.label}>TÍTULO</Text>
-                    <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('titulo', text)} paddingHorizontal={10} />
+                    <TextInput
+                        style={styles.inputs}
+                        autoCorrect={false}
+                        onChangeText={(text) => handleChange('titulo', text)}
+                        paddingHorizontal={10}
+                    />
                 </View>
                 <View style={styles.dataTarefa}>
                     <TouchableOpacity
@@ -126,8 +186,6 @@ export default function NovaTarefa({ navigation }) {
                             onChange={onChange}
                         />
                     )}
-
-
                 </View>
                 <View style={styles.inputsLabel}>
                     <Text style={styles.label}>ETIQUETA</Text>
@@ -138,24 +196,29 @@ export default function NovaTarefa({ navigation }) {
                             itemStyle={styles.pickerItem}
                             onValueChange={(itemValue) => handleChange('etiqueta', itemValue)}
                         >
-                            <Picker.Item label="Trabalho" value="Trabalho" />
-                            <Picker.Item label="Estudo" value="Estudo" />
-                            <Picker.Item label="Pessoal" value="Pessoal" />
-                            <Picker.Item label="Outro" value="Outro" />
+                            <Picker.Item label="Selecione uma etiqueta" value="" />
+                            <Picker.Item label="Importante" value="Importatne" />
+                            <Picker.Item label="Pendência" value="Pendência" />
+                            <Picker.Item label="Reunião" value="Reunião" />
                         </Picker>
                     </View>
                 </View>
                 <View style={styles.inputsLabel}>
                     <Text style={styles.label}>DESCRIÇÃO</Text>
-                    <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('descricao', text)} paddingHorizontal={10} multiline={true} />
+                    <TextInput
+                        style={styles.inputs}
+                        autoCorrect={false}
+                        onChangeText={(text) => handleChange('descricao', text)}
+                        paddingHorizontal={10}
+                        multiline={true}
+                    />
                 </View>
 
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
-                    <Text style={styles.submitTxt} >SALVAR TAREFA</Text>
+                    <Text style={styles.submitTxt}>SALVAR TAREFA</Text>
                 </TouchableOpacity>
             </View>
             <StatusBar style='auto' />
-        </KeyboardAvoidingView >
-
-    )
+        </KeyboardAvoidingView>
+    );
 }

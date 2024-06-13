@@ -1,10 +1,12 @@
 import conexao
 
-def criarTarefa():
+
+def criarTarefa(tarefa):
     conex = conexao.conectar()
     cursor = conex.cursor()
-    sql = "INSERT INTO usuario ( TITULO, TEXTO, DATA_TASK, HORA) VALUES (%s, %s, %s, %s)"
-    cursor.execute(sql)
+    sql = "INSERT INTO tarefa (TITULO, TEXTO, DATA_TASK, HORA, ETIQUETA, ID_USUARIO) VALUES (%s, %s, %s, %s, %s, %s)"
+    val = (tarefa)
+    cursor.execute(sql, val)
     conex.commit()
     conex.close()
     return {'erro': False, 'mensagem_cadastro': 'Tarefa criada com sucesso.'}

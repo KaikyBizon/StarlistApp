@@ -9,8 +9,3 @@ def selecionar_dados_cadastro(usuario_id):
     dados_usuario = cursor.fetchall()
     conex.close()
     return dados_usuario
-
-if __name__ == "__main__":
-    busca_id = int(input("Digite o ID que você deseja verificar os dados: "))
-    for dados in selecionar_dados_cadastro(busca_id):
-        print(dados)

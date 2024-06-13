@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Image, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../styles/StylesToDo';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import MenuScreen from '../components/Menu';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
 
@@ -19,37 +20,45 @@ export default function ToDo({ navigation }) {
   const [searchText, setSearchText] = useState('');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tarefas, setTarefas] = useState([]);
 
-  const tarefas = [
-    {
-      date: '28/03/2024',
-      items: [
-        { id: '1', info: 'ESTUDAR QUÍMICA', hora: '14:00' },
-        { id: '2', info: 'MAPA MENTAL', hora: '15:00' }
-      ],
-    },
-    {
-      date: '29/03/2024',
-      items: [
-        { id: '3', info: 'MÉDICO', hora: '18:00' },
-        { id: '4', info: 'PASSEAR', hora: '20:00' }
-      ],
-    },
-    {
-      date: '01/04/2024',
-      items: [
-        { id: '5', info: 'REUNIÃO', hora: '09:00' }
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchTarefas = async () => {
+      const usuarioId = await AsyncStorage.getItem('ID');
+      console.log(usuarioId)
+      try {
+        const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ usuario_id: usuarioId })
+        });
+        const resultado = (await resposta.json()).dados_processados.dados_tarefa;
+        console.log(resultado)
+
+        if (resposta.ok) {
+          setTarefas(resultado);
+        } else {
+          console.error('Erro no servidor:', resultado.mensagens_erro);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchTarefas();
+  }, []);
 
   if (!fontLoaded) {
     return null;
   }
 
-  const filteredTarefas = tarefas.map(tarefa => ({
+  const filteredTarefas = (tarefas && tarefas.length > 0) ? tarefas : [];
+
+  const filteredData = filteredTarefas.map(tarefa => ({
     ...tarefa,
-    items: tarefa.items.filter(item => 
+    items: tarefa.items.filter(item =>
       item.info.toLowerCase().includes(searchText.toLowerCase())
     )
   })).filter(tarefa => tarefa.items.length > 0 && tarefa.date === moment(date).format('DD/MM/YYYY'));
@@ -84,14 +93,15 @@ export default function ToDo({ navigation }) {
       <MenuScreen searchText={searchText} setSearchText={setSearchText} />
       <View style={styles.containerMenu}>
         <TouchableOpacity onPress={showDatePickerHandler}>
-          <Feather size={32} name="calendar"/>
+          <Feather size={32} name="calendar" />
         </TouchableOpacity>
         <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
       <FlatList
-        data={filteredTarefas}
+        data={filteredData}
         renderItem={renderTarefa}
         keyExtractor={(item) => item.date}
+        ListEmptyComponent={<Text style={styles.txtInfo}>Nenhuma tarefa encontrada para essa data.</Text>}
       />
       {showDatePicker && (
         <DateTimePicker

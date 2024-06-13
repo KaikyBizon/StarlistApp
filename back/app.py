@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 # Importe a função deletarUsuario
 from processamento import processar_dados, login, update, deletar_usuario, showDados
-
 app = Flask(__name__)
 CORS(app)  # Permita solicitações CORS
 
@@ -10,10 +9,10 @@ CORS(app)  # Permita solicitações CORS
 @app.route('/receber-dados', methods=['POST'])
 def receber_dados():
     dados = request.json
-    mensagens_erro, cadastro, alteracao = processar_dados(dados)
+    mensagens_erro, cadastro, alteracao, dados_tarefa = processar_dados(dados)
     ret_login = login(dados)
     ret_update = update(alteracao, mensagens_erro, dados)
-    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro}, "login_status": ret_login, "update_status": ret_update}
+    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro, "dados_tarefa": dados_tarefa}, "login_status": ret_login, "update_status": ret_update}
     return jsonify(response_data)
 
 

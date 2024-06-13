@@ -58,8 +58,17 @@ def processar_dados(dados):
     if tarefa:
         criarTarefa(tarefa)
 
+    # Corrigir a parte de seleção dos dados da tarefa
     id_usuario = dados_processados.get('usuario_id')
-    dados_tarefa = selecionar_dados_tarefa(id_usuario)
+    if id_usuario:
+        dados_tarefa = selecionar_dados_tarefa(id_usuario)
+        if dados_tarefa:
+            titulo, data, hora = dados_tarefa
+            dados_tarefa = {'titulo': titulo, 'data': data, 'hora': hora}
+        else:
+            dados_tarefa = {}
+    else:
+        dados_tarefa = {}
 
     return mensagens_erro, cadastro, alteracao, dados_tarefa
 
@@ -98,4 +107,4 @@ def deletar_usuario(dados):
     if dados.get('acao') == 'excluir_usuario':
         id_deletar = dados.get('id')
         excluir_usuario(id_deletar)
-        return {'mensagem': {'delete_status':'Usuário excluído com sucesso'}}
+        return {'mensagem': {'delete_status': 'Usuário excluído com sucesso'}}
