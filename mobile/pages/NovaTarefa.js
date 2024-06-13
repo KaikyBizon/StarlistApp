@@ -12,7 +12,6 @@ export default function NovaTarefa({ navigation }) {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState('date');
-    const [usuarioId, setUsuarioId] = useState(null);
 
     const formatDate = (date) => {
         return date.toLocaleDateString('pt-BR', {
@@ -29,97 +28,13 @@ export default function NovaTarefa({ navigation }) {
         });
     };
 
-    const formatDateForApi = (date) => {
-        const year = date.getFullYear();
-        const month = (`0${date.getMonth() + 1}`).slice(-2);
-        const day = (`0${date.getDate()}`).slice(-2);
-        return `${year}-${month}-${day}`;
-    };
-
-    const getUsuarioId = async () => {
-        try {
-            const id = await AsyncStorage.getItem('ID');
-            if (id !== null) {
-                return parseInt(id, 10); // Converter o ID para número
-            }
-            return null;
-        } catch (error) {
-            console.error('ID do usuário não encontrado', error);
-            return null;
-        }
-    };
-
-    useEffect(() => {
-        const fetchUsuarioId = async () => {
-            const id = await getUsuarioId();
-            setUsuarioId(id);
-        };
-
-        fetchUsuarioId();
-    }, []);
-
     const [dadosTask, setDadosTask] = useState({
         titulo: '',
         data: formatDate(new Date()),
         hora: formatTime(new Date()),
         etiqueta: '',
         descricao: '',
-        usuario_id: null,
     });
-
-    useEffect(() => {
-        const fetchUsuarioId = async () => {
-            const id = await getUsuarioId();
-            setUsuarioId(id);
-        };
-
-        fetchUsuarioId();
-    }, []);
-
-    useEffect(() => {
-        setDadosTask((prevState) => ({
-            ...prevState,
-            usuario_id: usuarioId,
-        }));
-    }, [usuarioId]);
-
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formattedData = {
-            ...dadosTask,
-            data: formatDateForApi(new Date(date)) // Formatar a data para o formato aaaa-mm-dd
-        };
-        try {
-            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formattedData),
-            });
-
-            const resultado = await resposta.json();
-
-            if (!resposta.ok || resultado.mensagens_erro) {
-                setMensagensErro(resultado.mensagens_erro);
-            } else {
-                setShow(false);
-                setDadosTask((prevState) => ({
-                    titulo: '',
-                    descricao: '',
-                    data: prevState.data,
-                    hora: prevState.hora,
-                    etiqueta: '',
-                    usuario_id: usuarioId // Reset the usuario_id as well
-                }));
-                navigation.goBack();
-            }
-        } catch (error) {
-            console.error('Erro ao enviar dados:', error);
-        }
-    };
 
     const handleChange = (name, value) => {
         setDadosTask((prevValues) => ({
@@ -214,7 +129,7 @@ export default function NovaTarefa({ navigation }) {
                     />
                 </View>
 
-                <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
+                <TouchableOpacity style={styles.btnSubmit}>
                     <Text style={styles.submitTxt}>SALVAR TAREFA</Text>
                 </TouchableOpacity>
             </View>

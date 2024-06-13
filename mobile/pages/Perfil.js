@@ -23,9 +23,8 @@ function Perfil({ navigation }) {
     const showDados = async () => {
       const id = await AsyncStorage.getItem('ID');
       setUserId(id)
-      console.log(id)
       try {
-        const resposta = await fetch('http://10.135.60.15:8085/dados-atuais', {
+        const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +87,7 @@ function Perfil({ navigation }) {
       const id = userId;
       const formattedDob = formatToISODate(dob); // Formatar para aaaa-mm-dd
 
-      const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +118,7 @@ function Perfil({ navigation }) {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
 
-      const resposta = await fetch('http://10.135.60.22:8085/delete-usuario', {
+      const resposta = await fetch('http://10.135.60.7:8085/delete-usuario', {
         method: 'POST', // ou 'DELETE', dependendo da configuração do seu backend
         headers: {
           'Content-Type': 'application/json',
@@ -149,65 +148,65 @@ function Perfil({ navigation }) {
   if (!fontLoaded) {
     return null;
   }
-};
-return (
-  <View style={styles.containerProfile}>
-    <Menu />
+  return (
+    <View style={styles.containerProfile}>
+      <Menu />
 
-    <View style={styles.profileContainer}>
-      <Image source={require('../assets/images/icone_usuario.png')} style={styles.logo} />
+      <View style={styles.profileContainer}>
+        <Image source={require('../assets/images/icone_usuario.png')} style={styles.logo} />
 
-      <View style={styles.profileInfo}>
-        <Text style={styles.userName}>{nomeUsuario}</Text>
-        <Text style={styles.userId}>ID: {userId}</Text>
+        <View style={styles.profileInfo}>
+          <Text style={styles.userName}>{nomeUsuario}</Text>
+          <Text style={styles.userId}>ID: {userId}</Text>
+        </View>
       </View>
-    </View>
 
-    <View style={styles.viewInputPerfil}>
-      <Text style={styles.inputPerfil}>Nome</Text>
-      <TextInput
-        style={styles.textinputPerfil}
-        placeholder="Thaina Eduarda Alexandre"
-        value={name}
-        onChangeText={setName}
-      />
-    </View>
+      <View style={styles.viewInputPerfil}>
+        <Text style={styles.inputPerfil}>Nome</Text>
+        <TextInput
+          style={styles.textinputPerfil}
+          placeholder="Thaina Eduarda Alexandre"
+          value={name}
+          onChangeText={setName}
+        />
+      </View>
 
-    <View style={styles.viewInputPerfil}>
-      <Text style={styles.inputPerfil}>E-mail</Text>
-      <TextInput
-        style={styles.textinputPerfil}
-        placeholder="thainaeduarda123@gmail.com"
-        value={email}
-        onChangeText={setEmail}
-      />
-    </View>
+      <View style={styles.viewInputPerfil}>
+        <Text style={styles.inputPerfil}>E-mail</Text>
+        <TextInput
+          style={styles.textinputPerfil}
+          placeholder="thainaeduarda123@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
 
-    <View style={styles.viewInputPerfil}>
-      <Text style={styles.inputPerfil}>Data de nascimento</Text>
-      <TextInput
-        style={styles.textinputPerfil}
-        placeholder="18/05/2007"
-        value={dob}
-        onChangeText={handleDobChange}
-        keyboardType="numeric"
-      />
-    </View>
+      <View style={styles.viewInputPerfil}>
+        <Text style={styles.inputPerfil}>Data de nascimento</Text>
+        <TextInput
+          style={styles.textinputPerfil}
+          placeholder="18/05/2007"
+          value={dob}
+          onChangeText={handleDobChange}
+          keyboardType="numeric"
+        />
+      </View>
 
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.buttonSalvar} onPress={handleSave}>
-        <Text style={styles.buttonTextSalvar}>Salvar</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.buttonSalvar} onPress={handleSave}>
+          <Text style={styles.buttonTextSalvar}>Salvar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
+          <Text style={styles.buttonTextDelete}>Deletar</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.buttonSair} onPress={() => navigation.navigate('Bemvindo')}>
+        <Text style={styles.buttonTextSair}>Sair</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
-        <Text style={styles.buttonTextDelete}>Deletar</Text>
-      </TouchableOpacity>
     </View>
-
-    <TouchableOpacity style={styles.buttonSair} onPress={() => navigation.navigate('Bemvindo')}>
-      <Text style={styles.buttonTextSair}>Sair</Text>
-    </TouchableOpacity>
-  </View>
-);
+  );
+}
 
 export default Perfil;

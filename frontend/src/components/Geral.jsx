@@ -9,7 +9,7 @@ function Geral() {
             </div>
             {/*Opção para criar nova etiqueta*/}
             <div className="edit-classificacao">
-                <img src="/public/lapis.png" alt="lapis" />
+                <img src="./public/images/lapis.png" alt="lapis" />
                 <p>Criar nova etiqueta</p>
             </div>
             {/*botões de etiquetas*/}

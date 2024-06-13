@@ -5,7 +5,6 @@ import Modal from 'react-bootstrap/Modal';
 
 function Formulario() {
   const [show, setShow] = useState(false);
-  const [mensagensErro, setMensagensErro] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -14,7 +13,6 @@ function Formulario() {
     descricao: '',
     data: '',
     horario: '',
-    usuario_id: localStorage.getItem("ID")
   });
 
   const handleChange = (event) => {
@@ -23,36 +21,6 @@ function Formulario() {
       ...prevValues,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(dadosTask)
-    try {
-      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dadosTask),
-      });
-
-      const resultado = await resposta.json();
-
-      if (!resposta.ok || resultado.mensagens_erro) {
-        setMensagensErro(resultado.mensagens_erro);
-      } else {
-        setShow(false);
-        setDadosTask({
-          titulo: '',
-          descricao: '',
-          data: '',
-          horario: '',
-        });
-      }
-    } catch (error) {
-      console.error('Erro ao enviar dados:', error);
-    }
   };
 
   return (
@@ -68,7 +36,7 @@ function Formulario() {
           <Modal.Title>Nova tarefa</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Form.Group className="mb-3 nome-evento" controlId="formTitulo">
               <Form.Control
                 type="text"

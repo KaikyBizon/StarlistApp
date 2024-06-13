@@ -2,8 +2,6 @@ from actionsBD.leitura_login_bd import selecionar_dados_cadastro
 from actionsBD.delete_bd import excluir_usuario
 from actionsBD.update_bd import atualizar_cadastro, select_atualizar
 from actionsBD.gravar_bd import inserir_usuario
-from actionsBD.createTask_bd import criarTarefa
-from actionsBD.selectTask import selecionar_dados_tarefa
 from validacoes import (
     validar_nome,
     validar_email,
@@ -54,23 +52,7 @@ def processar_dados(dados):
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
 
-    # Adicionar tarefa ao banco de dados
-    if tarefa:
-        criarTarefa(tarefa)
-
-    # Corrigir a parte de seleção dos dados da tarefa
-    id_usuario = dados_processados.get('usuario_id')
-    if id_usuario:
-        dados_tarefa = selecionar_dados_tarefa(id_usuario)
-        if dados_tarefa:
-            titulo, data, hora = dados_tarefa
-            dados_tarefa = {'titulo': titulo, 'data': data, 'hora': hora}
-        else:
-            dados_tarefa = {}
-    else:
-        dados_tarefa = {}
-
-    return mensagens_erro, cadastro, alteracao, dados_tarefa
+    return mensagens_erro, cadastro, alteracao
 
 
 def showDados(id):
