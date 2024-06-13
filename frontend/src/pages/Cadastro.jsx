@@ -8,7 +8,7 @@ import '../components/Cadastro.css';
      * Descrição Detalhada:
      *   Componente funcional React que representa um formulário de cadastro. 
      *   Ele utiliza hooks do React para gerenciar o estado do formulário e mensagens de erro.
-     *   O formulário é submetido via uma requisição POST para 'http://localhost:5000/receber-dados'.
+     *   O formulário é submetido via uma requisição POST para 'http://10.135.60.7:8085/receber-dados'.
      *   Exibe mensagens de erro, se houver, e imprime mensagens de sucesso ou falha no console.
      *
      * Observações Pertinentes:
@@ -36,7 +36,6 @@ import '../components/Cadastro.css';
 
 function Cadastro() {
     const [formValues, setFormValues] = useState({
-        acao: 'cadastro',
         nome: '',
         email: '',
         senha: '',
@@ -58,12 +57,12 @@ function Cadastro() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formValues),
+                body: JSON.stringify({ acao: 'cadastro', formValues }),
             });
 
             const resultado = (await resposta.json()).dados_processados;

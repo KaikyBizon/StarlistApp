@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Menu from '../components/Menu';
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesPerfil';
 
 function Perfil({ navigation }) {
@@ -21,36 +22,32 @@ function Perfil({ navigation }) {
   useEffect(() => {
     const showDados = async () => {
       const id = await AsyncStorage.getItem('ID');
-      if (id) {
-        setUserId(id);
-        console.log('User ID:', id);
-        try {
-          const resposta = await fetch('http://10.135.60.22:8085/dados-atuais', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id }),
-          });
+      setUserId(id)
+      try {
+        const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 'id': id }),
+        });
+        const dados = await resposta.json();
+        setFormAlter({
+          nome: dados.nome_usuario,
+          email: dados.email,
+          dataNascimento: dados.data_nasc,
+          id: id
+        });
 
-          const dados = await resposta.json();
-          setFormAlter({
-            nome: dados.nome_usuario,
-            email: dados.email,
-            dataNascimento: dados.data_nasc,
-            id: id
-          });
-
-          setNomeUsuario(dados.nome_usuario);
-          setName(dados.nome_usuario);
-          setEmail(dados.email);
-          setDob(dados.data_nasc);
-        } catch (error) {
-          console.error('Erro ao carregar dados!', error);
-          Alert.alert('Erro', 'Erro ao carregar dados!');
-        }
+        setNomeUsuario(dados.nome_usuario);
+        setName(dados.nome_usuario);
+        setEmail(dados.email);
+        setDob(dados.data_nasc);
+      } catch (error) {
+        console.error('Erro ao carregar dados!', error);
+        Alert.alert('Erro', 'Erro ao carregar dados!');
       }
-    };
+    }
 
     showDados();
   }, []);
@@ -88,9 +85,9 @@ function Perfil({ navigation }) {
       await AsyncStorage.setItem('dataNascimento', dob);
 
       const id = userId;
-      const formattedDob = formatToISODate(dob);
+      const formattedDob = formatToISODate(dob); // Formatar para aaaa-mm-dd
 
-      const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,6 +103,7 @@ function Perfil({ navigation }) {
       const resultado = (await resposta.json()).update_status;
 
       if (resultado) {
+        setNomeUsuario(name);
         Alert.alert('Sucesso', 'Dados salvos com sucesso!');
       } else {
         Alert.alert('Erro', 'Erro ao salvar dados!');
@@ -119,18 +117,18 @@ function Perfil({ navigation }) {
   const handleDelete = async () => {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
-  
-      const resposta = await fetch('http://10.135.60.22:8085/delete-usuario', {
+
+      const resposta = await fetch('http://10.135.60.7:8085/delete-usuario', {
         method: 'POST', // ou 'DELETE', dependendo da configuração do seu backend
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({  acao: 'excluir_usuario', id: idUsuario }),
+        body: JSON.stringify({ acao: 'excluir_usuario', id: idUsuario }),
       });
-  
+
       const resultado = (await resposta.json());
       console.log(resultado);
-  
+
       if (resultado) {
         Alert.alert('Sucesso', 'Usuário deletado com sucesso!');
         navigation.navigate('Bemvindo'); // Navega para a tela de boas-vindas após a exclusão
@@ -142,7 +140,14 @@ function Perfil({ navigation }) {
       Alert.alert('Erro', 'Erro ao deletar usuário!');
     }
   };
-  
+
+  const [fontLoaded] = useFonts({
+    Kanit_500Medium,
+  });
+
+  if (!fontLoaded) {
+    return null;
+  }
   return (
     <View style={styles.containerProfile}>
       <Menu />

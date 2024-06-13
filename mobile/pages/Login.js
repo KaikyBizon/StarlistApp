@@ -35,7 +35,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,13 +46,14 @@ function LoginForm({ navigation }) {
                 }),
             });
             const resultado = await resposta.json();
-            console.log(resultado)
 
             if (resposta.ok && resultado.login_status) {
+
                 // Converte o ID para string ao salvar
                 await AsyncStorage.setItem('ID', resultado.login_status.id.toString());
                 await AsyncStorage.setItem('email', resultado.login_status.email.toString());
                 await AsyncStorage.setItem('nome_usuario', resultado.login_status.nome_usuario.toString());
+
                 // Dados foram processados com sucesso
                 navigation.navigate('home');
             } else {

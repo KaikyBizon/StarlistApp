@@ -67,6 +67,7 @@ const AlterarDadosCadastro = () => {
             });
 
             const resultado = await resposta.json();
+            console.log(resultado)
 
             navigate("/login");
         } catch (error) {

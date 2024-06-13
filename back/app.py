@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 # Importe a função deletarUsuario
 from processamento import processar_dados, login, update, deletar_usuario, showDados
-
 app = Flask(__name__)
 CORS(app)  # Permita solicitações CORS
 

@@ -27,24 +27,34 @@ export default function Cadastro({ navigation }) {
   const [mensagensErro, setMensagensErro] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const convertDateToISO = (date) => {
+    const [day, month, year] = date.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const dataToSend = {
+      ...formValues,
+      dataNascimento: convertDateToISO(formValues.dataNascimento)
+    };
+
     try {
-      const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify(dataToSend),
       });
 
       const resultado = (await resposta.json()).dados_processados;
+      
 
-      if (!resposta.ok || resultado.mensagens_erro) {
+      if (!resposta.ok || resultado.mensagens_erro.length > 0) {
         setMensagensErro(resultado.mensagens_erro);
         setModalVisible(true);  // Exibe o modal com as mensagens de erro
-        console.log('Erros:', resultado.mensagens_erro);
       } else {
         navigation.navigate("home")
       }
@@ -87,10 +97,10 @@ export default function Cadastro({ navigation }) {
 
         <Text style={styles.label}>CONFIRME SUA SENHA</Text>
         <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} 
-        onChangeText={(text) => handleChange('senha','confirme', text)} placeholder='Confirmar sua senha' name="confirme" value={formValues.confirme} />
+        onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' name="confirme" value={formValues.confirme} />
 
         <Text style={styles.label}>DATA DE NASCIMENTO</Text>
-        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY', }} name="dataNas" value={formValues.dataNascimento} placeholder='Data de nascimento' />
+        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY', }} name="dataNascimento" value={formValues.dataNascimento} placeholder='Data de nascimento' />
 
         <Text style={styles.temconta}>Já tem uma conta? <Text style={styles.facalogin} onPress={() => navigation.navigate('Login')}>Faça login</Text></Text>
         <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>

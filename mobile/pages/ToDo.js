@@ -12,14 +12,17 @@ import 'moment/locale/pt-br'; // Importa a localização em português
 moment.locale('pt-br'); // Configura moment para usar português
 
 export default function ToDo({ navigation }) {
+  // Carrega a fonte Kanit_500Medium usando o hook useFonts do Expo
   const [fontLoaded] = useFonts({
     Kanit_500Medium,
   });
 
+  // Estados para o texto de busca, data selecionada e visibilidade do DateTimePicker
   const [searchText, setSearchText] = useState('');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  // Lista de tarefas com data e itens
   const tarefas = [
     {
       date: '28/03/2024',
@@ -43,17 +46,20 @@ export default function ToDo({ navigation }) {
     },
   ];
 
+  // Verifica se a fonte foi carregada, caso contrário retorna null para evitar renderização prematura
   if (!fontLoaded) {
     return null;
   }
 
+  // Filtra as tarefas de acordo com o texto de busca e a data selecionada
   const filteredTarefas = tarefas.map(tarefa => ({
     ...tarefa,
-    items: tarefa.items.filter(item => 
+    items: tarefa.items.filter(item =>
       item.info.toLowerCase().includes(searchText.toLowerCase())
     )
   })).filter(tarefa => tarefa.items.length > 0 && tarefa.date === moment(date).format('DD/MM/YYYY'));
 
+  // Renderiza cada tarefa na lista
   const renderTarefa = ({ item }) => (
     <View style={styles.tarefa}>
       <View style={styles.tarefaData}>
@@ -69,10 +75,12 @@ export default function ToDo({ navigation }) {
     </View>
   );
 
+  // Função para mostrar o DateTimePicker
   const showDatePickerHandler = () => {
     setShowDatePicker(true);
   };
 
+  // Função chamada quando a data é alterada no DateTimePicker
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -81,18 +89,23 @@ export default function ToDo({ navigation }) {
 
   return (
     <View style={styles.background}>
+      {/* Componente Menu para busca */}
       <MenuScreen searchText={searchText} setSearchText={setSearchText} />
       <View style={styles.containerMenu}>
+        {/* Botão para abrir o DateTimePicker */}
         <TouchableOpacity onPress={showDatePickerHandler}>
-          <Feather size={32} name="calendar"/>
+          <Feather size={32} name="calendar" />
         </TouchableOpacity>
+        {/* Mostra a data formatada */}
         <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
+      {/* Lista de tarefas filtradas */}
       <FlatList
         data={filteredTarefas}
         renderItem={renderTarefa}
         keyExtractor={(item) => item.date}
       />
+      {/* DateTimePicker para selecionar a data */}
       {showDatePicker && (
         <DateTimePicker
           value={date}

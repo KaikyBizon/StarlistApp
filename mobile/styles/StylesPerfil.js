@@ -21,13 +21,15 @@ const styles = StyleSheet.create({
       userName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#404040',
+        color: '#404040', 
+        fontFamily: 'Kanit_500Medium',
       },
 
       userId: {
         fontSize: 16,
         marginTop: 5,
         color: '#404040',
+        fontFamily: 'Kanit_500Medium',
       },
 
       textinputPerfil: {
@@ -38,7 +40,8 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         paddingHorizontal: 10,
         borderRadius: 10,
-        color: 'black',
+        color: 'black',  
+        fontFamily: 'Kanit_500Medium',
       },
 
       buttonContainer: {
@@ -71,12 +74,14 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: 'Kanit_500Medium',
       },
 
       buttonTextSalvar: {
         color: '#404040',
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: 'Kanit_500Medium',
       },
 
       buttonSair: {
@@ -93,10 +98,12 @@ const styles = StyleSheet.create({
         color: '#c1c1c1',
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: 'Kanit_500Medium',
       },
 
       inputPerfil: {
-        color: '#faed27',
+        color: '#faed27', 
+        fontFamily: 'Kanit_500Medium',
       },
 
       viewInputPerfil: {
