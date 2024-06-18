@@ -1,3 +1,34 @@
+/**
+ * Nome do Componente: KanBan
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que implementa uma interface Kanban para gerenciamento de tarefas baseadas em datas. Utiliza o 'react-native-calendars' para permitir a navegação e seleção de datas, e um seletor de data para escolha do dia. As tarefas são listadas e filtradas com base na data selecionada e no texto de busca.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar a data selecionada, exibição do seletor de data, e texto de busca.
+ *   2. Carrega a fonte 'Kanit_500Medium' para o estilo do texto.
+ *   3. Usa o 'moment' para manipulação de datas e formatação.
+ *   4. O componente 'DateTimePicker' permite que o usuário selecione uma data.
+ *   5. O estado 'filteredTarefas' é calculado com base na data selecionada e no texto de busca para exibir as tarefas relevantes.
+ *
+ * Estado:
+ *   - date: Armazena a data selecionada pelo usuário.
+ *   - showDatePicker: Controla a visibilidade do seletor de data.
+ *   - searchText: Texto digitado pelo usuário para buscar tarefas.
+ *
+ * Funções:
+ *   - showDatePickerHandler: Exibe o seletor de data.
+ *   - onDateChange: Atualiza a data selecionada quando o usuário escolhe uma data no 'DateTimePicker'.
+ *
+ * Estrutura JSX:
+ *   - Exibe um calendário e permite selecionar uma data.
+ *   - Lista as tarefas do dia selecionado, com filtragem baseada no texto de busca.
+ *   - Integra um componente de menu para navegação adicional na aplicação.
+ *   - Mostra um seletor de data quando necessário.
+ *
+ * @returns {JSX.Element}
+ */
+
 import React, { useState } from 'react';
 import { StatusBar, PanResponder, Animated, View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';

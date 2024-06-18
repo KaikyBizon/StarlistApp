@@ -1,8 +1,36 @@
+/**
+ * Nome do Componente: BoasVindas
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que exibe uma tela de boas-vindas com um carrossel de imagens. 
+ *   Utiliza hooks do React para gerenciar o estado do índice da imagem atual e o carregamento de fontes.
+ *   Permite ao usuário navegar para as telas de login ou cadastro.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar o índice da imagem atual no carrossel.
+ *   2. Utiliza o hook 'useEffect' para definir um intervalo que troca a imagem exibida no carrossel a cada 5 segundos.
+ *   3. Carrega a fonte 'Kanit_500Medium' usando o hook 'useFonts' do pacote @expo-google-fonts/kanit.
+ *   4. A troca de tela para login ou cadastro é realizada através das funções de navegação fornecidas pelo React Navigation.
+ *
+ * Estado:
+ *   - currentImageIndex: Índice da imagem atualmente exibida no carrossel.
+ *   - fontLoaded: Indica se a fonte 'Kanit_500Medium' foi carregada com sucesso.
+ *
+ * Funções:
+ *   - Nenhuma função personalizada diretamente no componente, mas navegação é gerida através das funções do React Navigation.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um carrossel de imagens que muda a cada 5 segundos.
+ *   - Exibe botões para navegar para a tela de login ou cadastro.
+ *
+ * @returns {JSX.Element}
+ */
+
+
 import { Text, TextInput, Image, View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import styles from '../styles/StylesBoasVindas';
-import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit'
-
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 
 const images = [
     require('../assets/images/logo_starlistMobile.png'),

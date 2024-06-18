@@ -1,3 +1,39 @@
+/**
+ * Nome do Componente: LoginForm
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que fornece uma interface de login para os usuários. Permite aos usuários inserir seu e-mail e senha para acessar a aplicação. Inclui funcionalidade para redefinição de senha através de um modal de redefinição.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza AsyncStorage para armazenar informações do usuário após o login.
+ *   2. Usa a biblioteca '@react-native-async-storage/async-storage' para armazenamento local.
+ *   3. Implementa a funcionalidade de redefinição de senha via modal.
+ *   4. Valida a entrada do usuário e lida com mensagens de erro exibidas na UI.
+ *   5. Utiliza 'react-navigation' para navegação entre telas.
+ *
+ * Estado:
+ *   - formValues: Contém os valores do formulário de login (e-mail e senha).
+ *   - mensagensErro: Mensagens de erro para exibir ao usuário em caso de falha no login.
+ *   - modalVisible: Controle da visibilidade do modal de redefinição de senha.
+ *   - resetEmail: E-mail para redefinição de senha.
+ *   - newPassword: Nova senha a ser definida.
+ *   - confirmNewPassword: Confirmação da nova senha.
+ *
+ * Funções:
+ *   - handleChange: Atualiza os valores do formulário conforme os inputs do usuário.
+ *   - handleSubmit: Envia os dados de login para o backend e processa a resposta.
+ *   - handlePasswordReset: Lida com o processo de redefinição de senha.
+ *
+ * Estrutura JSX:
+ *   - Formulário de login com inputs para e-mail e senha.
+ *   - Botão para submeter o login.
+ *   - Link para redefinição de senha que exibe um modal para redefinir a senha.
+ *   - Modal para redefinição de senha com inputs para nova senha e e-mail de confirmação.
+ *   - Navegação para outras telas, como a tela de cadastro e a tela inicial após login.
+ *
+ * @returns {JSX.Element}
+ */
+
 import React, { useState } from 'react';
 import styles from '../styles/StylesLogin';
 import { View, TextInput, KeyboardAvoidingView, TouchableOpacity, Text, Image, Modal } from "react-native";

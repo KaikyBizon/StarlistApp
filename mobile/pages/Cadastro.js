@@ -1,9 +1,40 @@
+/**
+ * Nome do Componente: Cadastro
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que representa um formulário de cadastro. 
+ *   Ele utiliza hooks do React para gerenciar o estado do formulário e mensagens de erro.
+ *   O formulário é submetido via uma requisição POST para 'http://10.135.60.7:8085/receber-dados'.
+ *   Exibe mensagens de erro, se houver, e imprime mensagens de sucesso ou falha no console.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar o estado do formulário (formValues) e das mensagens de erro.
+ *   2. O evento 'handleChange' é acionado ao digitar nos campos do formulário e atualiza o estado correspondente.
+ *   3. O formulário é submetido via requisição 'fetch' ao servidor, e a resposta é tratada no bloco 'try-catch'.
+ *   4. Exibe mensagens de erro no console e no formulário, se houverem, após a resposta do servidor.
+ *
+ * Estado:
+ *   - formValues: Armazena os valores do formulário.
+ *   - mensagensErro: Armazena mensagens de erro vindas do servidor.
+ *
+ * Funções:
+ *   - handleChange: Atualiza o estado 'formValues' ao digitar nos campos do formulário.
+ *   - handleSubmit: Envia os dados do formulário para o servidor e trata a resposta.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um formulário com campos para nome, e-mail, senha, confirmação de senha e data de nascimento.
+ *   - Exibe mensagens de erro abaixo dos campos correspondentes.
+ *   - Possui botões para confirmar o cadastro e cancelar.
+ *
+ * @returns {JSX.Element}
+ */
+
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, TextInput, View, KeyboardAvoidingView, Image, TouchableOpacity, Modal, TouchableHighlight } from 'react-native';
 import { useState } from 'react';
 import styles from '../styles/StylesCadastro.js';
-import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit'
+import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import { TextInputMask } from 'react-native-masked-text';
 
 export default function Cadastro({ navigation }) {
