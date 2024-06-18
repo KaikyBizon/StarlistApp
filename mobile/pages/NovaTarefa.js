@@ -9,6 +9,51 @@ import { Picker } from '@react-native-picker/picker';
 import MenuScreen from '../components/Menu.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * Nome do Componente: NovaTarefa
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que permite ao usuário criar uma nova tarefa.
+ *   Utiliza hooks do React para gerenciar o estado dos campos do formulário, incluindo título,
+ *   data, hora, etiqueta e descrição da tarefa.
+ *   Permite seleção de data e hora utilizando o componente DateTimePicker do React Native.
+ *   Ao salvar a tarefa, os dados são armazenados localmente utilizando AsyncStorage.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza os hooks 'useState' para gerenciar o estado dos campos do formulário.
+ *   2. O método 'handleChange' é utilizado para atualizar o estado conforme o usuário digita nos campos.
+ *   3. Utiliza o componente DateTimePicker para seleção de data e hora.
+ *   4. Utiliza AsyncStorage para armazenar os dados localmente no dispositivo.
+ *
+ * Estado:
+ *   - date: Armazena a data selecionada pelo usuário.
+ *   - show: Controla a visibilidade do componente DateTimePicker.
+ *   - mode: Indica se o DateTimePicker está configurado para data ou hora.
+ *   - dadosTask: Armazena os dados da tarefa, incluindo título, data, hora, etiqueta e descrição.
+ *
+ * Funções:
+ *   - handleChange: Atualiza o estado dos campos do formulário conforme o usuário digita.
+ *   - onChange: Atualiza o estado de data ou hora conforme o usuário seleciona no DateTimePicker.
+ *   - showMode: Controla a visibilidade do DateTimePicker para data ou hora.
+ *   - formatDate: Formata a data para exibição no formato 'dd/MM/yyyy'.
+ *   - formatTime: Formata a hora para exibição no formato 'HH:mm'.
+ *
+ * Componentes Importados:
+ *   - StatusBar: Componente do Expo para controlar a barra de status do aplicativo.
+ *   - useState, useEffect: Hooks do React para gerenciamento de estado e efeitos.
+ *   - Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity: Componentes essenciais do React Native para interface.
+ *   - DateTimePicker: Componente do React Native para seleção de data e hora.
+ *   - Picker: Componente do React Native para seleção de itens em lista suspensa.
+ *   - MenuScreen: Componente customizado para exibir o menu do aplicativo.
+ *   - AsyncStorage: API do React Native para armazenamento local de dados.
+ *
+ * Estilos:
+ *   - Utiliza estilos definidos em '../styles/StylesNovaTarefa.js' para estilização dos componentes.
+ *
+ * @returns {JSX.Element} Retorna o JSX que representa o formulário de criação de nova tarefa.
+ */
+
+
 // Função principal do componente NovaTarefa
 export default function NovaTarefa({ navigation }) {
     // Estados para gerenciar data, visibilidade do seletor de data/hora e modo (data ou hora)

@@ -4,6 +4,55 @@ import React, { useState } from 'react';
 import styles from '../styles/StylesPagamento';
 import { Feather } from '@expo/vector-icons';
 
+/**
+ * Nome do Componente: Pagamento
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que permite ao usuário realizar pagamentos utilizando Pix ou cartão de crédito.
+ *   Utiliza hooks do React para gerenciar o estado dos campos do formulário de pagamento, como número do cartão,
+ *   nome do titular, data de validade, CVV, CPF e código Pix gerado.
+ *   Permite ao usuário escolher entre pagar com Pix, onde é possível gerar um código de pagamento e exibir um código QR,
+ *   ou com cartão de crédito, onde são solicitadas informações como número do cartão, nome do titular, data de validade, CVV e CPF.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza os hooks 'useState' para gerenciar o estado dos campos do formulário.
+ *   2. Utiliza o componente 'Alert' do React Native para exibir mensagens de conclusão de pagamento.
+ *   3. Implementa funções para formatação de entrada numérica, formatação de número de cartão, data de validade e CPF.
+ *   4. Renderiza diferentes interfaces dependendo do método de pagamento selecionado (Pix ou cartão de crédito).
+ *
+ * Estado:
+ *   - selectedMethod: Método de pagamento selecionado (Pix ou cartão de crédito).
+ *   - cardNumber: Número do cartão de crédito informado pelo usuário.
+ *   - cardHolderName: Nome do titular do cartão de crédito.
+ *   - expiryDate: Data de validade do cartão de crédito.
+ *   - cvv: Código de segurança do cartão de crédito.
+ *   - cpf: CPF do usuário para pagamentos com cartão de crédito.
+ *   - pixCode: Código Pix gerado dinamicamente para pagamentos via Pix.
+ *
+ * Funções:
+ *   - handledPayment: Exibe um alerta de pagamento concluído e navega para a página inicial após o pagamento.
+ *   - validateNumericInput: Remove caracteres não numéricos de uma entrada de texto.
+ *   - formataNumeroCartao: Formata o número do cartão de crédito para exibição.
+ *   - formatExpiryDate: Formata a data de validade do cartão de crédito para o formato 'MM/AA'.
+ *   - formataCPF: Formata o CPF para exibição no formato 'XXX.XXX.XXX-XX'.
+ *   - generatePixCode: Simula a geração de um código Pix para exibição ao usuário.
+ *   - renderPixPayment: Renderiza a interface de pagamento via Pix, exibindo o código de pagamento e QR Code gerados.
+ *   - renderCardPayment: Renderiza a interface de pagamento via cartão de crédito, solicitando informações como número do cartão, nome do titular, etc.
+ *
+ * Componentes Importados:
+ *   - StatusBar: Componente do Expo para controlar a barra de status do aplicativo.
+ *   - Text, View, TouchableOpacity, TextInput, Image, KeyboardAvoidingView, Alert: Componentes essenciais do React Native para interface.
+ *   - Feather: Ícones vetorizados utilizados para o botão de voltar.
+ *   - styles: Estilos definidos em '../styles/StylesPagamento.js' para estilização dos componentes.
+ *
+ * Estilos:
+ *   - Utiliza estilos definidos em '../styles/StylesPagamento.js' para estilização dos componentes.
+ *
+ * @param {object} navigation Objeto de navegação utilizado para navegar entre telas.
+ * @returns {JSX.Element} Retorna o JSX que representa a interface de pagamento do aplicativo.
+ */
+
+
 // Função principal do componente de pagamento
 export default function Pagamento({ navigation }) {
     // Estados para armazenar os dados do formulário

@@ -5,6 +5,27 @@ import { Feather } from '@expo/vector-icons';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesTelaPlano';
 
+/**
+ * Nome do Componente: PlanCarousel
+ *
+ * Descrição Detalhada:
+ *   Componente principal do carrossel de planos, implementado em React Native utilizando o 'react-native-snap-carousel'.
+ *   Exibe diferentes planos de assinatura em um formato de carrossel horizontal, com detalhes de cada plano, preço e benefícios.
+ *   Ao clicar em "QUERO ESTE PLANO", navega para a tela de pagamento.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza a biblioteca 'react-native-snap-carousel' para renderizar o carrossel de planos de forma responsiva.
+ *   2. A navegação entre os itens do carrossel é controlada pelo estado 'index' e pelo componente 'Pagination'.
+ *   3. Cada item do carrossel é representado pelo componente 'CarouselCardItem'.
+ *   4. Ao selecionar um plano, a navegação é direcionada para a tela de pagamento através do 'navigation.navigate'.
+ *
+ * Estado:
+ *   - index: Controla o índice do item ativo no carrossel.
+ *
+ * @param {object} navigation - Objeto de navegação para redirecionamento entre telas.
+ * @returns {JSX.Element}
+ */
+
 // Dados dos planos disponíveis
 const data = [
     {
