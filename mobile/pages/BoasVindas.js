@@ -41,6 +41,21 @@ const images = [
 export default function BoasVindas({ navigation }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+
+    {/*
+        Nome da função: interval;
+        Autor: Kaiky;
+        Data de criação: 06/24;
+        Parametros de entrada: Nenhum específico, mas depende do estado `currentImageIndex` e da lista `images` do componente React.
+        Retorno: Nenhum explicitamente retornado; o efeito define um intervalo para mudar a imagem exibida.
+        Finalidade: Passar as imagens da tela de boas-vindas em um carrossel, atualizando a imagem exibida a cada 5 segundos.
+        Descrição/observações: 
+            - Esta função utiliza o hook `useEffect` do React para definir e limpar um intervalo.
+            - O intervalo `setInterval` é usado para alterar a imagem atual para a próxima no array `images` a cada 5 segundos.
+            - Quando `currentImageIndex` atinge o último índice do array `images`, ele retorna para o índice 0, criando um efeito de loop contínuo nas imagens.
+            - A limpeza do intervalo é gerenciada retornando uma função de limpeza que chama `clearInterval(interval)`, garantindo que o intervalo seja limpo quando o componente for desmontado, prevenindo vazamentos de memória e comportamentos indesejados.
+            - A dependência `[currentImageIndex]` no hook `useEffect` indica que o efeito deve ser reexecutado sempre que `currentImageIndex` for atualizado, permitindo que o carrossel de imagens funcione corretamente conforme o usuário interage com o componente.
+    */}
     useEffect(() => {
         const interval = setInterval(() => {
             // Avança para a próxima imagem no array de imagens
@@ -53,6 +68,17 @@ export default function BoasVindas({ navigation }) {
         return () => clearInterval(interval);
     }, [currentImageIndex]);
 
+
+    {/*
+        Nome da função: fontLoaded;
+        Autor: Kaiky;
+        Data de criação: 06/24;
+        Parametros de entrada: fontLoaded;
+        Retorno: Se a fonte foi ou não carregada na tela.
+        Finalidade: Verificar se a fonte foi carregada ou não;
+        Descrição/observações: 
+            - Esta função valida apenas a fonte especifica, caso uma nova seja inserida ela deve seradicionada nesta função também.
+    */}
     const [fontLoaded] = useFonts({
         Kanit_500Medium,
     });

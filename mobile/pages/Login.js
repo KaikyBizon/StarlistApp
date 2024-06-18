@@ -41,7 +41,16 @@ import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function LoginForm({ navigation }) {
-    // Estado para os valores do formulário de login
+    {/*
+        Nome da função: formValues;
+        Autor: Kaiky;
+        Data de criação: 05/24;
+        Parametros de entrada: setFormValues;
+        Retorno: Dados inseridos;
+        Finalidade: Armazenar os dados inseridos pelo usuário no Login;
+        Descrição/observações: 
+            - Os dados são enviados para o backend via requisição pela função handleSubmit e são validados.
+    */}
     const [formValues, setFormValues] = useState({
         email: '',
         senha: ''
@@ -68,7 +77,16 @@ function LoginForm({ navigation }) {
         });
     }, [navigation]);
 
-    // Função para lidar com as alterações nos inputs
+    {/*
+        Nome da função: handleChange;
+        Autor: Kaiky;
+        Data de criação: 05/24;
+        Parametros de entrada: name (string), value (qualquer);
+        Retorno: void;
+        Finalidade: Atualizar o estado de um formulário com os novos valores dos campos;
+        Descrição/observações: 
+            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método `setFormValues` para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
+    */}
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -76,7 +94,16 @@ function LoginForm({ navigation }) {
         }));
     };
 
-    // Função de envio do formulário de login
+    {/*
+        Nome da função: handleSubmit;
+        Autor: Kaiky;
+        Data de criação: 05/24;
+        Parametros de entrada: e (Event);
+        Retorno: Resposta do backend;
+        Finalidade: Enviar os dados do formulário para um servidor;
+        Descrição/observações: 
+            Esta função é chamada quando o formulário é submetido. Ela previne o comportamento padrão do formulário para evitar o recarregamento da página. Os dados do formulário são coletados e preparados para envio, incluindo a conversão de datas para o formato ISO. Em seguida, uma requisição HTTP POST é feita para enviar os dados para um servidor. Dependendo da resposta, mensagens de erro são exibidas em um modal ou o usuário é redirecionado para a tela inicial. O tratamento de erros é implementado para capturar e registrar quaisquer problemas durante o envio dos dados.
+    */}
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

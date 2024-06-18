@@ -54,7 +54,7 @@ export default function KanBan() {
   // Estado para armazenar o texto de busca
   const [searchText, setSearchText] = useState('');
 
-  
+
   // Lista de tarefas para diferentes datas
   const tarefas = [
     {
@@ -84,7 +84,19 @@ export default function KanBan() {
     return null;
   }
 
-  // Filtra as tarefas com base na data selecionada e no texto de busca
+  {/*
+        Nome da função: filteredTarefas;
+        Autor: Kaiky;
+        Data de criação: 05/24;
+        Parametros de entrada: tarefas (array de objetos), searchText (string), date (data);
+        Retorno: array de objetos filtrados;
+        Finalidade: Filtrar tarefas baseadas em texto de busca e data;
+        Descrição/observações:
+            Esta função realiza duas etapas de filtragem sobre uma lista de tarefas:
+            1. **Filtragem de Itens**: Para cada tarefa, ela cria um novo objeto onde apenas os itens cujo texto associado (`item.info`) contenha o texto de busca (`searchText`) são incluídos. A busca é feita de forma case-insensitive, garantindo que maiúsculas e minúsculas não afetem a correspondência.
+            2. **Filtragem de Tarefas**: Em seguida, o array resultante de tarefas é filtrado para incluir apenas aquelas cujo array `items` não esteja vazio e cuja data seja igual à data formatada no formato 'DD/MM/YYYY'.
+            Esse processo permite que apenas as tarefas relevantes sejam retornadas, considerando tanto o conteúdo dos itens quanto a data da tarefa, conforme especificado.
+    */}
   const filteredTarefas = tarefas.map(tarefa => ({
     ...tarefa,
     items: tarefa.items.filter(item =>
