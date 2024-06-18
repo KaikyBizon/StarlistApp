@@ -19,19 +19,18 @@ export default function BoasVindas({ navigation }) {
             setCurrentImageIndex((prevIndex) =>
                 prevIndex === images.length - 1 ? 0 : prevIndex + 1
             );
-        }, 5000); // 10 segundos
+        }, 5000); // Troca a imagem a cada 5 segundos
 
         // Limpa o intervalo quando o componente é desmontado
         return () => clearInterval(interval);
     }, [currentImageIndex]);
-
 
     const [fontLoaded] = useFonts({
         Kanit_500Medium,
     });
 
     if (!fontLoaded) {
-        return null;
+        return null; // Aguarda a carga da fonte antes de renderizar o conteúdo
     }
 
     return (
@@ -41,10 +40,14 @@ export default function BoasVindas({ navigation }) {
                     <Image source={images[currentImageIndex]} style={styles.image} />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}><Text style={styles.txtButton}>FAZER LOGIN</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Cadastro')}><Text style={styles.txtButton}>CADASTRE-SE</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+                        <Text style={styles.txtButton}>FAZER LOGIN</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Cadastro')}>
+                        <Text style={styles.txtButton}>CADASTRE-SE</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </KeyboardAvoidingView>
-    )
+    );
 }
