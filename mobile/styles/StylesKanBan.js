@@ -25,19 +25,20 @@ export default styles = StyleSheet.create({
     fontFamily: 'Kanit_500Medium',
   },
   tarefa: {
-    backgroundColor: '#fff',
+    backgroundColor: '#8f8e8e',
     borderWidth: 2,
     borderColor: '#726c6f',
     borderRadius: 10,
     padding: 16,
     marginBottom: 20,
     width: '100%',
+    
   },
   tarefaData: {
     marginBottom: 8,
   },
   txtTarefa: {
-    color: '#726c6f',
+    color: '#FAED27',
     fontSize: 20,
     marginBottom: 5,
     fontFamily: 'Kanit_500Medium',
@@ -47,16 +48,18 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 8,
+    borderColor:'#726c6f',
     borderWidth: 1,
     padding: 5,
     borderRadius: 10,
+    backgroundColor: '#8f8e8e',
   },
   detalheTarefa: {
     flex: 1,
   },
   txtInfo: {
     fontSize: 15,
-    color: '#726c6f',
+    color: '#FAED27',
     marginBottom: 10,
     fontFamily: 'Kanit_500Medium',
   },
@@ -71,7 +74,7 @@ export default styles = StyleSheet.create({
   },
   txtHora: {
     fontSize: 15,
-    color: '#726c6f',
+    color: '#FAED27',
     fontFamily: 'Kanit_500Medium',
   },
   container: {

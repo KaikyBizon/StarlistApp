@@ -7,7 +7,6 @@ import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit'
 import { TextInputMask } from 'react-native-masked-text';
 
 export default function Cadastro({ navigation }) {
-
   const [formValues, setFormValues] = useState({
     acao: 'cadastro',
     nome: '',
@@ -17,6 +16,7 @@ export default function Cadastro({ navigation }) {
     dataNascimento: '',
   });
 
+  // Função para atualizar os valores do formulário
   const handleChange = (name, value) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -27,17 +27,19 @@ export default function Cadastro({ navigation }) {
   const [mensagensErro, setMensagensErro] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // Converte a data no formato DD/MM/AAAA para ISO (AAAA-MM-DD)
   const convertDateToISO = (date) => {
     const [day, month, year] = date.split('/');
     return `${year}-${month}-${day}`;
   };
 
+  // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const dataToSend = {
       ...formValues,
-      dataNascimento: convertDateToISO(formValues.dataNascimento)
+      dataNascimento: convertDateToISO(formValues.dataNascimento),
     };
 
     try {
@@ -50,22 +52,23 @@ export default function Cadastro({ navigation }) {
       });
 
       const resultado = (await resposta.json()).dados_processados;
-      
 
+      // Verifica se houve erro na resposta
       if (!resposta.ok || resultado.mensagens_erro.length > 0) {
         setMensagensErro(resultado.mensagens_erro);
         setModalVisible(true);  // Exibe o modal com as mensagens de erro
       } else {
-        navigation.navigate("home")
+        navigation.navigate("home"); // Navega para a tela inicial em caso de sucesso
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
     }
   };
 
+  // Oculta o cabeçalho na navegação
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false, // Oculta todo o cabeçalho
+      headerShown: false,
     });
   }, [navigation]);
 
@@ -74,7 +77,7 @@ export default function Cadastro({ navigation }) {
   });
 
   if (!fontLoaded) {
-    return null;
+    return null; // Aguarda a carga da fonte
   }
 
   return (
@@ -85,22 +88,20 @@ export default function Cadastro({ navigation }) {
       </View>
 
       <View style={styles.containerInputs}>
-
         <Text style={styles.label}>NOME</Text>
-        <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('nome', text)} placeholder='Nome Completo' name="nome" value={formValues.nome} />
+        <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('nome', text)} placeholder='Nome Completo' value={formValues.nome} />
 
         <Text style={styles.label}>E-MAIL</Text>
-        <TextInput style={styles.inputs} autoCorrect={false} keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleChange('email', text)} placeholder='E-mail' name="email" value={formValues.email} />
+        <TextInput style={styles.inputs} autoCorrect={false} keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleChange('email', text)} placeholder='E-mail' value={formValues.email} />
 
         <Text style={styles.label}>SENHA</Text>
-        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('senha', text)} placeholder='Senha' name="senha" value={formValues.senha} />
+        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('senha', text)} placeholder='Senha' value={formValues.senha} />
 
         <Text style={styles.label}>CONFIRME SUA SENHA</Text>
-        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} 
-        onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' name="confirme" value={formValues.confirme} />
+        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' value={formValues.confirme} />
 
         <Text style={styles.label}>DATA DE NASCIMENTO</Text>
-        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY', }} name="dataNascimento" value={formValues.dataNascimento} placeholder='Data de nascimento' />
+        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY' }} placeholder='Data de nascimento' value={formValues.dataNascimento} />
 
         <Text style={styles.temconta}>Já tem uma conta? <Text style={styles.facalogin} onPress={() => navigation.navigate('Login')}>Faça login</Text></Text>
         <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>

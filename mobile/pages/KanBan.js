@@ -11,29 +11,20 @@ import MenuScreen from '../components/Menu';
 moment.locale('pt-br'); // Configura moment para usar português
 
 export default function KanBan() {
+  // Carregamento da fonte Kanit_500Medium
   const [fontLoaded] = useFonts({
     Kanit_500Medium,
   });
 
+  // Estado para a data selecionada
   const [date, setDate] = useState(new Date());
+  // Estado para controle da exibição do seletor de data
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [searchText, setSearchText] = useState(''); // Estado para armazenar o texto de busca
+  // Estado para armazenar o texto de busca
+  const [searchText, setSearchText] = useState('');
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (event, gestureState) => {
-      // Aqui podemos simplesmente monitorar ou usar os valores de gestureState diretamente
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      // Ajusta a data baseada no deslocamento horizontal (dx)
-      if (gestureState.dx > 120) { // Deslizar para a esquerda
-        setDate(moment(date).subtract(1, 'days').toDate());
-      } else if (gestureState.dx < -120) { // Deslizar para a direita
-        setDate(moment(date).add(1, 'days').toDate());
-      }
-    },
-  });
-
+  
+  // Lista de tarefas para diferentes datas
   const tarefas = [
     {
       date: '28/03/2024',
@@ -57,10 +48,12 @@ export default function KanBan() {
     },
   ];
 
+  // Condicional para evitar rendering enquanto a fonte não estiver carregada
   if (!fontLoaded) {
     return null;
   }
 
+  // Filtra as tarefas com base na data selecionada e no texto de busca
   const filteredTarefas = tarefas.map(tarefa => ({
     ...tarefa,
     items: tarefa.items.filter(item =>
@@ -68,10 +61,12 @@ export default function KanBan() {
     )
   })).filter(tarefa => tarefa.items.length > 0 && tarefa.date === moment(date).format('DD/MM/YYYY'));
 
+  // Função para mostrar o seletor de data
   const showDatePickerHandler = () => {
     setShowDatePicker(true);
   };
 
+  // Callback para quando a data é alterada no DateTimePicker
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -80,18 +75,23 @@ export default function KanBan() {
 
   return (
     <View style={styles.background}>
+      {/* Componente MenuScreen para o menu da aplicação */}
       <MenuScreen searchText={searchText} setSearchText={setSearchText} />
       <View style={styles.containerMenu}>
+        {/* Botão para abrir o seletor de data */}
         <TouchableOpacity onPress={showDatePickerHandler}>
           <Feather size={32} name="calendar" />
         </TouchableOpacity>
+        {/* Exibe a data formatada */}
         <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
+      {/* ScrollView para exibir as tarefas */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}
-        {...panResponder.panHandlers}
+        {...panResponder.panHandlers} // Adiciona gestos ao ScrollView
       >
+        {/* Renderiza as tarefas filtradas */}
         {filteredTarefas.map(tarefa => (
           <View key={tarefa.date} style={styles.tarefa}>
             <View style={styles.tarefaData}>
@@ -112,6 +112,7 @@ export default function KanBan() {
           </View>
         ))}
       </ScrollView>
+      {/* Exibe o seletor de data se estiver ativo */}
       {showDatePicker && (
         <DateTimePicker
           value={date}

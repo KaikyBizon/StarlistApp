@@ -10,8 +10,9 @@ from validacoes import (
     confirmar_senha,
 )
 
-
+# Função para processar os dados recebidos
 def processar_dados(dados):
+    # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados
 
     cadastro = [
@@ -28,6 +29,8 @@ def processar_dados(dados):
         dados_processados.get('id')
     ]
 
+
+    #recebe os dados para criar uma nova tarefa no banco de dados
     tarefa = [
         dados_processados.get('titulo'),
         dados_processados.get('descricao'),
@@ -37,24 +40,25 @@ def processar_dados(dados):
         dados_processados.get('usuario_id')
     ]
 
+    # Lista para armazenar mensagens de erro
     mensagens_erro = []
+    # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
-    mensagens_erro.append(validar_data_nascimento(
-        dados.get('dataNascimento', '')))
+    mensagens_erro.append(validar_data_nascimento(dados.get('dataNascimento', '')))
     mensagens_erro.append(validar_senha(dados.get('senha', '')))
-    mensagens_erro.append(confirmar_senha(
-        dados.get('senha', ''), dados.get('confirme', '')))
+    mensagens_erro.append(confirmar_senha(dados.get('senha', ''), dados.get('confirme', '')))
 
+    # Filtra apenas os erros que foram encontrados
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-    # Adicionar novo cadastro
+    # Se não houver erros e a ação for 'cadastro', inseri os dados no banco
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
 
     return mensagens_erro, cadastro, alteracao
 
-
+# Função para mostrar os dados de um usuário baseado no ID
 def showDados(id):
     # Obter os resultados da função select_atualizar
     resultado_select = select_atualizar(id)
@@ -64,16 +68,17 @@ def showDados(id):
     else:
         return None  # Se não houver resultados, retornar None ou uma mensagem de erro
 
-
+# Função para atualizar as informações do usuário
 def update(alteracao, mensagens_erro, dados):
     senha = dados.get('senha')
+    # Verifica se há erros e se a senha não foi informada
     if mensagens_erro and senha == '':
         return {'erro': True, 'mensagens': mensagens_erro}
     else:
         atualizar_cadastro(alteracao)
         return {'error': False, 'mensagem': 'Atualização processada com Sucesso!'}
 
-
+# Função para autenticar o login do usuário
 def login(dados):
     email = dados.get('email')
     senha = dados.get('senha')
@@ -84,7 +89,7 @@ def login(dados):
     else:
         return {'error': 'Email ou senha inválido'}, 401
 
-
+# Função para deletar um usuário
 def deletar_usuario(dados):
     if dados.get('acao') == 'excluir_usuario':
         id_deletar = dados.get('id')

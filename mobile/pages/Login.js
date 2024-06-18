@@ -5,17 +5,24 @@ import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function LoginForm({ navigation }) {
+    // Estado para os valores do formulário de login
     const [formValues, setFormValues] = useState({
         email: '',
         senha: ''
     });
 
+    // Estado para mensagens de erro
     const [mensagensErro, setMensagensErro] = useState('');
+    // Estado para controle da visibilidade do modal de redefinição de senha
     const [modalVisible, setModalVisible] = useState(false);
+    // Estado para armazenar o e-mail para redefinição de senha
     const [resetEmail, setResetEmail] = useState(' ');
+    // Estado para armazenar a nova senha
     const [newPassword, setNewPassword] = useState(' ');
+    // Estado para confirmar a nova senha
     const [confirmNewPassword, setConfirmNewPassword] = useState(' ');
 
+    // Ajuste de configuração do cabeçalho de navegação
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerStyle: {
@@ -25,6 +32,7 @@ function LoginForm({ navigation }) {
         });
     }, [navigation]);
 
+    // Função para lidar com as alterações nos inputs
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -32,6 +40,7 @@ function LoginForm({ navigation }) {
         }));
     };
 
+    // Função de envio do formulário de login
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -48,7 +57,6 @@ function LoginForm({ navigation }) {
             const resultado = await resposta.json();
 
             if (resposta.ok && resultado.login_status) {
-
                 // Converte o ID para string ao salvar
                 await AsyncStorage.setItem('ID', resultado.login_status.id.toString());
                 await AsyncStorage.setItem('email', resultado.login_status.email.toString());
@@ -65,15 +73,18 @@ function LoginForm({ navigation }) {
         }
     };
 
+    // Função para redefinir a senha
     const handlePasswordReset = async () => {
-        //Lógica para redefinir a senha
+        // Lógica para redefinir a senha
         setModalVisible(false);
     }
 
+    // Carregamento da fonte Kanit_500Medium
     const [fontLoaded] = useFonts({
         Kanit_500Medium,
     });
 
+    // Retorna nulo enquanto a fonte não é carregada
     if (!fontLoaded) {
         return null;
     }
