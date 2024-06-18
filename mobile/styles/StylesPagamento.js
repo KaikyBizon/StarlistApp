@@ -1,33 +1,39 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    // Estilo de fundo para a tela principal
     background: {
         flex: 1,
         backgroundColor: '#9d9d9d',
         justifyContent: 'center',
         alignItems: 'center',
     },
+    // Estilo para o logo
     logo: {
         width: 200,
         height: 100,
         marginBottom: 20,
     },
+    // Container para o botão de voltar
     containerVoltar: {
         position: 'absolute',
         top: 30,
         left: 10,
     },
+    // Estilo para o botão de voltar
     btnVoltar: {
         backgroundColor: '#9d9d9d',
         borderRadius: 25,
         padding: 5,
     },
+    // Estilo para o container de fundo
     backgroundContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
     },
+    // Container principal para os conteúdos
     container: {
         width: '80%',
         backgroundColor: '#696969',
@@ -39,9 +45,11 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
+    // Estilo para o método de pagamento
     metodoPagamento: {
         marginBottom: 20,
     },
+    // Estilo para textos informativos
     txtInfo: {
         fontSize: 16,
         fontWeight: 'bold',
@@ -49,11 +57,13 @@ const styles = StyleSheet.create({
         color: '#c9c9c9',
         textAlign: 'center',
     },
+    // Estilo para o container de escolha de botão
     btnEscolha: {
         flexDirection: 'row',
         justifyContent: 'center',
         marginBottom: 20,
     },
+    // Estilo para o botão de método de pagamento
     btnMetodo: {
         padding: 10,
         backgroundColor: '#ddd',
@@ -62,38 +72,47 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         alignItems: 'center',
     },
+    // Estilo para o botão de método de pagamento selecionado
     btnMetodoSelected: {
         backgroundColor: '#faed27',
     },
+    // Estilo para o texto do botão
     txtBotao: {
         fontSize: 16,
         color: '#696969',
     },
+    // Estilo para o container do código QR
     codigoQr: {
         alignItems: 'center',
     },
+    // Estilo para informações de pagamento
     infoPagamento: {
         fontSize: 16,
         fontWeight: 'bold',
         color: '#c9c9c9',
     },
+    // Estilo para o código PIX
     codigoPix: {
         fontSize: 18,
         marginVertical: 10,
         color: '#fff',
     },
+    // Estilo para informações de QR
     infoQr: {
         fontSize: 16,
         fontWeight: 'bold',
         color: '#c9c9c9',
     },
+    // Estilo para a imagem do código QR
     imagemQr: {
         marginVertical: 10,
     },
+    // Estilo para a imagem do código QR
     code: {
         width: 200,
         height: 200,
     },
+    // Estilo para o botão de pagar
     btnPagar: {
         marginTop: 20,
         backgroundColor: '#faed27',
@@ -101,28 +120,34 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
     },
+    // Estilo para o texto do botão de pagar
     txtPagar: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#696969',
     },
+    // Estilo para o container dos dados do cartão
     dadosCartao: {
         marginTop: 20,
     },
+    // Estilo para os campos de entrada
     input: {
         backgroundColor: '#fff',
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
     },
+    // Estilo para a linha de inputs
     linha: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+    // Estilo para os inputs dentro da linha
     inputLinha: {
         flex: 1,
         marginHorizontal: 5,
     },
+    // Estilo para o input no meio da linha
     inputMeio: {
         backgroundColor: '#fff',
         padding: 10,

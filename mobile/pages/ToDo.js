@@ -11,6 +11,27 @@ import 'moment/locale/pt-br'; // Importa a localização em português
 
 moment.locale('pt-br'); // Configura moment para usar português
 
+/**
+ * Nome do Componente: ToDo
+ *
+ * Descrição Detalhada:
+ *   Componente principal para a lista de tarefas. Permite a filtragem das tarefas por texto de busca
+ *   e data selecionada, além de exibir um calendário para seleção da data. Utiliza o componente
+ *   'DateTimePicker' para escolher a data e o formato de data localizado em português.
+ *
+ * Estados:
+ *   - searchText: Texto de busca para filtrar as tarefas por palavra-chave.
+ *   - date: Data selecionada para filtrar as tarefas por dia.
+ *   - showDatePicker: Controla a visibilidade do componente 'DateTimePicker'.
+ *
+ * Funções:
+ *   - showDatePickerHandler: Mostra o 'DateTimePicker' ao ser chamado.
+ *   - onDateChange: Atualiza a data selecionada quando o usuário escolhe uma nova data no 'DateTimePicker'.
+ *
+ * @param {object} navigation - Objeto de navegação para redirecionamento entre telas.
+ * @returns {JSX.Element}
+ */
+
 export default function ToDo({ navigation }) {
   // Carrega a fonte Kanit_500Medium usando o hook useFonts do Expo
   const [fontLoaded] = useFonts({

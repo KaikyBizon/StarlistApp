@@ -5,13 +5,65 @@ import Menu from '../components/Menu';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesPerfil';
 
+/**
+ * Nome do Componente: Perfil
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React Native que permite visualizar e editar o perfil do usuário.
+ *   Utiliza AsyncStorage para armazenar e recuperar dados locais do usuário, como nome, e-mail,
+ *   data de nascimento e ID.
+ *   Permite ao usuário editar e salvar informações do perfil, incluindo nome, e-mail e data de nascimento,
+ *   além de oferecer a opção de deletar o perfil.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza os hooks 'useState' para gerenciar os estados dos dados do perfil e 'useEffect' para carregar
+ *      os dados do usuário ao montar o componente.
+ *   2. Implementa funções para formatar a data de nascimento, salvar dados alterados do perfil e deletar o usuário.
+ *   3. Utiliza AsyncStorage para armazenar dados localmente e fazer requisições POST para APIs para atualização
+ *      e exclusão de dados.
+ *
+ * Estado:
+ *   - name: Nome do usuário.
+ *   - email: E-mail do usuário.
+ *   - dob: Data de nascimento do usuário.
+ *   - nomeUsuario: Nome de usuário exibido no perfil.
+ *   - userId: ID do usuário.
+ *   - formAlter: Objeto que armazena os dados alteráveis do perfil (nome, e-mail, data de nascimento e ID).
+ *
+ * Funções:
+ *   - formatDate: Formata a data de nascimento para o formato 'dd/mm/aaaa'.
+ *   - handleDobChange: Atualiza o estado 'dob' com a data de nascimento formatada.
+ *   - formatToISODate: Formata a data de nascimento para o formato ISO 'aaaa-mm-dd'.
+ *   - handleSave: Salva as alterações feitas no perfil, atualizando os dados localmente e na API.
+ *   - handleDelete: Deleta o usuário da aplicação, realizando uma requisição POST para a API de exclusão.
+ *
+ * Componentes Importados:
+ *   - View, Text, TextInput, TouchableOpacity, Image: Componentes essenciais do React Native para interface.
+ *   - Alert: Componente do React Native para exibição de alertas.
+ *   - AsyncStorage: Módulo para armazenamento local de dados.
+ *   - Menu: Componente importado de '../components/Menu' para exibição do menu de navegação.
+ *   - useFonts, Kanit_500Medium: Hooks e fonte importados do Expo Google Fonts para estilização.
+ *   - styles: Estilos definidos em '../styles/StylesPerfil' para estilização dos componentes.
+ *
+ * Estilos:
+ *   - Utiliza estilos definidos em '../styles/StylesPerfil' para estilização dos componentes da interface do perfil.
+ *
+ * Navegação:
+ *   - Utiliza o objeto 'navigation' para navegar entre telas da aplicação, incluindo a tela de boas-vindas ('Bemvindo').
+ *
+ * @param {object} navigation Objeto de navegação utilizado para navegar entre telas.
+ * @returns {JSX.Element} Retorna o JSX que representa a interface de perfil do usuário.
+ */
+
 function Perfil({ navigation }) {
+  // Definindo estados para armazenar os dados do perfil
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
   const [nomeUsuario, setNomeUsuario] = useState('');
   const [userId, setUserId] = useState('');
 
+  // Estado para armazenar os dados que podem ser alterados
   const [formAlter, setFormAlter] = useState({
     nome: '',
     email: '',
@@ -19,10 +71,11 @@ function Perfil({ navigation }) {
     id: ''
   });
 
+  // useEffect para carregar os dados do usuário ao montar o componente
   useEffect(() => {
     const showDados = async () => {
       const id = await AsyncStorage.getItem('ID');
-      setUserId(id)
+      setUserId(id);
       try {
         const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
           method: 'POST',
@@ -52,9 +105,11 @@ function Perfil({ navigation }) {
     showDados();
   }, []);
 
+  // Armazenando dados atualizados no AsyncStorage
   AsyncStorage.setItem('email', formAlter.email);
   AsyncStorage.setItem('nome_usuario', formAlter.nome);
 
+  // Função para formatar a data de nascimento
   const formatDate = (text) => {
     let cleaned = ('' + text).replace(/\D/g, '');
     cleaned = cleaned.substring(0, 8);
@@ -68,16 +123,19 @@ function Perfil({ navigation }) {
     return formatted;
   };
 
+  // Função para lidar com a mudança de data de nascimento
   const handleDobChange = (text) => {
     const formattedText = formatDate(text);
     setDob(formattedText);
   };
 
+  // Função para formatar a data de nascimento para o formato ISO (aaaa-mm-dd)
   const formatToISODate = (text) => {
     const [day, month, year] = text.split('/');
     return `${year}-${month}-${day}`;
   };
 
+  // Função para salvar os dados alterados do perfil
   const handleSave = async () => {
     try {
       await AsyncStorage.setItem('nome_usuario', name);
@@ -114,6 +172,7 @@ function Perfil({ navigation }) {
     }
   };
 
+  // Função para deletar o usuário
   const handleDelete = async () => {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
@@ -141,13 +200,17 @@ function Perfil({ navigation }) {
     }
   };
 
+  // Carregando a fonte personalizada
   const [fontLoaded] = useFonts({
     Kanit_500Medium,
   });
 
+  // Renderização condicional baseada no carregamento da fonte
   if (!fontLoaded) {
     return null;
   }
+
+  // Renderização do componente de perfil
   return (
     <View style={styles.containerProfile}>
       <Menu />
