@@ -4,25 +4,30 @@ import React, { useState } from 'react';
 import styles from '../styles/StylesPagamento';
 import { Feather } from '@expo/vector-icons';
 
+// Função principal do componente de pagamento
 export default function Pagamento({ navigation }) {
-    const [selectedMethod, setSelectedMethod] = useState('Pix'); // Default to Pix
+    // Estados para armazenar os dados do formulário
+    const [selectedMethod, setSelectedMethod] = useState('Pix'); // Método de pagamento padrão é Pix
     const [cardNumber, setCardNumber] = useState('');
     const [cardHolderName, setCardHolderName] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCvv] = useState('');
     const [cpf, setCpf] = useState('');
-    const [pixCode, setPixCode] = useState(null); // State to store Pix code and QR code visibility
-  
+    const [pixCode, setPixCode] = useState(null); // Estado para armazenar o código Pix
+
+    // Função para lidar com a conclusão do pagamento
     const handledPayment = () => {
         Alert.alert("Pagamento Concluído", "Seu pagamento foi realizado com sucesso!");
-        navigation.navigate('home');
+        navigation.navigate('home'); // Navega para a página inicial após o pagamento
     }
 
+    // Função para validar entrada numérica
     const validateNumericInput = (text) => {
         const numericValue = text.replace(/[^0-9]/g, '');
         return numericValue;
     };
 
+    // Função para formatar número do cartão de crédito
     const formataNumeroCartao = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         let formattedText = '';
@@ -35,6 +40,7 @@ export default function Pagamento({ navigation }) {
         return formattedText;
     };
 
+    // Função para formatar a data de validade do cartão
     const formatExpiryDate = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         if (cleanedText.length <= 2) {
@@ -44,6 +50,7 @@ export default function Pagamento({ navigation }) {
         }
     };
 
+    // Função para formatar o CPF
     const formataCPF = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         if (cleanedText.length <= 3) {
@@ -57,11 +64,12 @@ export default function Pagamento({ navigation }) {
         }
     };
 
+    // Função para simular a geração de um código Pix
     const generatePixCode = () => {
-        // Simulate generating a Pix code
         setPixCode('05101520StarList');
     };
 
+    // Renderiza a interface de pagamento via Pix
     const renderPixPayment = () => (
         <View>
             {pixCode ? (
@@ -81,6 +89,7 @@ export default function Pagamento({ navigation }) {
         </View>
     );
 
+    // Renderiza a interface de pagamento via cartão de crédito
     const renderCardPayment = () => (
         <View style={styles.dadosCartao}>
             <Text style={styles.txtInfo}>Número do cartão</Text>
@@ -110,6 +119,7 @@ export default function Pagamento({ navigation }) {
         </View>
     );
 
+    // Renderiza a interface principal do componente de pagamento
     return (
         <KeyboardAvoidingView style={styles.background}>
             <View style={styles.containerVoltar}>

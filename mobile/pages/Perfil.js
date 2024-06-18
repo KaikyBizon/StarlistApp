@@ -6,12 +6,14 @@ import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import styles from '../styles/StylesPerfil';
 
 function Perfil({ navigation }) {
+  // Definindo estados para armazenar os dados do perfil
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
   const [nomeUsuario, setNomeUsuario] = useState('');
   const [userId, setUserId] = useState('');
 
+  // Estado para armazenar os dados que podem ser alterados
   const [formAlter, setFormAlter] = useState({
     nome: '',
     email: '',
@@ -19,10 +21,11 @@ function Perfil({ navigation }) {
     id: ''
   });
 
+  // useEffect para carregar os dados do usuário ao montar o componente
   useEffect(() => {
     const showDados = async () => {
       const id = await AsyncStorage.getItem('ID');
-      setUserId(id)
+      setUserId(id);
       try {
         const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
           method: 'POST',
@@ -52,9 +55,11 @@ function Perfil({ navigation }) {
     showDados();
   }, []);
 
+  // Armazenando dados atualizados no AsyncStorage
   AsyncStorage.setItem('email', formAlter.email);
   AsyncStorage.setItem('nome_usuario', formAlter.nome);
 
+  // Função para formatar a data de nascimento
   const formatDate = (text) => {
     let cleaned = ('' + text).replace(/\D/g, '');
     cleaned = cleaned.substring(0, 8);
@@ -68,16 +73,19 @@ function Perfil({ navigation }) {
     return formatted;
   };
 
+  // Função para lidar com a mudança de data de nascimento
   const handleDobChange = (text) => {
     const formattedText = formatDate(text);
     setDob(formattedText);
   };
 
+  // Função para formatar a data de nascimento para o formato ISO (aaaa-mm-dd)
   const formatToISODate = (text) => {
     const [day, month, year] = text.split('/');
     return `${year}-${month}-${day}`;
   };
 
+  // Função para salvar os dados alterados do perfil
   const handleSave = async () => {
     try {
       await AsyncStorage.setItem('nome_usuario', name);
@@ -114,6 +122,7 @@ function Perfil({ navigation }) {
     }
   };
 
+  // Função para deletar o usuário
   const handleDelete = async () => {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
@@ -141,13 +150,17 @@ function Perfil({ navigation }) {
     }
   };
 
+  // Carregando a fonte personalizada
   const [fontLoaded] = useFonts({
     Kanit_500Medium,
   });
 
+  // Renderização condicional baseada no carregamento da fonte
   if (!fontLoaded) {
     return null;
   }
+
+  // Renderização do componente de perfil
   return (
     <View style={styles.containerProfile}>
       <Menu />
