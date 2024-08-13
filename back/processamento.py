@@ -2,6 +2,8 @@ from actionsBD.leitura_login_bd import selecionar_dados_cadastro
 from actionsBD.delete_bd import excluir_usuario
 from actionsBD.update_bd import atualizar_cadastro, select_atualizar
 from actionsBD.gravar_bd import inserir_usuario
+from actionsBD.createTask_bd import criarTarefa
+from actionsBD.selectTask import selecionar_dados_tarefa
 from validacoes import (
     validar_nome,
     validar_email,
@@ -11,6 +13,8 @@ from validacoes import (
 )
 
 # Função para processar os dados recebidos
+
+
 def processar_dados(dados):
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados
@@ -29,13 +33,12 @@ def processar_dados(dados):
         dados_processados.get('id')
     ]
 
-
-    #recebe os dados para criar uma nova tarefa no banco de dados
+    # recebe os dados para criar uma nova tarefa no banco de dados
     tarefa = [
         dados_processados.get('titulo'),
         dados_processados.get('descricao'),
         dados_processados.get('data'),
-        dados_processados.get('hora'),
+        dados_processados.get('horario'),
         dados_processados.get('etiqueta'),
         dados_processados.get('usuario_id')
     ]
@@ -45,9 +48,11 @@ def processar_dados(dados):
     # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
-    mensagens_erro.append(validar_data_nascimento(dados.get('dataNascimento', '')))
+    mensagens_erro.append(validar_data_nascimento(
+        dados.get('dataNascimento', '')))
     mensagens_erro.append(validar_senha(dados.get('senha', '')))
-    mensagens_erro.append(confirmar_senha(dados.get('senha', ''), dados.get('confirme', '')))
+    mensagens_erro.append(confirmar_senha(
+        dados.get('senha', ''), dados.get('confirme', '')))
 
     # Filtra apenas os erros que foram encontrados
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
@@ -56,9 +61,21 @@ def processar_dados(dados):
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
 
-    return mensagens_erro, cadastro, alteracao
+    if tarefa:
+        criarTarefa(tarefa)
+
+        # Corrigir a parte de seleção dos dados da tarefa
+    id_usuario = dados_processados.get('usuario_id')
+    if id_usuario:
+        dados_tarefa = selecionar_dados_tarefa(id_usuario)
+    else:
+        dados_tarefa = []
+
+    return mensagens_erro, cadastro, alteracao, dados_tarefa
 
 # Função para mostrar os dados de um usuário baseado no ID
+
+
 def showDados(id):
     # Obter os resultados da função select_atualizar
     resultado_select = select_atualizar(id)
@@ -69,6 +86,8 @@ def showDados(id):
         return None  # Se não houver resultados, retornar None ou uma mensagem de erro
 
 # Função para atualizar as informações do usuário
+
+
 def update(alteracao, mensagens_erro, dados):
     senha = dados.get('senha')
     # Verifica se há erros e se a senha não foi informada
@@ -79,6 +98,8 @@ def update(alteracao, mensagens_erro, dados):
         return {'error': False, 'mensagem': 'Atualização processada com Sucesso!'}
 
 # Função para autenticar o login do usuário
+
+
 def login(dados):
     email = dados.get('email')
     senha = dados.get('senha')
@@ -90,6 +111,8 @@ def login(dados):
         return {'error': 'Email ou senha inválido'}, 401
 
 # Função para deletar um usuário
+
+
 def deletar_usuario(dados):
     if dados.get('acao') == 'excluir_usuario':
         id_deletar = dados.get('id')

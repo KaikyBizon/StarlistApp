@@ -1,29 +1,4 @@
-/*tamaho e cor dos cards*/
-.cards-tarefa {
-    background-color: #413F3F;
-    color: #faed27;
-    border-radius: 15px 0 0 0;
-    height: 125px;
-}
-
-/*cores das etiquetas nos cards*/
-.blueTask {
-    background-color: blue;
-}
-
-.redTask {
-    background-color: red;
-}
-
-.greenTask {
-    background-color: green;
-}
-
-.purpleTask {
-    background-color: purple;
-}
-
-/*tamanho da div onde ficam os cards*/
+/* Div onde ficam os cards com overflow e scroll */
 .back-cards {
     width: 100%;
     height: 634px;
@@ -31,8 +6,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    overflow-y: auto; /* Adiciona scroll vertical */
+    padding: 10px; /* Adiciona um pouco de espaçamento interno */
 }
+
+/* Cards de tarefas */
+.cards-tarefa {
+    background-color: #413F3F;
+    color: #faed27;
+    border-radius: 15px 0 0 0;
+    height: 125px;
+    width: 100%; /* Garante que o card ocupe toda a largura disponível */
+    max-width: 1000px; /* Limita a largura máxima do card */
+    margin-bottom: 10px; /* Espaçamento entre os cards */
+}
+
 
 .interacao {
     width: 100%;

@@ -3,7 +3,7 @@
 #fundo {
     background-image: url(../../public/images/fundo-login.png);
     background-size: 1550px;
-    height: 750px;
+    height: 100vh;
 }
 
 .amarelo {

@@ -77,7 +77,7 @@ function Perfil({ navigation }) {
       const id = await AsyncStorage.getItem('ID');
       setUserId(id);
       try {
-        const resposta = await fetch('http://10.135.60.7:8085/dados-atuais', {
+        const resposta = await fetch('http://10.135.60.9:8085/dados-atuais', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ function Perfil({ navigation }) {
       const id = userId;
       const formattedDob = formatToISODate(dob); // Formatar para aaaa-mm-dd
 
-      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ function Perfil({ navigation }) {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
 
-      const resposta = await fetch('http://10.135.60.7:8085/delete-usuario', {
+      const resposta = await fetch('http://10.135.60.9:8085/delete-usuario', {
         method: 'POST', // ou 'DELETE', dependendo da configuração do seu backend
         headers: {
           'Content-Type': 'application/json',

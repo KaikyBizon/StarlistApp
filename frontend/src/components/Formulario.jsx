@@ -3,8 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-function Formulario() {
+function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
   const [show, setShow] = useState(false);
+  const [mensagensErro, setMensagensErro] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -13,6 +14,7 @@ function Formulario() {
     descricao: '',
     data: '',
     horario: '',
+    usuario_id: localStorage.getItem("ID")
   });
 
   const handleChange = (event) => {
@@ -21,6 +23,40 @@ function Formulario() {
       ...prevValues,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dadosTask),
+      });
+
+      const resultado = await resposta.json();
+      console.log(resultado)
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        setMensagensErro(resultado.mensagens_erro);
+      } else {
+        setShow(false);
+        setDadosTask({
+          titulo: '',
+          descricao: '',
+          data: '',
+          horario: '',
+          usuario_id: localStorage.getItem("ID")
+        });
+        if (onTarefaSalva) {
+          onTarefaSalva(); // Chama a função de callback
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
   };
 
   return (
@@ -36,7 +72,7 @@ function Formulario() {
           <Modal.Title>Nova tarefa</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3 nome-evento" controlId="formTitulo">
               <Form.Control
                 type="text"

@@ -9,10 +9,10 @@ CORS(app)  # Permita solicitações CORS
 @app.route('/receber-dados', methods=['POST'])
 def receber_dados():
     dados = request.json
-    mensagens_erro, cadastro, alteracao = processar_dados(dados)
+    mensagens_erro, cadastro, alteracao, dados_tarefa = processar_dados(dados)
     ret_login = login(dados)
     ret_update = update(alteracao, mensagens_erro, dados)
-    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro}, "login_status": ret_login, "update_status": ret_update}
+    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro, "dados_tarefa": dados_tarefa}, "login_status": ret_login, "update_status": ret_update}
     return jsonify(response_data)
 
 
@@ -37,4 +37,4 @@ def dados_atuais():
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(port=8085, host='10.135.60.7', debug=True, threaded=True)
+    app.run(port=8085, host='10.135.60.9', debug=True, threaded=True)

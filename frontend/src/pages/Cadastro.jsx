@@ -36,6 +36,7 @@ import '../components/Cadastro.css';
 
 function Cadastro() {
     const [formValues, setFormValues] = useState({
+        acao: 'cadastro',
         nome: '',
         email: '',
         senha: '',
@@ -57,15 +58,16 @@ function Cadastro() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'cadastro', formValues }),
+                body: JSON.stringify(formValues),
             });
 
             const resultado = (await resposta.json()).dados_processados;
+            console.log(resposta.ok)
 
             if (resposta.ok && resultado.mensagens_erro.length > 0) {
                 // Assume que a estrutura de erro vem no campo 'mensagens_erro'
@@ -73,7 +75,7 @@ function Cadastro() {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
                 console.log('Dados processados com sucesso!', resultado);
-                navigate("/escolher");
+                navigate("/login");
                 setFormValues({
                     nome: '',
                     email: '',
