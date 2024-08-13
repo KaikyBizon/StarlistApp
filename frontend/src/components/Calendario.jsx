@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Event from '../components/Event';
-import '../components/Calendario.css';
+import '../StylesPages/Calendario.css';
 const months = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import '../components/Login.css';
+import '../StylesPages/Login.css';
 
 function LoginForm() {
   const [formValues, setFormValues] = useState({
@@ -21,7 +21,7 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import './App.css'
+import '../StylesPages/App.css'
 import "../StylesPages/TelaCnpj.css"
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
