@@ -142,26 +142,27 @@ export default function Pagamento({ navigation }) {
     const renderCardPayment = () => (
         <View style={styles.dadosCartao}>
             <Text style={styles.txtInfo}>Número do cartão</Text>
-            <TextInput style={styles.input} keyboardType="numeric" placeholder='XXXX XXXX XXXX XXXX' value={formataNumeroCartao(cardNumber)} onChangeText={text => setCardNumber(text)} maxLength={19} />
+            <TextInput style={styles.input} keyboardType="numeric" placeholder='XXXX XXXX XXXX XXXX' placeholderTextColor="#2F4F4F" value={formataNumeroCartao(cardNumber)} onChangeText={text => setCardNumber(text)} maxLength={19} />
             <Text style={styles.txtInfo}>Nome do titular</Text>
             <TextInput
                 style={styles.input}
                 placeholder='Nome Completo'
+                placeholderTextColor="#2F4F4F"
                 value={cardHolderName}
                 onChangeText={text => setCardHolderName(text)}
             />
             <View style={styles.linha}>
                 <View style={styles.inputLinha}>
                     <Text style={styles.txtInfo}>Data de validade</Text>
-                    <TextInput style={styles.inputMeio} placeholder="MM/AA" value={expiryDate} onChangeText={text => setExpiryDate(formatExpiryDate(text))} maxLength={5} />
+                    <TextInput style={styles.inputMeio} placeholder="MM/AA" placeholderTextColor="#2F4F4F" value={expiryDate} onChangeText={text => setExpiryDate(formatExpiryDate(text))} maxLength={5} />
                 </View>
                 <View style={styles.inputLinha}>
                     <Text style={styles.txtInfo}>CVV</Text>
-                    <TextInput style={styles.inputMeio} keyboardType="numeric" placeholder="123" value={cvv} onChangeText={text => setCvv(validateNumericInput(text))} maxLength={3} />
+                    <TextInput style={styles.inputMeio} keyboardType="numeric" placeholder="123" placeholderTextColor="#2F4F4F" value={cvv} onChangeText={text => setCvv(validateNumericInput(text))} maxLength={3} />
                 </View>
             </View>
             <Text style={styles.txtInfo}>CPF</Text>
-            <TextInput style={styles.input} keyboardType="numeric" placeholder="123.456.789-00" value={formataCPF(cpf)} onChangeText={text => setCpf(text)} maxLength={14} />
+            <TextInput style={styles.input} keyboardType="numeric" placeholder="123.456.789-00" placeholderTextColor="#2F4F4F" value={formataCPF(cpf)} onChangeText={text => setCpf(text)} maxLength={14} />
             <TouchableOpacity style={styles.btnPagar} onPress={handledPayment}>
                 <Text style={styles.txtPagar}>Pagar e concluir</Text>
             </TouchableOpacity>

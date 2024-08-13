@@ -49,9 +49,10 @@ const MenuScreen = ({ searchText, setSearchText }) => {
             <TextInput
               style={styles.searchBar}
               placeholder="Pesquisar..."
-              placeholderTextColor="#888"
+              placeholderTextColor="black"
               value={searchText}
               onChangeText={setSearchText}
+              
             />
           )}
           {/* Botão para alternar a visibilidade da barra de pesquisa */}

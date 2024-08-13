@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 10,
         fontFamily: 'Kanit_500Medium',
+        color: "black",
     },
     // Estilo específico para campos de entrada de data
     inputsData: {
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: '100%',
     },
+   
 })
 
 export default styles
