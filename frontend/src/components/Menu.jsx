@@ -36,7 +36,7 @@ export default function Menu({ onSearch }) {
                 <img src="https://cdn-icons-png.flaticon.com/128/7524/7524806.png" alt="duvidas" />
                 <img src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png" alt="sino" />
 
-                {/*botão para alterar os dados do usuário*/}
+                {/*botão para alterar dados do usuário*/}
                 <Dropdown>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         <img src="https://cdn-icons-png.flaticon.com/128/64/64572.png" alt="minha-conta" />

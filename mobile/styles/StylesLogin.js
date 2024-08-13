@@ -16,7 +16,7 @@ export default styles = StyleSheet.create({
     },
     inputsLogin: {
         backgroundColor: '#CECECE',
-        color: '#8F8E8E',
+        color: 'black',
         marginBottom: 15,
         fontSize: 17,
         borderRadius: 10,
@@ -117,7 +117,8 @@ export default styles = StyleSheet.create({
         width: 280,
     },
     forgotPassword: {
-        color: '#696969'
+        color: 'black'
     },
+    
     
 });

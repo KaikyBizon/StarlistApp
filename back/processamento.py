@@ -63,6 +63,7 @@ def processar_dados(dados):
 
     if tarefa:
         criarTarefa(tarefa)
+        tarefaCriada = {'Tarefa criada': 'Tarefa criada com sucesso!'}
 
         # Corrigir a parte de seleção dos dados da tarefa
     id_usuario = dados_processados.get('usuario_id')
@@ -71,7 +72,7 @@ def processar_dados(dados):
     else:
         dados_tarefa = []
 
-    return mensagens_erro, cadastro, alteracao, dados_tarefa
+    return mensagens_erro, cadastro, alteracao, tarefaCriada, dados_tarefa
 
 # Função para mostrar os dados de um usuário baseado no ID
 

@@ -31,14 +31,13 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     height: 40,
-    borderColor: '#000',
-    borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 10,
     marginRight: 10,
-    backgroundColor: '#696969',
+    backgroundColor: '#808080',
     color: 'black',
     flex: 1
+    
   },
   headerRightContainer: {
     flexDirection: 'row',

@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
-    },
+        color:"black",    },
     // Estilo para a linha de inputs
     linha: {
         flexDirection: 'row',
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     inputLinha: {
         flex: 1,
         marginHorizontal: 5,
+        color:"black"
     },
     // Estilo para o input no meio da linha
     inputMeio: {
@@ -154,6 +155,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         textAlign: 'center',
+        color:"black",
     },
 });
 

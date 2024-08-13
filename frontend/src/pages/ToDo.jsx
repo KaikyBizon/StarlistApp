@@ -11,10 +11,9 @@ function ToDo() {
 
     const fetchTarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
-        console.log('ID do usuário no fetch:', usuarioId);
 
         try {
-            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -22,7 +21,6 @@ function ToDo() {
                 body: JSON.stringify({ usuario_id: usuarioId })
             });
             const resultado = await resposta.json();
-            console.log('Resposta do servidor:', resultado);
 
             if (resposta.ok) {
                 const tarefasOrdenadas = ordenarTarefas(resultado.dados_processados.dados_tarefa);
@@ -71,29 +69,6 @@ function ToDo() {
         fetchTarefas(); // Carrega as tarefas ao carregar a página
     }, [localStorage.getItem('ID')]); // Observa mudanças no localStorage ID
 
-    const adicionarTarefa = async (novaTarefa) => {
-        try {
-            const resposta = await fetch('http://10.135.60.9:8085/adicionar-tarefa', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(novaTarefa)
-            });
-
-            if (resposta.ok) {
-                await fetchTarefas(); // Recarrega as tarefas após a adição bem-sucedida
-            } else {
-                const resultado = await resposta.json();
-                console.error('Erro ao adicionar tarefa:', resultado.mensagens_erro);
-                setMensagensErro(resultado.mensagens_erro || ['Erro ao adicionar tarefa.']);
-            }
-        } catch (error) {
-            console.error('Erro ao adicionar tarefa:', error);
-            setMensagensErro(['Erro ao adicionar tarefa.']);
-        }
-    };
-
     return (
         <>
             <Menu />
@@ -121,7 +96,11 @@ function ToDo() {
 
                             return (
                                 <Card className='cards-tarefa' style={{ width: '1000px' }} key={index}>
-                                    <Card.Header>{dataExibida}</Card.Header>
+                                    <Card.Header>{dataExibida}
+                                        <img src="../../public/images/excluir.png" alt="" />
+                                        <img src="../../public/images/editar.png" alt="" />
+                                    </Card.Header>
+
                                     <Card.Body>
                                         <div className='titulo-important'>
                                             <Card.Title>{tituloExibido}</Card.Title>

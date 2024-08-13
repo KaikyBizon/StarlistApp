@@ -107,7 +107,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -163,6 +163,7 @@ function LoginForm({ navigation }) {
                 <TextInput
                     style={styles.inputsLogin}
                     placeholder="Digite seu e-mail"
+                    placeholderTextColor="#2F4F4F"
                     value={formValues.email}
                     onChangeText={(text) => handleChange('email', text)}
                 />
@@ -172,6 +173,7 @@ function LoginForm({ navigation }) {
                     style={styles.inputsLogin}
                     secureTextEntry={true}
                     placeholder="Digite sua senha"
+                    placeholderTextColor="#2F4F4F"
                     value={formValues.senha}
                     onChangeText={(text) => handleChange('senha', text)}
                 />

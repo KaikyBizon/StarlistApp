@@ -50,3 +50,11 @@ p {
     border-radius: 15px;
     margin-left: 10px;
 }
+
+/*Icone para excluir tarefa*/
+.card-header img{
+    width: 25px;
+    height: 25px;
+    margin: 0 5px;
+    float: right;
+}
