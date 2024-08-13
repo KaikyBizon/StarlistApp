@@ -19,6 +19,44 @@
     margin-left: 10px;
 }
 
-.drop-options:hover, .drop-options:focus{
+.drop-options:hover,
+.drop-options:focus {
     color: #c1c1c1 !important;
+}
+
+/*Modal do nome da lista*/
+.salvarlistanome {
+    border: none;
+    background-color: #faed27;
+
+}
+
+.salvarlistanome:hover {
+    background-color: #faed27;
+    opacity: 0.8;
+}
+
+.salvarlistanome:active {
+    opacity: 0.5;
+}
+
+.fecharlista {
+    border: none;
+    background-color: #696969;
+     margin: 0;
+
+}
+
+.fecharlista:hover {
+    margin: 0;
+    transform: none;
+    opacity: 0.8;
+}
+
+.fecharlista:active {
+    opacity: 0.5;
+}
+
+.inputlista{
+    border: none;
 }
