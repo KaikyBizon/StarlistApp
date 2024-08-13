@@ -1,8 +1,18 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-export default function Menu() {
-    return (
+
+export default function Menu({ onSearch }) {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (event) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+        onSearch(value);
+    };
+
+   return (
 
         <header className="menu">
             {/*logo do menu*/}
@@ -11,7 +21,14 @@ export default function Menu() {
             </div>
             {/*barra de pesquisa*/}
             <div className="search">
-                <input type="search" name="Pesquisa" id="pesquisar" placeholder="Buscar" />
+                <input
+                    type="search"
+                    name="Pesquisa"
+                    id="pesquisar"
+                    placeholder="Buscar"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
                 <img src="/public/images/lupa.png" alt="lupa" />
             </div>
             {/*icones do menu*/}
