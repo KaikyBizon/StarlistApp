@@ -1,3 +1,4 @@
+import socket
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 # Importe a função deletarUsuario
@@ -9,10 +10,12 @@ CORS(app)  # Permita solicitações CORS
 @app.route('/receber-dados', methods=['POST'])
 def receber_dados():
     dados = request.json
-    mensagens_erro, cadastro, alteracao, tarefaCriada, listaCriada, dados_tarefa = processar_dados(dados)
+    mensagens_erro, cadastro, alteracao, listaCriada, dados_tarefa = processar_dados(
+        dados)
     ret_login = login(dados)
     ret_update = update(alteracao, mensagens_erro, dados)
-    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro, "tarefaCriada": tarefaCriada, "listaCriada": listaCriada, "dados_tarefa": dados_tarefa}, "login_status": ret_login, "update_status": ret_update}
+    response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro,
+                                           "listaCriada": listaCriada, "dados_tarefa": dados_tarefa}, "login_status": ret_login, "update_status": ret_update}
     return jsonify(response_data)
 
 
@@ -35,6 +38,10 @@ def dados_atuais():
         return jsonify({'error': 'ID não fornecido'}), 400
 
 
+# Obtendo o endereço IP local
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(port=8085, host='10.135.60.22', debug=True, threaded=True)
+    # app.run(debug=True)
+    app.run(port=8085, host=local_ip, debug=True, threaded=True)
