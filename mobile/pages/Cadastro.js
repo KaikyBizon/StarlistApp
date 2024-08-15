@@ -66,7 +66,7 @@ export default function Cadastro({ navigation }) {
         Retorno: void;
         Finalidade: Atualizar o estado de um formulário com os novos valores dos campos;
         Descrição/observações: 
-            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método `setFormValues` para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
+            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método setFormValues para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
     */}
   const handleChange = (name, value) => {
     setFormValues((prevValues) => ({
@@ -118,7 +118,7 @@ export default function Cadastro({ navigation }) {
         setMensagensErro(resultado.mensagens_erro);
         setModalVisible(true);  // Exibe o modal com as mensagens de erro
       } else {
-        navigation.navigate("home"); // Navega para a tela inicial em caso de sucesso
+        navigation.navigate("Login"); // Navega para a tela inicial em caso de sucesso
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
@@ -129,11 +129,11 @@ export default function Cadastro({ navigation }) {
         Nome da função: useLayoutEffect para configuração do cabeçalho;
         Autor: Kaiky;
         Data de criação: 05/24;
-        Parametros de entrada: Nenhum, mas depende da variável `navigation` de props;
+        Parametros de entrada: Nenhum, mas depende da variável navigation de props;
         Retorno: Nada;
         Finalidade: Modificar a configuração do cabeçalho da navegação;
         Descrição/observações:
-            Este uso do `useLayoutEffect` é empregado para ajustar as opções de navegação no React Native, especificamente para ocultar o cabeçalho de uma tela. Ao executar o efeito, ele chama `navigation.setOptions` para alterar as configurações de navegação, definindo a propriedade `headerShown` como `false`, o que oculta o cabeçalho dessa tela. Essa mudança é aplicada de forma síncrona e visível para o usuário, antes que o navegador pinte a tela, garantindo que a interface do usuário seja atualizada conforme esperado. O efeito é dependente da variável `navigation`, o que significa que ele será reexecutado sempre que essa variável mudar.
+            Este uso do useLayoutEffect é empregado para ajustar as opções de navegação no React Native, especificamente para ocultar o cabeçalho de uma tela. Ao executar o efeito, ele chama navigation.setOptions para alterar as configurações de navegação, definindo a propriedade headerShown como false, o que oculta o cabeçalho dessa tela. Essa mudança é aplicada de forma síncrona e visível para o usuário, antes que o navegador pinte a tela, garantindo que a interface do usuário seja atualizada conforme esperado. O efeito é dependente da variável navigation, o que significa que ele será reexecutado sempre que essa variável mudar.
     */}
   React.useLayoutEffect(() => {
     navigation.setOptions({
