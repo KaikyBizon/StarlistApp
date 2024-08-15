@@ -10,6 +10,7 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
   const handleShow = () => setShow(true);
 
   const [dadosTask, setDadosTask] = useState({
+    acao: 'criar_tarefa',
     titulo: '',
     descricao: '',
     data: '',
@@ -27,8 +28,9 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Olá")
     try {
-      const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

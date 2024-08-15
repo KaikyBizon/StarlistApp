@@ -69,3 +69,13 @@
 .calendario-mes{
     color: #c1c1c1;
 }
+
+/*Mostra uma bolinha nos dias em que houver tarefas*/
+.event-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: yellow;
+  border-radius: 50%;
+  margin-top: 5px;
+}

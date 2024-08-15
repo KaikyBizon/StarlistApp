@@ -3,17 +3,19 @@ import Card from 'react-bootstrap/Card';
 import Geral from '../components/Geral';
 import Menu from '../components/menu';
 import Options from '../components/Options';
+import Calendario from '../components/Calendario';
 import '../StylesPages/todo.css';
 
 function ToDo() {
     const [tarefas, setTarefas] = useState([]);
     const [mensagensErro, setMensagensErro] = useState([]);
+    const [filteredTasks, setFilteredTasks] = useState([]);
 
     const fetchTarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,8 +25,19 @@ function ToDo() {
             const resultado = await resposta.json();
 
             if (resposta.ok) {
-                const tarefasOrdenadas = ordenarTarefas(resultado.dados_processados.dados_tarefa);
-                setTarefas(tarefasOrdenadas); // Atualiza a lista de tarefas ordenadas
+                const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
+
+                // Atualiza a estrutura para incluir o ID
+                const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
+                    titulo: tarefa[0],
+                    data: tarefa[1],
+                    horario: tarefa[2],
+                    id: tarefa[3],
+                }));
+
+                const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+                setTarefas(tarefasOrdenadas);
+                setFilteredTasks(tarefasOrdenadas);
             } else {
                 console.error('Erro no servidor:', resultado.mensagens_erro);
                 setMensagensErro(resultado.mensagens_erro || ['Erro ao obter mensagens de erro.']);
@@ -35,47 +48,82 @@ function ToDo() {
         }
     };
 
-    // Função para ordenar tarefas pela data e horário
+    const excluirTarefa = async (id) => {
+        console.log(id)
+        try {
+            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+            });
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                // Atualizar a lista de tarefas após exclusão
+                const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== id);
+                setTarefas(tarefasAtualizadas);
+                setFilteredTasks(tarefasAtualizadas);
+            } else {
+                console.error('Erro ao excluir a tarefa:', resultado.mensagens_erro);
+                setMensagensErro(resultado.mensagens_erro || ['Erro ao excluir tarefa.']);
+            }
+        } catch (error) {
+            console.error('Erro ao excluir a tarefa:', error);
+        }
+    };
+
     const ordenarTarefas = (tarefas) => {
         return tarefas.sort((a, b) => {
-            const [tituloA, dataA, horarioA] = a;
-            const [tituloB, dataB, horarioB] = b;
+            const dataDateA = new Date(a.data);
+            const dataDateB = new Date(b.data);
 
-            // Converter datas para objetos Date
-            const dataDateA = new Date(dataA);
-            const dataDateB = new Date(dataB);
-
-            // Comparar datas
             if (dataDateA.getTime() !== dataDateB.getTime()) {
-                return dataDateA - dataDateB; // Ordena pela data
+                return dataDateA - dataDateB;
             }
 
-            // Se as datas forem iguais, comparar horários
-            if (horarioA && horarioB) {
-                const [horaA, minutoA] = horarioA.split(':').map(Number);
-                const [horaB, minutoB] = horarioB.split(':').map(Number);
-                const tempoA = horaA * 60 + minutoA; // Tempo em minutos
-                const tempoB = horaB * 60 + minutoB; // Tempo em minutos
+            if (a.horario && b.horario) {
+                const [horaA, minutoA] = a.horario.split(':').map(Number);
+                const [horaB, minutoB] = b.horario.split(':').map(Number);
+                const tempoA = horaA * 60 + minutoA;
+                const tempoB = horaB * 60 + minutoB;
 
-                return tempoA - tempoB; // Ordena pelo horário
+                return tempoA - tempoB;
             }
 
-            // Se o horário não estiver disponível, considerar como horário 00:00
-            return (horarioA ? 0 : 1) - (horarioB ? 0 : 1);
+            return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
         });
     };
 
     useEffect(() => {
-        fetchTarefas(); // Carrega as tarefas ao carregar a página
-    }, [localStorage.getItem('ID')]); // Observa mudanças no localStorage ID
+        fetchTarefas();
+    }, []);
+
+    const handleSearch = (searchTerm) => {
+        console.log('Termo de busca:', searchTerm);
+
+        if (!searchTerm) {
+            setFilteredTasks(tarefas);
+            return;
+        }
+
+        const filtered = tarefas.filter(tarefa => {
+            return tarefa.titulo.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
+        console.log('Tarefas filtradas:', filtered);
+        setFilteredTasks(filtered);
+    };
 
     return (
         <>
-            <Menu />
+            <Menu onSearch={handleSearch} />
             <Options />
             <section className='interacao'>
                 <section className='calendario-left'>
                     <Geral />
+                    <Calendario events={tarefas} />
                 </section>
                 <div className="back-cards">
                     {mensagensErro.length > 0 && (
@@ -85,26 +133,25 @@ function ToDo() {
                             ))}
                         </div>
                     )}
-                    {tarefas && tarefas.length > 0 ? (
-                        tarefas.map((tarefa, index) => {
-                            const [titulo, data, horario] = tarefa;
+                    {filteredTasks && filteredTasks.length > 0 ? (
+                        filteredTasks.map((tarefa, index) => {
+                            const { id, titulo, data, horario } = tarefa;
 
-                            // Valores padrão para lidar com casos de dados faltantes
+
                             const tituloExibido = titulo || 'Título não informado';
                             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
                             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
                             return (
-                                <Card className='cards-tarefa' style={{ width: '1000px' }} key={index}>
-                                    <Card.Header>{dataExibida}
-                                        <img src="../../public/images/excluir.png" alt="" />
+                                <Card className='cards-tarefa' style={{ width: '1000px' }} key={id}>
+                                    <Card.Header>
+                                        {dataExibida}
+                                        <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
                                         <img src="../../public/images/editar.png" alt="" />
                                     </Card.Header>
-
                                     <Card.Body>
                                         <div className='titulo-important'>
                                             <Card.Title>{tituloExibido}</Card.Title>
-                                            {/* Substituir com a lógica para a cor da etiqueta, se necessário */}
                                             <div className='default-etiqueta'></div>
                                         </div>
                                         <Card.Text className='todo-textcard'>
