@@ -7,5 +7,5 @@ def excluir_usuario(id_deletar):
     val = (id_deletar,)
     cursor.execute(sql, val)
     conex.commit()
-    print("Usuario excluído com sucesso")
     conex.close()
+    return {'erro': False, 'excluir_usuario': 'Usuário excluído!'}

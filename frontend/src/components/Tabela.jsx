@@ -1,6 +1,6 @@
 import Table from 'react-bootstrap/Table';
-import Progresso from './Progresso';
-import './Tabela.css'
+import Progresso from './BarraProgresso';
+import '../StylesPages/Tabela.css'
 
 function Tabela() {
   return (

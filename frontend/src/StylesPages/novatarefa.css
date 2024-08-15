@@ -48,9 +48,8 @@
 }
 
 .fecharlista:hover {
-    margin: 0;
-    transform: none;
     opacity: 0.8;
+    background-color: #696969;
 }
 
 .fecharlista:active {
@@ -59,4 +58,17 @@
 
 .inputlista{
     border: none;
+    border-color: initial; /* Garante que a cor da borda seja a padrão */
+    box-shadow: none; /* Remove a sombra do campo */
+    background-color: #fff; /* Define a cor de fundo padrão */
+}
+.inputlista:focus {
+    border-color: initial; /* Garante que a cor da borda não mude quando o campo está focado */
+    box-shadow: none; /* Remove a sombra do campo quando está focado */
+}
+
+.nav-utensilios .navbar-brand {
+    color: #c1c1c1; /* Define a cor do texto para preto ou qualquer cor desejada */
+    transition: color 0.3s ease; /* Adiciona uma transição suave para a mudança de cor */
+    font-size: 17px;
 }

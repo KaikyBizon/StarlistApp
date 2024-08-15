@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 8,
         fontFamily: 'Kanit_500Medium',
+        color: "black",
     },
     containerLogo: {
         width: 380,

@@ -4,6 +4,7 @@ from actionsBD.update_bd import atualizar_cadastro, select_atualizar
 from actionsBD.gravar_bd import inserir_usuario
 from actionsBD.createTask_bd import criarTarefa
 from actionsBD.selectTask import selecionar_dados_tarefa
+from actionsBD.deleteTask import excluir_tarefa
 from validacoes import (
     validar_nome,
     validar_email,
@@ -61,16 +62,25 @@ def processar_dados(dados):
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
 
-    if tarefa:
+    if dados_processados.get('acao') == 'criar_tarefa':
         criarTarefa(tarefa)
         tarefaCriada = {'Tarefa criada': 'Tarefa criada com sucesso!'}
+    else:
+        tarefaCriada = {}
 
-        # Corrigir a parte de seleção dos dados da tarefa
+    #Código para enviar as tarefas do usuário para o frontend e mostrar na tela (refatorar o mais rápido possível)    
     id_usuario = dados_processados.get('usuario_id')
     if id_usuario:
         dados_tarefa = selecionar_dados_tarefa(id_usuario)
     else:
-        dados_tarefa = []
+        dados_tarefa = {"Status_acao": "Tarefas renderizadas!"}
+
+
+    if dados_processados.get('acao') == 'excluirTarefa':
+        id_tarefa = dados_processados.get('id')
+        excluir_tarefa(id_tarefa)
+        dados_tarefa = {"Status_acao": "Tarefa excluída!"}
+
 
     return mensagens_erro, cadastro, alteracao, tarefaCriada, dados_tarefa
 
