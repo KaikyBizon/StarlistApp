@@ -76,9 +76,9 @@ function LoginForm() {
           </div>
           <a href="#">Esqueceu sua senha?</a>
 
-          <Link to="/cadastro">
-            <a href="#">Ainda não tem conta? Crie uma</a>
-          </Link>
+          {/*Link para ir para o Cadastro */}
+          <a href="#">Ainda não tem conta? <Link to="/cadastro" className='crieUma'>Crie uma</Link></a>
+
 
           <div className="botoes">
             <div className="btn-login">

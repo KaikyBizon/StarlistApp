@@ -15,7 +15,7 @@ input#formBasicPassword {
 }
 
 /*-----------------------------------------------Cor da letra do botão continuar-------------------------------------------------------------*/
-button.btn.btn-primary {
+.botao_cnpj {
     color: #2e2d2d;
 }
 

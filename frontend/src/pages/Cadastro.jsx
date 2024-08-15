@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import '../StylesPages/Cadastro.css';
 
 /**
@@ -167,6 +168,9 @@ function Cadastro() {
                                 <li key={index}>{mensagem.mensagem_idade}</li>
                             ))}
                         </ul>
+
+                        {/*Link para ir para o Login */}
+                        <a href="#" className='JaTemConta'>Já tem uma conta? <Link to="/login" className='VaParaLogin'>Faça Login</Link></a>
 
                         <div className="botoes">
                             <div className="botao_confirmar">

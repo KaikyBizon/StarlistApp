@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 20,
       fontWeight: 'bold',
-      color:'#9d9d9d'
+      color:'black'
     },
     modalErrorText: {
       marginBottom: 10,

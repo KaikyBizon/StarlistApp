@@ -85,7 +85,7 @@ function LoginForm({ navigation }) {
         Retorno: void;
         Finalidade: Atualizar o estado de um formulário com os novos valores dos campos;
         Descrição/observações: 
-            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método `setFormValues` para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
+            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método setFormValues para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
     */}
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
@@ -118,6 +118,7 @@ function LoginForm({ navigation }) {
                 }),
             });
             const resultado = await resposta.json();
+            console.log (resultado)
 
             if (resposta.ok && resultado.login_status) {
                 // Converte o ID para string ao salvar
