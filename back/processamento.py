@@ -5,6 +5,8 @@ from actionsBD.gravar_bd import inserir_usuario
 from actionsBD.createTask_bd import criarTarefa
 from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
+from actionsBD.createList_bd import criarLista
+
 from validacoes import (
     validar_nome,
     validar_email,
@@ -44,6 +46,12 @@ def processar_dados(dados):
         dados_processados.get('usuario_id')
     ]
 
+    # recebe os dados para criar uma nova lista no banco de dados
+    lista = [
+        dados_processados.get('nome'),
+        dados_processados.get('lista_id')
+    ]
+
     # Lista para armazenar mensagens de erro
     mensagens_erro = []
     # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
@@ -68,6 +76,12 @@ def processar_dados(dados):
     else:
         tarefaCriada = {}
 
+    if dados_processados.get('acao') == 'criar_lista':
+        criarLista(lista)
+        listaCriada = {'Lista criada': 'Lista criada com sucesso!'}
+    else:
+        listaCriada = {}
+
     #Código para enviar as tarefas do usuário para o frontend e mostrar na tela (refatorar o mais rápido possível)    
     id_usuario = dados_processados.get('usuario_id')
     if id_usuario:
@@ -82,7 +96,7 @@ def processar_dados(dados):
         dados_tarefa = {"Status_acao": "Tarefa excluída!"}
 
 
-    return mensagens_erro, cadastro, alteracao, tarefaCriada, dados_tarefa
+    return mensagens_erro, cadastro, alteracao, tarefaCriada, listaCriada, dados_tarefa
 
 # Função para mostrar os dados de um usuário baseado no ID
 
