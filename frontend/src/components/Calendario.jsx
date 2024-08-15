@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Event from '../components/Event';
 import '../components/Calendario.css';
+
 const months = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
@@ -8,19 +8,12 @@ const months = [
 
 const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
-const Calendario = () => {
+const Calendario = ({ events }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [events, setEvents] = useState([]);
+
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-  const handleAddEvent = (day) => {
-    const title = prompt('Digite evento:');
-    if (title) {
-      setEvents([...events, { date: day + 1, title }]);
-    }
-  };
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -39,7 +32,17 @@ const Calendario = () => {
       setCurrentMonth(currentMonth + 1);
     }
   };
-  
+
+  const hasEvent = (day) => {
+    return events.some(event => {
+      const eventDate = new Date(event.data);
+      return (
+        eventDate.getDate() === day + 1 &&
+        eventDate.getMonth() === currentMonth &&
+        eventDate.getFullYear() === currentYear
+      );
+    });
+  };
 
   return (
     <div className="calendar">
@@ -58,22 +61,14 @@ const Calendario = () => {
           <div key={`empty-${index}`} className="empty-day"></div>
         ))}
         {[...Array(daysInMonth).keys()].map((day) => (
-          <div key={day} className="day" onClick={() => handleAddEvent(day)}>
+          <div key={day} className="day">
             <span className="day-number">{day + 1}</span>
-            {events.map((event, index) => {
-              if (event.date === day + 1) {
-                return <Event key={index} title={event.title} />;
-              }
-              return null;
-            })}
+            {hasEvent(day) && <span className="event-dot"></span>}
           </div>
         ))}
       </div>
     </div>
   );
-
-
-
 };
 
-export default Calendario ;
+export default Calendario;
