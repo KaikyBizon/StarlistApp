@@ -1,13 +1,63 @@
-/*Estilização dos cards*/
-.kanban {
-    background-color: #faed27;
-    height: 250px;
-    width: 200px;
+/* Estilo do input e botão de adicionar lista */
+.lista-adiciona {
+    display: flex;
+    flex-direction: column;
+    background-color: #494545;
+    height: 150px;
+    width: 265px;
     padding: 20px;
     border-radius: 20px;
 }
 
-/*Alinhando os cards na tela*/
+.lista-adiciona input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #faed27;
+    background-color: #535050;
+    color: #c9c9c9;
+}
+
+.lista-adiciona button {
+    background-color: #faed27;
+  
+    color:#535050;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 148px;
+
+}
+
+.listaAdiciona button:hover {
+    background-color: #e0d425;
+}
+
+
+.listaAdiciona button.excluir {
+    margin-left: 10px;
+    background-color: transparent;
+    color: #faed27;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.lista-adiciona button.excluir:hover {
+    color: #e0d425;
+}
+
+/* Estilização dos cards */
+.kanban {
+    background-color: #494545;
+    height: 150px;
+    width: 265px;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+/* Alinhando os cards na tela */
 .cards-kanban {
     display: flex;
     justify-content: space-evenly;
@@ -15,22 +65,20 @@
     background-color: #535050;
 }
 
-/*Margem no nome da area do kanban "a fazer, fazendo, feito..."*/
+/* Nome da tarefa (a fazer, fazendo, feito, etc.) */
 .status-tarefa {
     margin-left: 10px;
-}
-
-/*cor de fundo dos cards*/
-.status-tarefa {
     color: #faed27;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-/*fonte do "add link"*/
+/* Fonte do link "Anexar link" */
 .card-link {
     font-size: 14px;
 }
 
-/*titulo do card*/
+/* Título do card */
 .title-cardkanban {
     border: 1px solid #000000;
     border-radius: 10px;
@@ -38,17 +86,22 @@
     padding: 5px;
 }
 
+/* Seção de interação */
 .interacao {
     display: flex;
     background-color: #535050;
 }
 
+/* Layout dos cartões Kanban */
 .cartoes-kanban {
     width: 100vw;
-    height: 100vh;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #535050;
     overflow-x: scroll;
     overflow-y: scroll;
     max-height: 634px;
 }
+
+
