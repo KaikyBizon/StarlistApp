@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import '../components/Cadastro.css';
+import '../StylesPages/Cadastro.css';
 
 /**
      * Nome do Componente: Cadastro
