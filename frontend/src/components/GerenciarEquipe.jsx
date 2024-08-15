@@ -4,7 +4,7 @@ import { Informacao } from './Informacao';
 import { Informacao2 } from './Informacao2';
 import Options from './Options';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "./GerenciarEquipe.css"
+import "../StylesPages/GerenciarEquipe.css"
 
 function App() {
 
