@@ -306,6 +306,14 @@ nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   padding: 0 10px;
 }
 
+.nav-fixed a:hover {
+  color: #c1c1c1;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+  color:  #c1c1c1;
+}
+
 /*--------------------------------------------Estilizando a Section---------------------------------*/
 .planos {
   display: flex;
