@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import '../StylesPages/Login.css';
 
@@ -74,6 +75,10 @@ function LoginForm() {
             </div>
           </div>
           <a href="#">Esqueceu sua senha?</a>
+          
+          <Link to="/cadastro">
+            <a href="#">Ainda não tem conta? Crie uma</a>
+          </Link>
 
           <div className="botoes">
             <div className="btn-login">
