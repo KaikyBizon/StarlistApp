@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../components/Calendario.css';
+import '../StylesPages/Calendario.css';
 
 const months = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -63,7 +63,7 @@ const Calendario = ({ events }) => {
         {[...Array(daysInMonth).keys()].map((day) => (
           <div key={day} className="day">
             <span className="day-number">{day + 1}</span>
-            {hasEvent(day) && <span className="event-dot"></span>}
+            {hasEvent(day - 1) && <span className="event-dot"></span>}
           </div>
         ))}
       </div>
