@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Image, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TouchableOpacity, FlatList, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../styles/StylesToDo';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
@@ -8,6 +8,7 @@ import MenuScreen from '../components/Menu';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 moment.locale('pt-br'); // Configura moment para usar português
 
@@ -38,63 +39,76 @@ export default function ToDo({ navigation }) {
     Kanit_500Medium,
   });
 
-  // Estados para o texto de busca, data selecionada e visibilidade do DateTimePicker
-  const [searchText, setSearchText] = useState('');
+  // Estados para as tarefas buscadas no banco, data selecionada e visibilidade do DateTimePicker
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tarefas, setTarefas] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [mensagensErro, setMensagensErro] = useState([]);
 
-  // Lista de tarefas com data e itens
-  const tarefas = [
-    {
-      date: '28/03/2024',
-      items: [
-        { id: '1', info: 'ESTUDAR QUÍMICA', hora: '14:00' },
-        { id: '2', info: 'MAPA MENTAL', hora: '15:00' }
-      ],
-    },
-    {
-      date: '29/03/2024',
-      items: [
-        { id: '3', info: 'MÉDICO', hora: '18:00' },
-        { id: '4', info: 'PASSEAR', hora: '20:00' }
-      ],
-    },
-    {
-      date: '01/04/2024',
-      items: [
-        { id: '5', info: 'REUNIÃO', hora: '09:00' }
-      ],
-    },
-  ];
+  // Função para buscar tarefas do servidor
+  const fetchTarefas = async () => {
+    const usuarioId = await AsyncStorage.getItem('ID');
 
-  // Verifica se a fonte foi carregada, caso contrário retorna null para evitar renderização prematura
-  if (!fontLoaded) {
-    return null;
-  }
+    try {
+      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ usuario_id: usuarioId })
+      });
+      const resultado = await resposta.json();
 
-  // Filtra as tarefas de acordo com o texto de busca e a data selecionada
-  const filteredTarefas = tarefas.map(tarefa => ({
-    ...tarefa,
-    items: tarefa.items.filter(item =>
-      item.info.toLowerCase().includes(searchText.toLowerCase())
-    )
-  })).filter(tarefa => tarefa.items.length > 0 && tarefa.date === moment(date).format('DD/MM/YYYY'));
+      if (resposta.ok) {
+        const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
 
-  // Renderiza cada tarefa na lista
-  const renderTarefa = ({ item }) => (
-    <View style={styles.tarefa}>
-      <View style={styles.tarefaData}>
-        <Image style={styles.estrela} resizeMode='contain' source={require('../assets/images/estrela.png')} />
-        <Text style={styles.txtTarefa}>{item.date}</Text>
-      </View>
-      {item.items.map(subItem => (
-        <View key={subItem.id} style={styles.infoTarefa}>
-          <Text style={styles.txtInfo}>{subItem.info}</Text>
-          <Text style={styles.txtHora}>{subItem.hora}</Text>
-        </View>
-      ))}
-    </View>
-  );
+        // Atualiza a estrutura para incluir o ID
+        const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
+          titulo: tarefa[0],
+          data: tarefa[1],
+          horario: tarefa[2],
+          id: tarefa[3],
+        }));
+
+        const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+        setTarefas(tarefasOrdenadas);
+        setFilteredTasks(tarefasOrdenadas);
+      } else {
+        console.error('Erro no servidor:', resultado.mensagens_erro);
+        setMensagensErro(resultado.mensagens_erro || ['Erro ao obter mensagens de erro.']);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+      setMensagensErro(['Erro ao buscar dados.']);
+    }
+  };
+
+  const ordenarTarefas = (tarefas) => {
+    return tarefas.sort((a, b) => {
+      const dataDateA = new Date(a.data);
+      const dataDateB = new Date(b.data);
+
+      if (dataDateA.getTime() !== dataDateB.getTime()) {
+        return dataDateA - dataDateB;
+      }
+
+      if (a.horario && b.horario) {
+        const [horaA, minutoA] = a.horario.split(':').map(Number);
+        const [horaB, minutoB] = b.horario.split(':').map(Number);
+        const tempoA = horaA * 60 + minutoA;
+        const tempoB = horaB * 60 + minutoB;
+
+        return tempoA - tempoB;
+      }
+
+      return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
+    });
+  };
+
+  useEffect(() => {
+    fetchTarefas();
+  }, []);
 
   // Função para mostrar o DateTimePicker
   const showDatePickerHandler = () => {
@@ -106,12 +120,42 @@ export default function ToDo({ navigation }) {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
+    // Filtra as tarefas com base na data selecionada
+    const tarefasFiltradas = tarefas.filter(tarefa => moment(tarefa.data).isSame(currentDate, 'day'));
+    setFilteredTasks(tarefasFiltradas);
+  };
+
+  // Função para excluir tarefa
+  const excluirTarefa = async (id) => {
+    try {
+      const resposta = await fetch(`http://10.135.60.10:8085/receber-dados`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+      });
+
+      if (resposta.ok) {
+        Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
+        // Atualiza a lista de tarefas após exclusão
+        const novasTarefas = tarefas.filter(tarefa => tarefa.id !== id);
+        setTarefas(novasTarefas);
+        setFilteredTasks(novasTarefas);
+      } else {
+        console.error('Erro ao excluir tarefa:', await resposta.text());
+      }
+    } catch (error) {
+      console.error('Erro ao excluir tarefa:', error);
+    }
   };
 
   return (
     <View style={styles.background}>
       {/* Componente Menu para busca */}
-      <MenuScreen searchText={searchText} setSearchText={setSearchText} />
+      <MenuScreen />
+
+      {/* Mostra o DateTimePicker e a data formatada */}
       <View style={styles.containerMenu}>
         {/* Botão para abrir o DateTimePicker */}
         <TouchableOpacity onPress={showDatePickerHandler}>
@@ -120,12 +164,7 @@ export default function ToDo({ navigation }) {
         {/* Mostra a data formatada */}
         <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
-      {/* Lista de tarefas filtradas */}
-      <FlatList
-        data={filteredTarefas}
-        renderItem={renderTarefa}
-        keyExtractor={(item) => item.date}
-      />
+
       {/* DateTimePicker para selecionar a data */}
       {showDatePicker && (
         <DateTimePicker
@@ -135,6 +174,41 @@ export default function ToDo({ navigation }) {
           onChange={onDateChange}
         />
       )}
+
+      {/* Lista de tarefas */}
+      {filteredTasks && filteredTasks.length > 0 ? (
+        <FlatList
+          data={filteredTasks}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => {
+            const { id, titulo, data, horario } = item;
+            const tituloExibido = titulo || 'Título não informado';
+            const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
+            const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
+
+            return (
+              <View style={styles.card} key={id}>
+                <View style={styles.cardHeader}>
+                  <Text>{dataExibida}</Text>
+                  <TouchableOpacity onPress={() => excluirTarefa(id)}>
+                    <Image source={require('../assets/images/excluir.png')} style={styles.icon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Image source={require('../assets/images/editar.png')} style={styles.icon} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.cardBody}>
+                  <Text style={styles.title}>{tituloExibido}</Text>
+                  <Text>{`Horário: ${horarioExibido}`}</Text>
+                </View>
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <Text>Nenhuma tarefa encontrada</Text>
+      )}
+
       <StatusBar style="auto" />
     </View>
   );

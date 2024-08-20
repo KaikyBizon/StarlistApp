@@ -146,7 +146,7 @@ function ToDo() {
                                 <Card className='cards-tarefa' style={{ width: '1000px' }} key={id}>
                                     <Card.Header>
                                         {dataExibida}
-                                        <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
+                                        <img src="../../public/images/excluir.png" alt="" onPress={() => excluirTarefa(id)} />
                                         <img src="../../public/images/editar.png" alt="" />
                                     </Card.Header>
                                     <Card.Body>

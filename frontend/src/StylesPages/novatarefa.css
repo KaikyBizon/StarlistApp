@@ -19,8 +19,18 @@
     margin-left: 10px;
 }
 
-.drop-options:hover,
-.drop-options:focus {
+/* Força a cor do dropdown a ser sempre a mesma*/
+.drop-options,
+.drop-options a,
+.drop-options a:active,
+.drop-options a:focus,
+.drop-options a:hover {
+    color: #c1c1c1 !important;
+    text-decoration: none; /* Remove o sublinhado ao focar ou passar o mouse */
+} 
+
+/* Garante que o dropdown não altere a cor ao perder o foco */
+.drop-options.show > .dropdown-toggle {
     color: #c1c1c1 !important;
 }
 

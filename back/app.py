@@ -10,8 +10,7 @@ CORS(app)  # Permita solicitações CORS
 @app.route('/receber-dados', methods=['POST'])
 def receber_dados():
     dados = request.json
-    mensagens_erro, cadastro, alteracao, listaCriada, dados_tarefa = processar_dados(
-        dados)
+    mensagens_erro, cadastro, alteracao, listaCriada, dados_tarefa = processar_dados(dados)
     ret_login = login(dados)
     ret_update = update(alteracao, mensagens_erro, dados)
     response_data = {"dados_processados": {"mensagens_erro": mensagens_erro, "cadastro": cadastro,

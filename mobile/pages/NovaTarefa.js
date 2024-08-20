@@ -1,4 +1,3 @@
-// Importa componentes necessários
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
@@ -9,59 +8,14 @@ import { Picker } from '@react-native-picker/picker';
 import MenuScreen from '../components/Menu.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-/**
- * Nome do Componente: NovaTarefa
- *
- * Descrição Detalhada:
- *   Componente funcional React Native que permite ao usuário criar uma nova tarefa.
- *   Utiliza hooks do React para gerenciar o estado dos campos do formulário, incluindo título,
- *   data, hora, etiqueta e descrição da tarefa.
- *   Permite seleção de data e hora utilizando o componente DateTimePicker do React Native.
- *   Ao salvar a tarefa, os dados são armazenados localmente utilizando AsyncStorage.
- *
- * Observações Pertinentes:
- *   1. Utiliza os hooks 'useState' para gerenciar o estado dos campos do formulário.
- *   2. O método 'handleChange' é utilizado para atualizar o estado conforme o usuário digita nos campos.
- *   3. Utiliza o componente DateTimePicker para seleção de data e hora.
- *   4. Utiliza AsyncStorage para armazenar os dados localmente no dispositivo.
- *
- * Estado:
- *   - date: Armazena a data selecionada pelo usuário.
- *   - show: Controla a visibilidade do componente DateTimePicker.
- *   - mode: Indica se o DateTimePicker está configurado para data ou hora.
- *   - dadosTask: Armazena os dados da tarefa, incluindo título, data, hora, etiqueta e descrição.
- *
- * Funções:
- *   - handleChange: Atualiza o estado dos campos do formulário conforme o usuário digita.
- *   - onChange: Atualiza o estado de data ou hora conforme o usuário seleciona no DateTimePicker.
- *   - showMode: Controla a visibilidade do DateTimePicker para data ou hora.
- *   - formatDate: Formata a data para exibição no formato 'dd/MM/yyyy'.
- *   - formatTime: Formata a hora para exibição no formato 'HH:mm'.
- *
- * Componentes Importados:
- *   - StatusBar: Componente do Expo para controlar a barra de status do aplicativo.
- *   - useState, useEffect: Hooks do React para gerenciamento de estado e efeitos.
- *   - Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity: Componentes essenciais do React Native para interface.
- *   - DateTimePicker: Componente do React Native para seleção de data e hora.
- *   - Picker: Componente do React Native para seleção de itens em lista suspensa.
- *   - MenuScreen: Componente customizado para exibir o menu do aplicativo.
- *   - AsyncStorage: API do React Native para armazenamento local de dados.
- *
- * Estilos:
- *   - Utiliza estilos definidos em '../styles/StylesNovaTarefa.js' para estilização dos componentes.
- *
- * @returns {JSX.Element} Retorna o JSX que representa o formulário de criação de nova tarefa.
- */
-
-
-// Função principal do componente NovaTarefa
-export default function NovaTarefa({ navigation }) {
-    // Estados para gerenciar data, visibilidade do seletor de data/hora e modo (data ou hora)
+export default function NovaTarefa({ navigation, onTarefaSalva }) {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState('date');
 
-    // Formata data para exibição
+    //Constante para recarregar a página após criar uma nova tarefa
+    const [refresh, setRefresh] = useState(false)
+
     const formatDate = (date) => {
         return date.toLocaleDateString('pt-BR', {
             day: '2-digit',
@@ -70,7 +24,6 @@ export default function NovaTarefa({ navigation }) {
         });
     };
 
-    // Formata hora para exibição
     const formatTime = (date) => {
         return date.toLocaleTimeString('pt-BR', {
             hour: '2-digit',
@@ -78,16 +31,38 @@ export default function NovaTarefa({ navigation }) {
         });
     };
 
-    // Estado inicial para os dados da tarefa
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('ID');
+                if (userId) {
+                    setDadosTask((prevValues) => ({
+                        ...prevValues,
+                        usuario_id: userId
+                    }));
+                }
+            } catch (error) {
+                console.error("Erro ao buscar o ID do usuário do AsyncStorage", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    //Constante que armazena os valores inseridos nos inputs
     const [dadosTask, setDadosTask] = useState({
+        acao: 'criar_tarefa',
         titulo: '',
         data: formatDate(new Date()),
-        hora: formatTime(new Date()),
+        horario: formatTime(new Date()),
         etiqueta: '',
         descricao: '',
+        usuario_id: ''
     });
 
-    // Atualiza os dados da tarefa com os valores dos campos de entrada
+    //Constante para armazenar mensagens de erro
+    const [mensagens_erro, setMensagensErro] = useState([])
+
     const handleChange = (name, value) => {
         setDadosTask((prevValues) => ({
             ...prevValues,
@@ -95,31 +70,73 @@ export default function NovaTarefa({ navigation }) {
         }));
     };
 
-    // Lida com mudanças no seletor de data/hora
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(false);
         setDate(currentDate);
-        handleChange(mode === 'date' ? 'data' : 'hora', mode === 'date' ? formatDate(currentDate) : formatTime(currentDate));
+        handleChange(mode === 'date' ? 'data' : 'horario', mode === 'date' ? formatDate(currentDate) : formatTime(currentDate));
     };
 
-    // Mostra o seletor de data ou hora
+    const convertDateToISO = (date) => {
+        const [day, month, year] = date.split('/');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleSubmit = async (e) => {
+        navigation.navigate('TO DO')
+        e.preventDefault();
+
+        const valuesTask = {
+            ...dadosTask,
+            data: convertDateToISO(dadosTask.data),
+        };
+
+        try {
+            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(valuesTask),
+            });
+
+            const resultado = (await resposta.json()).dados_processados;
+
+            if (resultado.mensagens_erro) {
+                setMensagensErro(resultado.mensagens_erro);
+            } else {
+                setShow(false);
+                setDadosTask({
+                    titulo: '',
+                    descricao: '',
+                    data: formatDate(new Date()),
+                    horario: formatTime(new Date()),
+                    etiqueta: '',
+                    usuario_id: dadosTask.usuario_id,
+                });
+                setRefresh(!refresh) //Recarrega a página após inserir uma tarefa
+                if (onTarefaSalva) {
+                    onTarefaSalva();
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+        }
+    };
+
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);
     };
 
-    // Carrega a fonte Kanit
     const [fontLoaded] = useFonts({
         Kanit_500Medium,
     });
 
-    // Retorna null se a fonte ainda não estiver carregada
     if (!fontLoaded) {
         return null;
     }
 
-    // Renderiza o componente
     return (
         <KeyboardAvoidingView style={styles.background}>
             <MenuScreen />
@@ -147,7 +164,7 @@ export default function NovaTarefa({ navigation }) {
                         onPress={() => showMode("time")}
                         style={styles.button}
                     >
-                        <Text style={styles.buttonText}>{dadosTask.hora}</Text>
+                        <Text style={styles.buttonText}>{dadosTask.horario}</Text>
                     </TouchableOpacity>
                     {show && (
                         <DateTimePicker
@@ -187,7 +204,7 @@ export default function NovaTarefa({ navigation }) {
                 </View>
 
                 <TouchableOpacity style={styles.btnSubmit}>
-                    <Text style={styles.submitTxt}>SALVAR TAREFA</Text>
+                    <Text style={styles.submitTxt} onPress={handleSubmit}>SALVAR TAREFA</Text>
                 </TouchableOpacity>
             </View>
             <StatusBar style='auto' />
