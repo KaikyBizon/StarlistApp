@@ -13,6 +13,9 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState('date');
 
+    //Constante para recarregar a página após criar uma nova tarefa
+    const [refresh, setRefresh] = useState(false)
+
     const formatDate = (date) => {
         return date.toLocaleDateString('pt-BR', {
             day: '2-digit',
@@ -46,6 +49,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         fetchUserId();
     }, []);
 
+    //Constante que armazena os valores inseridos nos inputs
     const [dadosTask, setDadosTask] = useState({
         acao: 'criar_tarefa',
         titulo: '',
@@ -55,6 +59,8 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         descricao: '',
         usuario_id: ''
     });
+
+    //Constante para armazenar mensagens de erro
     const [mensagens_erro, setMensagensErro] = useState([])
 
     const handleChange = (name, value) => {
@@ -77,6 +83,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
     };
 
     const handleSubmit = async (e) => {
+        navigation.navigate('TO DO')
         e.preventDefault();
 
         const valuesTask = {
@@ -107,6 +114,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                     etiqueta: '',
                     usuario_id: dadosTask.usuario_id,
                 });
+                setRefresh(!refresh) //Recarrega a página após inserir uma tarefa
                 if (onTarefaSalva) {
                     onTarefaSalva();
                 }
