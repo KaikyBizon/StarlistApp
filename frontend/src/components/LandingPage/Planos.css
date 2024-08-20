@@ -13,20 +13,34 @@
     position: fixed;
 }
 
+.planos{
+    background-color: #282727;
+    height: 745px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.planos h1{
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    font-size: 48px;
+}
+
 .tabela-preco {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     width: min(1600px, 100%);
     margin: auto;
-    background-color: #525050;
     height: 100%;
 }
 
 .card-preco-div {
     flex: 1;
     max-width: 360px;
-    background-color: #000;
+    background-color: #282727;
     margin: 20px 10px;
     text-align: center;
     cursor: pointer;
@@ -37,9 +51,32 @@
     border: 2px solid #faed26;
 }
 
-.card-preco:hover .card-preco-header {
-    box-shadow: 0 0 29em 28em #faed26;
+.card-preco-div:hover{
+    background-color: #faed26;
+    color:  #282727;
+    background-image: linear-gradient(to right, #faed26, rgb(255, 197, 0));
 }
+
+.card-preco-div:hover .card-preco-header{
+    background-image: linear-gradient(to right, #faed26, rgb(255, 197, 0));
+}
+
+.card-preco-div:hover .preco{
+    background-color: #faed26;
+    color:  #282727;
+    background-image: linear-gradient(to right, #faed26, rgb(255, 197, 0));
+}
+.card-preco-div:hover .queroplano{
+    background-color: linear-gradient(to right, #faed26, rgb(255, 197, 0));
+    color:  #282727;
+    border-color: #282727 ;
+}
+
+.card-preco-div:hover .queroplano:hover{
+    background-color: #282727 ;
+    color: #faed26;
+}
+
 
 .card-preco-header {
     background-color: #faed26;
@@ -70,7 +107,7 @@
 
 .card-preco:hover,
 .card-preco:hover .preco {
-    color: #535353;
+    color: #5e5b5b;
 }
 
 .card-preco {
@@ -91,10 +128,6 @@
     transition: .3s linear;
 }
 
-.queroplano:hover {
-    background-color: #faed26;
-    color: #525050;
-}
 
 .check-in {
     height: 15px;
