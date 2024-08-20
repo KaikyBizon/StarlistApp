@@ -94,7 +94,7 @@ function Options() {
 
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Título do modal</Modal.Title>
+                    <Modal.Title>Altere o título da lista</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
