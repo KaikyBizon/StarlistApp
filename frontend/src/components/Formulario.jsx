@@ -29,7 +29,6 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Olá")
     try {
       const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
         method: 'POST',
