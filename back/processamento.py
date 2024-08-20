@@ -66,15 +66,14 @@ def processar_dados(dados):
     # Filtra apenas os erros que foram encontrados
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-    # Se não houver erros e a ação for 'cadastro', inseri os dados no banco
+    # Função para criar uma novo usuário no banco de dados
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
-
+    
+    # Função para criar uma nova tarefa no banco de dados
     if dados_processados.get('acao') == 'criar_tarefa':
         criarTarefa(tarefa)
-        tarefaCriada = {'Tarefa criada': 'Tarefa criada com sucesso!'}
-    else:
-        tarefaCriada = {}
+        dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
 
     if dados_processados.get('acao') == 'criar_lista':
         criarLista(lista)
@@ -82,21 +81,20 @@ def processar_dados(dados):
     else:
         listaCriada = {}
 
-    #Código para enviar as tarefas do usuário para o frontend e mostrar na tela (refatorar o mais rápido possível)    
+    # Código para enviar as tarefas do usuário para o frontend e mostrar na tela (refatorar o mais rápido possível)
     id_usuario = dados_processados.get('usuario_id')
     if id_usuario:
         dados_tarefa = selecionar_dados_tarefa(id_usuario)
     else:
         dados_tarefa = {"Status_acao": "Tarefas renderizadas!"}
 
-
+    # Função para excluir tarefa do banco de dados
     if dados_processados.get('acao') == 'excluirTarefa':
         id_tarefa = dados_processados.get('id')
         excluir_tarefa(id_tarefa)
         dados_tarefa = {"Status_acao": "Tarefa excluída!"}
 
-
-    return mensagens_erro, cadastro, alteracao, tarefaCriada, listaCriada, dados_tarefa
+    return mensagens_erro, cadastro, alteracao, listaCriada, dados_tarefa
 
 # Função para mostrar os dados de um usuário baseado no ID
 
@@ -108,7 +106,7 @@ def showDados(id):
         email, nome_usuario, data_nasc = resultado_select  # Desempacotar os resultados
         return {'email': email, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
     else:
-        return None  # Se não houver resultados, retornar None ou uma mensagem de erro
+        return None
 
 # Função para atualizar as informações do usuário
 

@@ -9,6 +9,7 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  //constante que armazena os valores inseridos nos inputs
   const [dadosTask, setDadosTask] = useState({
     acao: 'criar_tarefa',
     titulo: '',
@@ -51,7 +52,7 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
           horario: '',
           usuario_id: localStorage.getItem("ID")
         });
-        window.location.reload()
+        window.location.reload() // recarrega a página ao criar uma tarefa
         if (onTarefaSalva) {
           onTarefaSalva(); // Chama a função de callback
         }
