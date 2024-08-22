@@ -6,6 +6,7 @@ from actionsBD.createTask_bd import criarTarefa
 from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
 from actionsBD.createList_bd import criarLista
+from actionsBD.editTask import editar_tarefa
 
 from validacoes import (
     validar_nome,
@@ -57,9 +58,11 @@ def processar_dados(dados):
     # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
-    mensagens_erro.append(validar_data_nascimento(dados.get('dataNascimento', '')))
+    mensagens_erro.append(validar_data_nascimento(
+        dados.get('dataNascimento', '')))
     mensagens_erro.append(validar_senha(dados.get('senha', '')))
-    mensagens_erro.append(confirmar_senha(dados.get('senha', ''), dados.get('confirme', '')))
+    mensagens_erro.append(confirmar_senha(
+        dados.get('senha', ''), dados.get('confirme', '')))
 
     # Filtra apenas os erros que foram encontrados
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
@@ -67,11 +70,21 @@ def processar_dados(dados):
     # Função para criar uma novo usuário no banco de dados
     if not mensagens_erro and dados.get('acao') == 'cadastro':
         inserir_usuario(cadastro)
-    
+
     # Função para criar uma nova tarefa no banco de dados
     if dados_processados.get('acao') == 'criar_tarefa':
         criarTarefa(tarefa)
         dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
+
+
+    if dados_processados.get('acao') == 'editar_tarefa':
+        # Adiciona o ID ao final da lista de dados da tarefa
+        tarefa.append(dados_processados.get('id'))
+        tarefa.remove(dados_processados.get('usuario_id'))
+        print("Tarefa:", tarefa)
+        # Chama a função de edição com os dados da tarefa, incluindo o ID
+        editar_tarefa(tarefa)
+        dados_tarefa = {'Tarefa editada': 'Tarefa editada com sucesso!'}
 
     if dados_processados.get('acao') == 'criar_lista':
         criarLista(lista)

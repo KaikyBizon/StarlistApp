@@ -4,9 +4,10 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 function Formulario({ tarefa, onClose }) {
-  const [mensagensErro, setMensagensErro] = useState([]);
+  const [mensagensErro, setMensagensErro] = useState([]); //Armazena as mensagens de erro retornadas do backend
+  //Constante para armazenar os dados da tarefa
   const [dadosTask, setDadosTask] = useState({
-    acao: 'criar_tarefa',
+    acao: 'criar_tarefa', //Ação usada para o backend saber qual função executar
     titulo: '',
     descricao: '',
     etiqueta: '',
@@ -31,7 +32,6 @@ function Formulario({ tarefa, onClose }) {
       });
     }
   }, [tarefa]);
-  console.log(dadosTask)
 
   const handleChange = (event) => {
     const { name, value } = event.target;
