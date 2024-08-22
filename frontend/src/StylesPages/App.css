@@ -181,6 +181,16 @@ input#pesquisar {
   display: flex;
 }
 
+/*ajustando tamanho e posição do input de etiqueta*/
+#formEtiqueta {
+  width: 430px;
+  margin-left: 20px;
+}
+
+.Criartask_titulo{
+  color: #faed27;
+}
+
 /*Tirando borda quando clicar no input no modal de nova tarefa*/
 .nome-evento input,
 .data-evento input {
@@ -310,8 +320,9 @@ nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   color: #c1c1c1;
 }
 
-.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-  color:  #c1c1c1;
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+  color: #c1c1c1;
 }
 
 /*--------------------------------------------Estilizando a Section---------------------------------*/
@@ -330,16 +341,16 @@ nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   padding: 0;
 }
 
-.alterar_dados{
-  color:#c1c1c1;
-  --bs-dropdown-link-hover-bg:var(--bs-btn-active-bg)
+.alterar_dados {
+  color: #c1c1c1;
+  --bs-dropdown-link-hover-bg: var(--bs-btn-active-bg)
 }
 
-.alterar_dados:hover{
+.alterar_dados:hover {
   color: #faed27;
 }
 
-p.alterar_dados{
+p.alterar_dados {
   padding-left: 15px;
   color: #faed27;
 }
