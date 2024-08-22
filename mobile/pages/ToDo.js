@@ -51,7 +51,7 @@ export default function ToDo({ navigation }) {
     const usuarioId = await AsyncStorage.getItem('ID');
 
     try {
-      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,8 +66,10 @@ export default function ToDo({ navigation }) {
         // Atualiza a estrutura para incluir o ID
         const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
           titulo: tarefa[0],
-          data: tarefa[1],
-          horario: tarefa[2],
+          etiqueta: tarefa[1],
+          descricao: tarefa[2],
+          data: tarefa[3],
+          horario: tarefa[4],
           id: tarefa[3],
         }));
 
@@ -130,7 +132,7 @@ export default function ToDo({ navigation }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.15:8085/receber-dados`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,25 +185,47 @@ export default function ToDo({ navigation }) {
           data={filteredTasks}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => {
-            const { id, titulo, data, horario } = item;
+            const { id, titulo, data, horario, etiqueta = 'Nenhuma' } = item;
             const tituloExibido = titulo || 'Título não informado';
             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
+            const corEtiqueta = etiqueta === 'Importante' ? 'red' :
+              etiqueta === 'Pendência' ? 'orange' :
+                etiqueta === 'Reunião' ? 'blue' :
+                  'transparent';
+
             return (
               <View style={styles.card} key={id}>
+                {/* Cabeçalho do card */}
                 <View style={styles.cardHeader}>
-                  <Text>{dataExibida}</Text>
-                  <TouchableOpacity onPress={() => excluirTarefa(id)}>
-                    <Image source={require('../assets/images/excluir.png')} style={styles.icon} />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Image source={require('../assets/images/editar.png')} style={styles.icon} />
-                  </TouchableOpacity>
+                  <Text style={styles.cardTitle}>{tituloExibido}</Text>
+                  <View style={[styles.etiqueta, { backgroundColor: corEtiqueta }]} />
                 </View>
+
+                {/* Corpo do card - descrição */}
                 <View style={styles.cardBody}>
-                  <Text style={styles.title}>{tituloExibido}</Text>
-                  <Text>{`Horário: ${horarioExibido}`}</Text>
+                  <Text style={styles.cardDescription}>
+                    {item.descricao && item.descricao.trim().length > 0
+                      ? item.descricao
+                      : 'Aqui vai a descrição da tarefa, se houver.'}
+                  </Text>
+                </View>
+
+                {/* Rodapé do card */}
+                <View style={styles.cardFooter}>
+                  <View>
+                    <Text style={styles.cardFooterText}>{dataExibida}</Text>
+                    <Text style={styles.cardFooterText}>{horarioExibido}</Text>
+                  </View>
+                  <View style={styles.iconContainer}>
+                    <TouchableOpacity>
+                      <Feather name="edit" size={24} color="#4682B4" style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => excluirTarefa(id)}>
+                      <Feather name="trash-2" size={24} color="#FF6347" style={styles.icon} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             );
@@ -211,7 +235,7 @@ export default function ToDo({ navigation }) {
         <Text>Nenhuma tarefa encontrada</Text>
       )}
 
-      <StatusBar style="auto" />
+      <StatusBar style="auto"/>
     </View>
   );
 }

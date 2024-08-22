@@ -92,7 +92,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         };
 
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -156,13 +156,13 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                 <View style={styles.dataTarefa}>
                     <TouchableOpacity
                         onPress={() => showMode("date")}
-                        style={styles.button}
+                        style={styles.buttonDateAndTime}
                     >
                         <Text style={styles.buttonText}>{dadosTask.data}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => showMode("time")}
-                        style={styles.button}
+                        style={styles.buttonDateAndTime}
                     >
                         <Text style={styles.buttonText}>{dadosTask.horario}</Text>
                     </TouchableOpacity>
