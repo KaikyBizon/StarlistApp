@@ -38,11 +38,9 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
         body: JSON.stringify(dadosTask),
       });
 
-      const resultado = (await resposta.json()).dados_processados.tarefaCriada;
+      const resultado = (await resposta.json()).dados_processados;
 
-      if (!resposta.ok || resultado.mensagens_erro) {
-        setMensagensErro(resultado.mensagens_erro);
-      } else {
+      if (resposta.ok && !resultado.mensagens_erro) {
         setShow(false);
         setDadosTask({
           titulo: '',
@@ -51,10 +49,12 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
           horario: '',
           usuario_id: localStorage.getItem("ID")
         });
-        window.location.reload() // recarrega a página ao criar uma tarefa
+      } else {
+        setMensagensErro(resultado.mensagens_erro);
         if (onTarefaSalva) {
           onTarefaSalva(); // Chama a função de callback
         }
+        window.location.reload() // recarrega a página ao criar uma tarefa
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);

@@ -30,9 +30,10 @@ function ToDo() {
                 // Atualiza a estrutura para incluir o ID
                 const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
                     titulo: tarefa[0],
-                    data: tarefa[1],
-                    horario: tarefa[2],
-                    id: tarefa[3],
+                    descricao: tarefa[1],
+                    data: tarefa[2],
+                    horario: tarefa[3],
+                    id: tarefa[4],
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
@@ -48,8 +49,8 @@ function ToDo() {
         }
     };
 
+
     const excluirTarefa = async (id) => {
-        console.log(id)
         try {
             const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
                 method: 'POST',
@@ -135,10 +136,11 @@ function ToDo() {
                     )}
                     {filteredTasks && filteredTasks.length > 0 ? (
                         filteredTasks.map((tarefa, index) => {
-                            const { id, titulo, data, horario } = tarefa;
+                            const { id, titulo, descricao, data, horario } = tarefa;
 
 
                             const tituloExibido = titulo || 'Título não informado';
+                            const descricaoExibida = descricao || 'Descrição não informada';
                             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
                             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
@@ -146,14 +148,17 @@ function ToDo() {
                                 <Card className='cards-tarefa' style={{ width: '1000px' }} key={id}>
                                     <Card.Header>
                                         {dataExibida}
-                                        <img src="../../public/images/excluir.png" alt="" onPress={() => excluirTarefa(id)} />
+                                        <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
                                         <img src="../../public/images/editar.png" alt="" />
                                     </Card.Header>
-                                    <Card.Body>
+                                    <Card.Body className="content-dataTask">
                                         <div className='titulo-important'>
                                             <Card.Title>{tituloExibido}</Card.Title>
                                             <div className='default-etiqueta'></div>
                                         </div>
+                                        <Card.Text className='descricao'>
+                                            {descricaoExibida}
+                                        </Card.Text>
                                         <Card.Text className='todo-textcard'>
                                             {`Horário: ${horarioExibido}`}
                                         </Card.Text>
