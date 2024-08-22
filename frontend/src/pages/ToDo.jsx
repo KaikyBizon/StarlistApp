@@ -15,7 +15,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,10 +30,11 @@ function ToDo() {
                 // Atualiza a estrutura para incluir o ID
                 const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
                     titulo: tarefa[0],
-                    descricao: tarefa[1],
-                    data: tarefa[2],
-                    horario: tarefa[3],
-                    id: tarefa[4],
+                    etiqueta: tarefa[1],
+                    descricao: tarefa[2],
+                    data: tarefa[3],
+                    horario: tarefa[4],
+                    id: tarefa[5],
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
@@ -52,7 +53,7 @@ function ToDo() {
 
     const excluirTarefa = async (id) => {
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ function ToDo() {
                     )}
                     {filteredTasks && filteredTasks.length > 0 ? (
                         filteredTasks.map((tarefa, index) => {
-                            const { id, titulo, descricao, data, horario } = tarefa;
+                            const { id, titulo, etiqueta, descricao, data, horario } = tarefa;
 
 
                             const tituloExibido = titulo || 'Título não informado';

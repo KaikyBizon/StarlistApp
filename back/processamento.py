@@ -57,11 +57,9 @@ def processar_dados(dados):
     # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
     mensagens_erro.append(validar_nome(dados.get('nome', '')))
     mensagens_erro.append(validar_email(dados.get('email', '')))
-    mensagens_erro.append(validar_data_nascimento(
-        dados.get('dataNascimento', '')))
+    mensagens_erro.append(validar_data_nascimento(dados.get('dataNascimento', '')))
     mensagens_erro.append(validar_senha(dados.get('senha', '')))
-    mensagens_erro.append(confirmar_senha(
-        dados.get('senha', ''), dados.get('confirme', '')))
+    mensagens_erro.append(confirmar_senha(dados.get('senha', ''), dados.get('confirme', '')))
 
     # Filtra apenas os erros que foram encontrados
     mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]

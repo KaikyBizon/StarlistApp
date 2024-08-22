@@ -14,6 +14,7 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
     acao: 'criar_tarefa',
     titulo: '',
     descricao: '',
+    etiqueta: '',
     data: '',
     horario: '',
     usuario_id: localStorage.getItem("ID")
@@ -28,9 +29,10 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
   };
 
   const handleSubmit = async (e) => {
+    console.log(dadosTask)
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,6 +47,7 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
         setDadosTask({
           titulo: '',
           descricao: '',
+          etiqueta: '',
           data: '',
           horario: '',
           usuario_id: localStorage.getItem("ID")
