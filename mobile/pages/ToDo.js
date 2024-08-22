@@ -84,6 +84,7 @@ export default function ToDo({ navigation }) {
     }
   };
 
+  //Função para ordenar tarefas de acordo com a data mais próxima
   const ordenarTarefas = (tarefas) => {
     return tarefas.sort((a, b) => {
       const dataDateA = new Date(a.data);
@@ -106,6 +107,7 @@ export default function ToDo({ navigation }) {
     });
   };
 
+  //Renderiza as tarefas do backend
   useEffect(() => {
     fetchTarefas();
   }, []);
@@ -128,7 +130,7 @@ export default function ToDo({ navigation }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.10:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
