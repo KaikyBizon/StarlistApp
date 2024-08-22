@@ -89,7 +89,7 @@ function Options() {
                         </Navbar.Collapse>
                     </div>
                     <div className="create-nova">
-                        <Button variant="primary" onClick={handleShowFormulario}>Nova Tarefa</Button>
+                        <Button variant="primary" className='btn-novatarefa' onClick={handleShowFormulario}>Nova Tarefa</Button>
                     </div>
                 </Container>
             </Navbar>
