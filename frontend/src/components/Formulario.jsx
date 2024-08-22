@@ -31,6 +31,7 @@ function Formulario({ tarefa, onClose }) {
       });
     }
   }, [tarefa]);
+  console.log(dadosTask)
 
   const handleChange = (event) => {
     const { name, value } = event.target;
