@@ -51,7 +51,7 @@ export default function ToDo({ navigation }) {
     const usuarioId = await AsyncStorage.getItem('ID');
 
     try {
-      const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function ToDo({ navigation }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.15:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.30:8085/receber-dados`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ export default function ToDo({ navigation }) {
       {filteredTasks && filteredTasks.length > 0 ? (
         <FlatList
           data={filteredTasks}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           renderItem={({ item }) => {
             const { id, titulo, data, horario, etiqueta = 'Nenhuma' } = item;
             const tituloExibido = titulo || 'Título não informado';
@@ -235,7 +235,7 @@ export default function ToDo({ navigation }) {
         <Text>Nenhuma tarefa encontrada</Text>
       )}
 
-      <StatusBar style="auto"/>
+      <StatusBar style="auto" />
     </View>
   );
 }
