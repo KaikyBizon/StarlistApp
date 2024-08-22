@@ -95,6 +95,18 @@ function Formulario({ onTarefaSalva }) { // Adiciona a prop onTarefaSalva
                 onChange={handleChange}
               />
             </Form.Group>
+            <Form.Group className="mb-3 etiqueta-evento" controlId="formEtiqueta">
+              <Form.Select
+                name='etiqueta'
+                value={dadosTask.etiqueta}
+                onChange={handleChange}
+              >
+                <option value="">Selecione uma etiqueta</option>
+                <option value="Importante">Importante</option>
+                <option value="Pendência">Pendência</option>
+                <option value="Reunião">Reunião</option>
+              </Form.Select>
+            </Form.Group>
             <Form.Group className="mb-3 data-evento" controlId="formData">
               <Form.Control
                 type="date"
