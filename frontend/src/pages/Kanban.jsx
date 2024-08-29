@@ -10,9 +10,9 @@ function Kanban({ onListaSalva }) {
     const [categorias, setCategorias] = useState([]);
     const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
     const [novaLista, setNovaLista] = useState('');
-    const [exibirFormulario, setExibirFormulario] = useState(false);
 
     const [dadosList, setDadosList] = useState({
+        acao: 'criar_lista',
         nome: '',
         tarefa_id: localStorage.getItem("ID"),
         usuario_id: localStorage.getItem("ID")
@@ -21,7 +21,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para uma categoria específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.22:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.19:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.22:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,18 +90,18 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    acao: 'criar_lista',
-                    dados: { ...dadosList, nome: novaLista }
+                    ...dadosList,
+                    nome: novaLista
                 }),
             });
 
-            const resultado = (await resposta.json()).listaCriada;
+            const resultado = (await resposta.json()).dados_processados.listaCriada;
 
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
@@ -112,7 +112,6 @@ function Kanban({ onListaSalva }) {
 
                 // Salva as listas no localStorage
                 localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
-                window.location.reload()
 
                 if (onListaSalva) {
                     onListaSalva();
@@ -123,13 +122,32 @@ function Kanban({ onListaSalva }) {
         }
     };
 
-    const handleClearInput = () => {
-        setNovaLista('');
+    const handleDeleteLista = async (listaId) => {
+        try {
+            const resposta = await fetch(`http://10.135.60.22:8085/lista/${listaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (resposta.ok) {
+                // Filtra a lista removendo a excluída
+                setCategorias(categorias.filter(categoria => categoria.id !== listaId));
+                // Atualiza o estado das tarefas
+                const novoTarefasPorCategoria = { ...tarefasPorCategoria };
+                delete novoTarefasPorCategoria[listaId];
+                setTarefasPorCategoria(novoTarefasPorCategoria);
+            } else {
+                console.error('Erro ao excluir lista');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir lista:', error);
+        }
     };
 
-    // Função para alternar a exibição do formulário
-    const handleExibirFormulario = () => {
-        setExibirFormulario(!exibirFormulario);
+    const handleClearInput = () => {
+        setNovaLista('');
     };
 
     useEffect(() => {
@@ -164,7 +182,6 @@ function Kanban({ onListaSalva }) {
                                     {exibirFormulario && <Formulario onClose={handleExibirFormulario} />}
                                 </div>
                             </div>
-
                         </section>
                     ))}
                     <div className="lista-adiciona">

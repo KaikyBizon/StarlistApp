@@ -4,6 +4,7 @@ from flask_cors import CORS
 # Importe a função deletarUsuario
 from processamento import processar_dados, deletar_usuario
 from lista import selecionar_dados_lista, selecionar_lista_tarefa
+from actionsBD.deleteList_bd import deleteList_bd
 
 app = Flask(__name__)
 CORS(app)  # Permita solicitações CORS
@@ -47,6 +48,16 @@ def tarefas(id_lista):
     except Exception as e:
         print('Erro ao selecionar dados:', e)
         return jsonify({'error': 'Erro ao recuperar dados'}), 500
+
+@app.route('/lista/<int:lista_id>', methods=['DELETE'])
+def excluir_lista(lista_id):
+    try:
+        # Chama a função que exclui a lista e as tarefas associadas
+        resultado = deleteList_bd(lista_id)
+        return jsonify(resultado)
+    except Exception as e:
+        print('Erro ao excluir lista:', e)
+        return jsonify({'erro': True, 'mensagem': 'Erro ao excluir lista'}), 500
 
 # Obtendo o endereço IP local
 hostname = socket.gethostname()
