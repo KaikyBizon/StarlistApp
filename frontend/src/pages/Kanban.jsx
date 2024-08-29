@@ -122,6 +122,30 @@ function Kanban({ onListaSalva }) {
         }
     };
 
+    const handleDeleteLista = async (listaId) => {
+        try {
+            const resposta = await fetch(`http://10.135.60.22:8085/lista/${listaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (resposta.ok) {
+                // Filtra a lista removendo a excluída
+                setCategorias(categorias.filter(categoria => categoria.id !== listaId));
+                // Atualiza o estado das tarefas
+                const novoTarefasPorCategoria = { ...tarefasPorCategoria };
+                delete novoTarefasPorCategoria[listaId];
+                setTarefasPorCategoria(novoTarefasPorCategoria);
+            } else {
+                console.error('Erro ao excluir lista');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir lista:', error);
+        }
+    };    
+
     const handleClearInput = () => {
         setNovaLista(''); 
     };
@@ -142,23 +166,24 @@ function Kanban({ onListaSalva }) {
                 <section className='cartoes-kanban'>
                     {categorias.map((categoria) => (
                         <section key={categoria.id} className="status-kanban">
-                            <div className="kanban">
-                                <div className='titulo-lista'>
-                                    <h4 className='status-tarefa'>{categoria.nome}</h4>
-                                </div>
-                                {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
-                                    <div key={index} className="tarefa-item">
-                                        <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
-                                        <p className='data-hora'>Data: {tarefa.data}</p>
-                                        <p className='data-hora'>Hora: {tarefa.horario}</p>
-                                    </div>
-                                ))}
-                                <div className="formulario-fixo">
-                                    <Formulario />
-                                </div>
+                        <div className="kanban">
+                            <div className='titulo-lista'>
+                                <h4 className='status-tarefa'>{categoria.nome}</h4>
+                                <button className="excluir-lista" onClick={() => handleDeleteLista(categoria.id)}>Excluir</button>
                             </div>
-                            
-                        </section>
+                            {/* Tarefas da lista */}
+                            {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
+                                <div key={index} className="tarefa-item">
+                                    <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
+                                    <p className='data-hora'>Data: {tarefa.data}</p>
+                                    <p className='data-hora'>Hora: {tarefa.horario}</p>
+                                </div>
+                            ))}
+                            <div className="formulario-fixo">
+                                <Formulario />
+                            </div>
+                        </div>
+                    </section>
                     ))}
                     <div className="lista-adiciona">
                         <input type="text" placeholder="Digite o nome da lista" value={novaLista} onChange={handleChange}/>
