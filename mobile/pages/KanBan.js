@@ -30,7 +30,7 @@
  */
 
 import React, { useState } from 'react';
-import { StatusBar, PanResponder, Animated, View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { StatusBar, Animated, View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons';
@@ -132,7 +132,6 @@ export default function KanBan() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}
-        {...panResponder.panHandlers} // Adiciona gestos ao ScrollView
       >
         {/* Renderiza as tarefas filtradas */}
         {filteredTarefas.map(tarefa => (

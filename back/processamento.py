@@ -19,6 +19,8 @@ from validacoes import (
 )
 
 # Função para processar os dados recebidos
+
+
 def processar_dados(dados):
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
@@ -80,7 +82,8 @@ def processar_dados(dados):
             if not mensagens_erro:
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro}
 
         # Função para validar o login do usuário e retornar os dados dele para serem mostrados no frontend
         if acao == 'efetuar_login':
@@ -89,9 +92,11 @@ def processar_dados(dados):
             user = selecionar_dados_cadastro(email, senha)
             if user and email == user[0] and senha == user[1]:
                 email, senha, id, nome_usuario, data_nasc = user
-                dados_cadastro = {'error': False, 'email': email, 'id': id, 'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
+                dados_cadastro = {'error': False, 'email': email, 'id': id,
+                                  'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': 'Email ou senha inválido'}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': 'Email ou senha inválido'}
 
         if acao == 'criar_lista':
             criarLista(lista)
@@ -109,11 +114,12 @@ def processar_dados(dados):
         if mensagens_erro:
             dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
         else:
-            dados_cadastro = {'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
+            dados_cadastro = {
+                'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
 
     # Função para carregar os dados do usuário
     if acao == 'selecionar_dados_usuario':
-        id = dados_processados.get('id')
+        id = dados_processados
         resultado_select = select_atualizar(id)
         if resultado_select is not None:  # Verificar se há resultados
             email, nome_usuario, data_nasc = resultado_select  # Desempacotar os resultados
@@ -132,7 +138,6 @@ def processar_dados(dados):
         # Adiciona o ID ao final da lista de dados da tarefa
         tarefa.append(dados_processados.get('id'))
         tarefa.remove(dados_processados.get('usuario_id'))
-        print("Tarefa:", tarefa)
         # Chama a função de edição com os dados da tarefa, incluindo o ID
         editar_tarefa(tarefa)
         dados_tarefa = {'Tarefa editada': 'Tarefa editada com sucesso!'}

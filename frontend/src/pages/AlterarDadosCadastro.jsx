@@ -27,7 +27,7 @@ const AlterarDadosCadastro = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: formAlter }),
+                body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: formAlter.id }),
             });
             const dados = (await resposta.json()).dadosCadastro;
 

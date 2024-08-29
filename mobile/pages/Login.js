@@ -117,7 +117,6 @@ function LoginForm({ navigation }) {
                 body: JSON.stringify({ acao: 'efetuar_login', dados: formValues }),
             });
             const resultado = (await resposta.json()).dadosCadastro;
-            console.log('resposta: ', resultado);
 
             if (resposta.error) {
                 // Assume que resultado.login_status é um array com a mensagem de erro
