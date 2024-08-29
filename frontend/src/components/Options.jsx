@@ -6,34 +6,29 @@ import AddParticipantes from './AddParticipantes.jsx';
 import { Link } from 'react-router-dom';
 
 function Options() {
-    // Defina um nome padrão
     const defaultName = 'Nome da lista';
-
-    // Estado para controlar a exibição do modal, o valor do input temporário e mensagens de erro
     const [showModal, setShowModal] = useState(false);
     const [recipientName, setRecipientName] = useState(defaultName);
     const [tempName, setTempName] = useState(defaultName);
     const [error, setError] = useState('');
+    const [showFormulario, setShowFormulario] = useState(false); // Estado para controlar a exibição do formulário
 
     useEffect(() => {
-        // Carregar o estado do modal e o valor do input do localStorage
         const modalState = localStorage.getItem('modalVisible');
         const name = localStorage.getItem('recipientName');
         
         if (modalState !== null) {
             setShowModal(JSON.parse(modalState));
         }
-        // Defina recipientName para o valor armazenado ou o valor padrão se não houver valor
         if (name !== null) {
             setRecipientName(name);
-            setTempName(name); // Defina o nome temporário também
+            setTempName(name);
         } else {
             setRecipientName(defaultName);
             setTempName(defaultName);
         }
     }, []);
 
-    // Funções para abrir e fechar o modal
     const handleShow = () => {
         setShowModal(true);
         localStorage.setItem('modalVisible', JSON.stringify(true));
@@ -44,10 +39,9 @@ function Options() {
         localStorage.setItem('modalVisible', JSON.stringify(false));
     };
 
-    // Função para lidar com a mudança do input temporário
     const handleInputChange = (event) => {
         setTempName(event.target.value);
-        setError(''); // Limpar o erro quando o usuário começa a digitar
+        setError('');
     };
 
     const handleSave = () => {
@@ -55,9 +49,17 @@ function Options() {
             setError('O nome da lista não pode estar vazio.');
             return;
         }
-        setRecipientName(tempName); // Atualiza o nome exibido
-        localStorage.setItem('recipientName', tempName); // Salva o nome no localStorage
+        setRecipientName(tempName);
+        localStorage.setItem('recipientName', tempName);
         handleClose();
+    };
+
+    const handleShowFormulario = () => {
+        setShowFormulario(true); // Exibe o formulário
+    };
+
+    const handleCloseFormulario = () => {
+        setShowFormulario(false); // Fecha o formulário
     };
 
     return (
@@ -87,14 +89,14 @@ function Options() {
                         </Navbar.Collapse>
                     </div>
                     <div className="create-nova">
-                        <Formulario />
+                        <Button variant="primary" className='btn-novatarefa' onClick={handleShowFormulario}>Nova Tarefa</Button>
                     </div>
                 </Container>
             </Navbar>
 
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Título do modal</Modal.Title>
+                    <Modal.Title>Altere o título da lista</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
@@ -106,7 +108,7 @@ function Options() {
                                 type="text"
                                 value={tempName}
                                 onChange={handleInputChange}
-                                style={{ boxShadow: 'none', borderColor: 'initial' }} // Remove o efeito de foco
+                                style={{ boxShadow: 'none', borderColor: 'initial' }}
                             />
                         </Form.Group>
                     </Form>
@@ -116,6 +118,10 @@ function Options() {
                     <Button className='salvarlistanome' variant="primary" onClick={handleSave}>Salvar mudanças</Button>
                 </Modal.Footer>
             </Modal>
+
+            {showFormulario && (
+                <Formulario onClose={handleCloseFormulario} />
+            )}
         </>
     );
 }

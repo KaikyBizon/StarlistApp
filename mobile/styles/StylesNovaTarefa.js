@@ -44,7 +44,19 @@ const styles = StyleSheet.create({
         marginTop: 80,
         width: '100%',
         alignItems: 'center',
+
     },
+    // Estilo específico para os botões de data e hora
+    buttonDateAndTime: {
+        width: 166,  
+        marginHorizontal: 10,  
+        height: 50,
+        backgroundColor: '#faed27',
+        alignItems: 'center',
+        borderRadius: 10,
+        justifyContent: 'center',
+    },
+
     // Estilo para a seção de data da tarefa
     dataTarefa: {
         flexDirection: 'row',
@@ -107,7 +119,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: '100%',
     },
-   
+
 })
 
 export default styles

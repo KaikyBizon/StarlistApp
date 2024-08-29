@@ -19,31 +19,29 @@ const AlterarDadosCadastro = () => {
         id: localStorage.getItem("ID")
     });
 
-    useEffect(() => {
-        const showDados = async () => {
-            try {
-                const resposta = await fetch('http://10.135.60.10:8085/dados-atuais', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formAlter),
-                });
-                const dados = await resposta.json();
-                setFormAlter({
-                    nome: dados.nome_usuario,
-                    email: dados.email,
-                    dataNascimento: dados.data_nasc,
-                    id: localStorage.getItem("ID")
-                });
-                setNomeUsuario(dados.nome_usuario);
-            } catch (error) {
-                console.error('Erro ao carregar dados!', error)
-            }
-        };
+    //Constante para buscar os dados do usuário no backend ao carregar a página
+    const showDados = async () => {
+        try {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: formAlter }),
+            });
+            const dados = (await resposta.json()).dadosCadastro;
 
-        showDados();
-    }, []);
+            setFormAlter({
+                nome: dados.nome_usuario,
+                email: dados.email,
+                dataNascimento: dados.data_nasc,
+                id: localStorage.getItem("ID")
+            });
+            setNomeUsuario(dados.nome_usuario);
+        } catch (error) {
+            console.error('Erro ao carregar dados!', error)
+        }
+    };
     localStorage.setItem('email', formAlter.email);
     localStorage.setItem('nome_usuario', formAlter.nome);
 
@@ -55,10 +53,11 @@ const AlterarDadosCadastro = () => {
         }));
     };
 
+    //Constante para deletar o usuário
     const handleDelete = async () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
-            const resposta = await fetch('http://10.135.60.10:8085/delete-usuario', {
+            const resposta = await fetch('http://10.135.60.19:8085/delete-usuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,23 +76,26 @@ const AlterarDadosCadastro = () => {
 
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
+
+    //Constante para enviar os dados alterados para salvar no banco
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formAlter),
+                body: JSON.stringify({acao: 'atualizar_cadastro', dados: formAlter}),
             });
 
-            const resultado = (await resposta.json()).update_status;
+            const resultado = (await resposta.json()).dadosCadastro;
+            console.log("Resposta: ", resultado)
 
-            if (resultado.erro) {
+            if (resultado.error) {
                 // Atualiza o estado com as mensagens de erro para exibição no formulário
-                setMensagensErro(resultado.mensagens);
+                setMensagensErro(resultado.mensagens_erro);
             }
             else {
                 navigate("/kanban");
@@ -102,6 +104,11 @@ const AlterarDadosCadastro = () => {
             console.error('Erro ao enviar dados:', error);
         }
     };
+
+    useEffect(() => {
+        showDados();
+    }, []);
+    
 
     return (
         <>
@@ -154,9 +161,9 @@ const AlterarDadosCadastro = () => {
                         ))}
                     </ul>
                     <div className="botoes_alterar_dados">
-                            <Button className='botao_salvar_dados' variant="primary" type="submit" onClick={handleSubmit}>
-                                Salvar
-                            </Button>
+                        <Button className='botao_salvar_dados' variant="primary" type="submit" onClick={handleSubmit}>
+                            Salvar
+                        </Button>
                         <Button className='botao_deletar_dados' variant="danger" onClick={handleDelete}>
                             Deletar
                         </Button>
@@ -166,5 +173,4 @@ const AlterarDadosCadastro = () => {
         </>
     );
 }
-
 export default AlterarDadosCadastro;

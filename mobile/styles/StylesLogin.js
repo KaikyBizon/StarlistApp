@@ -119,6 +119,25 @@ export default styles = StyleSheet.create({
     forgotPassword: {
         color: 'black'
     },
-    
+
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        color:'black'
+      },
+      modalErrorText: {
+        marginBottom: 10,
+        textAlign: 'center',
+        color: '#faed27',
+      },
+      closeButton: {
+        backgroundColor: '#FAED27',
+        borderRadius: 9,
+        padding: 8,
+        elevation: 2,
+      },
+      
     
 });

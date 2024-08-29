@@ -16,7 +16,7 @@
     background-color: #413F3F;
     color: #faed27;
     border-radius: 15px 0 0 0;
-    height: 125px;
+    height: 28%;
     width: 100%; /* Garante que o card ocupe toda a largura disponível */
     max-width: 1000px; /* Limita a largura máxima do card */
     margin-bottom: 10px; /* Espaçamento entre os cards */
@@ -67,4 +67,20 @@ p {
 
 .card-header img:active{
     opacity: 0.6;
+}
+
+/* Limitar o tamanho do texto e adicionar reticências */
+.cards-tarefa .descricao{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /*Mostra até 2 linhas antes de cortar*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; /*Permite quebra de linha*/
+}
+
+.content-dataTask{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }

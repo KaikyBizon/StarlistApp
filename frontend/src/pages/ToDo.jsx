@@ -4,38 +4,43 @@ import Geral from '../components/Geral';
 import Menu from '../components/menu';
 import Options from '../components/Options';
 import Calendario from '../components/Calendario';
+import Formulario from '../components/Formulario';
 import '../StylesPages/todo.css';
 
 function ToDo() {
     const [tarefas, setTarefas] = useState([]);
     const [mensagensErro, setMensagensErro] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
+    const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
+    const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
 
     const fetchTarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ usuario_id: usuarioId })
+                body: JSON.stringify({acao: "carregar_tarefas", dados: usuarioId })
             });
             const resultado = await resposta.json();
 
             if (resposta.ok) {
                 const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
 
-                // Atualiza a estrutura para incluir o ID
                 const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
                     titulo: tarefa[0],
-                    data: tarefa[1],
-                    horario: tarefa[2],
-                    id: tarefa[3],
+                    etiqueta: tarefa[1],
+                    descricao: tarefa[2],
+                    data: tarefa[3],
+                    horario: tarefa[4],
+                    id: tarefa[5],
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+                console.log(tarefasOrdenadas)
                 setTarefas(tarefasOrdenadas);
                 setFilteredTasks(tarefasOrdenadas);
             } else {
@@ -49,19 +54,17 @@ function ToDo() {
     };
 
     const excluirTarefa = async (id) => {
-        console.log(id)
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+                body: JSON.stringify({ dados: id, acao: 'excluirTarefa' })
             });
             const resultado = await resposta.json();
 
             if (resposta.ok) {
-                // Atualizar a lista de tarefas após exclusão
                 const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== id);
                 setTarefas(tarefasAtualizadas);
                 setFilteredTasks(tarefasAtualizadas);
@@ -101,8 +104,6 @@ function ToDo() {
     }, []);
 
     const handleSearch = (searchTerm) => {
-        console.log('Termo de busca:', searchTerm);
-
         if (!searchTerm) {
             setFilteredTasks(tarefas);
             return;
@@ -112,8 +113,17 @@ function ToDo() {
             return tarefa.titulo.toLowerCase().includes(searchTerm.toLowerCase());
         });
 
-        console.log('Tarefas filtradas:', filtered);
         setFilteredTasks(filtered);
+    };
+
+    const handleEditarClick = (tarefa) => {
+        setTarefaSelecionada(tarefa); // Define a tarefa a ser editada
+        setShowFormulario(true); // Exibe o formulário
+    };
+
+    const handleFecharFormulario = () => {
+        setShowFormulario(false); // Fecha o formulário
+        setTarefaSelecionada(null); // Limpa a tarefa selecionada
     };
 
     return (
@@ -134,11 +144,11 @@ function ToDo() {
                         </div>
                     )}
                     {filteredTasks && filteredTasks.length > 0 ? (
-                        filteredTasks.map((tarefa, index) => {
-                            const { id, titulo, data, horario } = tarefa;
-
+                        filteredTasks.map((tarefa) => {
+                            const { id, titulo, etiqueta, descricao, data, horario } = tarefa;
 
                             const tituloExibido = titulo || 'Título não informado';
+                            const descricaoExibida = descricao || 'Descrição não informada';
                             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
                             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
@@ -147,13 +157,16 @@ function ToDo() {
                                     <Card.Header>
                                         {dataExibida}
                                         <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
-                                        <img src="../../public/images/editar.png" alt="" />
+                                        <img src="../../public/images/editar.png" alt="" onClick={() => handleEditarClick(tarefa)} />
                                     </Card.Header>
-                                    <Card.Body>
+                                    <Card.Body className="content-dataTask">
                                         <div className='titulo-important'>
                                             <Card.Title>{tituloExibido}</Card.Title>
                                             <div className='default-etiqueta'></div>
                                         </div>
+                                        <Card.Text className='descricao'>
+                                            {descricaoExibida}
+                                        </Card.Text>
                                         <Card.Text className='todo-textcard'>
                                             {`Horário: ${horarioExibido}`}
                                         </Card.Text>
@@ -166,6 +179,13 @@ function ToDo() {
                     )}
                 </div>
             </section>
+
+            {showFormulario && (
+                <Formulario
+                    tarefa={tarefaSelecionada} // Passa a tarefa selecionada para o formulário
+                    onClose={handleFecharFormulario} // Função para fechar o formulário
+                />
+            )}
         </>
     );
 }

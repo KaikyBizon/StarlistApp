@@ -36,11 +36,12 @@
 
 import React, { useState } from 'react';
 import styles from '../styles/StylesLogin';
-import { View, TextInput, KeyboardAvoidingView, TouchableOpacity, Text, Image, Modal } from "react-native";
+import { View, TextInput, KeyboardAvoidingView, TouchableOpacity, Text, Image, Modal, TouchableHighlight } from "react-native";
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function LoginForm({ navigation }) {
+
     {/*
         Nome da função: formValues;
         Autor: Kaiky;
@@ -51,29 +52,25 @@ function LoginForm({ navigation }) {
         Descrição/observações: 
             - Os dados são enviados para o backend via requisição pela função handleSubmit e são validados.
     */}
+
+    // Estados do formulário e mensagens de erro
     const [formValues, setFormValues] = useState({
         email: '',
         senha: ''
     });
+    const [mensagensErro, setMensagensErro] = useState([]);
+    const [isPasswordResetModalVisible, setIsPasswordResetModalVisible] = useState(false);
+    const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    // Estado para mensagens de erro
-    const [mensagensErro, setMensagensErro] = useState('');
-    // Estado para controle da visibilidade do modal de redefinição de senha
-    const [modalVisible, setModalVisible] = useState(false);
-    // Estado para armazenar o e-mail para redefinição de senha
-    const [resetEmail, setResetEmail] = useState(' ');
-    // Estado para armazenar a nova senha
-    const [newPassword, setNewPassword] = useState(' ');
-    // Estado para confirmar a nova senha
-    const [confirmNewPassword, setConfirmNewPassword] = useState(' ');
-
-    // Ajuste de configuração do cabeçalho de navegação
+    // Configuração do cabeçalho de navegação
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerStyle: {
-                backgroundColor: '#9d9d9d', // Define a cor de fundo do cabeçalho
+                backgroundColor: '#9d9d9d',
             },
-            // Oculta todo o cabeçalho
         });
     }, [navigation]);
 
@@ -87,6 +84,8 @@ function LoginForm({ navigation }) {
         Descrição/observações: 
             Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método setFormValues para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
     */}
+
+    // Atualiza os valores do formulário
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -98,57 +97,65 @@ function LoginForm({ navigation }) {
         Nome da função: handleSubmit;
         Autor: Kaiky;
         Data de criação: 05/24;
+        Data de alteração: 15/08 (Nathan e Davi)
         Parametros de entrada: e (Event);
         Retorno: Resposta do backend;
         Finalidade: Enviar os dados do formulário para um servidor;
         Descrição/observações: 
             Esta função é chamada quando o formulário é submetido. Ela previne o comportamento padrão do formulário para evitar o recarregamento da página. Os dados do formulário são coletados e preparados para envio, incluindo a conversão de datas para o formato ISO. Em seguida, uma requisição HTTP POST é feita para enviar os dados para um servidor. Dependendo da resposta, mensagens de erro são exibidas em um modal ou o usuário é redirecionado para a tela inicial. O tratamento de erros é implementado para capturar e registrar quaisquer problemas durante o envio dos dados.
     */}
+
+    // Envia os dados do formulário para o backend
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: formValues.email,
-                    senha: formValues.senha
-                }),
+                body: JSON.stringify({ acao: 'efetuar_login', dados: formValues }),
             });
-            const resultado = await resposta.json();
-            console.log (resultado)
+            const resultado = (await resposta.json()).dadosCadastro;
+            console.log('resposta: ', resultado);
 
-            if (resposta.ok && resultado.login_status) {
-                // Converte o ID para string ao salvar
-                await AsyncStorage.setItem('ID', resultado.login_status.id.toString());
-                await AsyncStorage.setItem('email', resultado.login_status.email.toString());
-                await AsyncStorage.setItem('nome_usuario', resultado.login_status.nome_usuario.toString());
-
-                // Dados foram processados com sucesso
-                navigation.navigate('home');
+            if (resposta.error) {
+                // Assume que resultado.login_status é um array com a mensagem de erro
+                const erroMensagem = resultado[0]?.error || 'Dados incorretos';
+                setMensagensErro([erroMensagem]);
+                setIsErrorModalVisible(true);
             } else {
-                // Atualiza o estado com as mensagens de erro para exibição no formulário
-                setMensagensErro(resultado.mensagens || 'Dados incorretos');
+                const { id, email, nome_usuario } = resultado;
+
+                // Verifica se os campos necessários estão presentes
+                if (id && email && nome_usuario) {
+                    await AsyncStorage.setItem('ID', id.toString());
+                    await AsyncStorage.setItem('email', email.toString());
+                    await AsyncStorage.setItem('nome_usuario', nome_usuario.toString());
+                    navigation.navigate('home');
+                } else {
+                    setMensagensErro(['Dados do login inválidos']);
+                    setIsErrorModalVisible(true);
+                }
             }
         } catch (error) {
-            console.error('Erro ao realizar login', error);
+            console.error('Erro ao realizar login:', error);
+            setMensagensErro(['Erro ao conectar com o servidor.']);
+            setIsErrorModalVisible(true);
         }
     };
 
-    // Função para redefinir a senha
+    // Lógica para redefinir a senha
     const handlePasswordReset = async () => {
         // Lógica para redefinir a senha
-        setModalVisible(false);
-    }
+        setIsPasswordResetModalVisible(false);
+    };
 
     // Carregamento da fonte Kanit_500Medium
     const [fontLoaded] = useFonts({
         Kanit_500Medium,
     });
 
-    // Retorna nulo enquanto a fonte não é carregada
     if (!fontLoaded) {
         return null;
     }
@@ -157,9 +164,7 @@ function LoginForm({ navigation }) {
         <KeyboardAvoidingView style={styles.blackground} behavior="padding">
             <View keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Image style={styles.logo} resizeMode='contain' source={require('../assets/images/logo_starlistMobile.png')} />
-                <View style={styles.containerError}>
-                    {mensagensErro ? <Text style={styles.error}>{mensagensErro}</Text> : null}
-                </View>
+
                 <Text style={styles.login}>E-mail</Text>
                 <TextInput
                     style={styles.inputsLogin}
@@ -178,7 +183,7 @@ function LoginForm({ navigation }) {
                     value={formValues.senha}
                     onChangeText={(text) => handleChange('senha', text)}
                 />
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <TouchableOpacity onPress={() => setIsPasswordResetModalVisible(true)}>
                     <Text style={styles.forgotPassword}>Esqueci minha senha</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
@@ -187,15 +192,14 @@ function LoginForm({ navigation }) {
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit} disabled={!formValues.email || !formValues.senha}>
                     <Text style={styles.submitTxt}>ENTRAR</Text>
                 </TouchableOpacity>
-
             </View>
 
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={modalVisible}
+                visible={isPasswordResetModalVisible}
                 onRequestClose={() => {
-                    setModalVisible(!modalVisible);
+                    setIsPasswordResetModalVisible(!isPasswordResetModalVisible);
                 }}
             >
                 <View style={styles.centeredView}>
@@ -224,7 +228,7 @@ function LoginForm({ navigation }) {
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={[styles.button, styles.buttonCancel]}
-                                onPress={() => setModalVisible(!modalVisible)}
+                                onPress={() => setIsPasswordResetModalVisible(!isPasswordResetModalVisible)}
                             >
                                 <Text style={styles.textStyleCancelar}>Cancelar</Text>
                             </TouchableOpacity>
@@ -238,7 +242,34 @@ function LoginForm({ navigation }) {
                     </View>
                 </View>
             </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isErrorModalVisible}
+                onRequestClose={() => {
+                    setIsErrorModalVisible(!isErrorModalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Erros no login:</Text>
+                        {mensagensErro.map((mensagem, index) => (
+                            <Text key={index} style={styles.modalErrorText}>{mensagem}</Text>
+                        ))}
+                        <TouchableHighlight
+                            style={styles.closeButton}
+                            onPress={() => {
+                                setIsErrorModalVisible(!isErrorModalVisible);
+                            }}
+                        >
+                            <Text style={styles.closeButtonText}>fechar</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </Modal>
         </KeyboardAvoidingView>
     );
 }
+
 export default LoginForm;

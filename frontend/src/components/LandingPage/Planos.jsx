@@ -4,8 +4,8 @@ function Planos() {
     return (
         <>
             <section className="planos">
+                <h1>PLANOS</h1>
                 <div className="tabela-preco" >
-
                     <div className="card-preco-div" >
 
                         <h3 className="card-preco-header">Gratuito</h3>
