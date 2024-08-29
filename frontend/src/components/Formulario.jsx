@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-function Formulario({ tarefa, onClose }) {
+function Formulario({ tarefa, onClose, listaId }) {
   const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
   const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
 
@@ -14,13 +14,17 @@ function Formulario({ tarefa, onClose }) {
     etiqueta: '',
     data: '',
     horario: '',
-    usuario_id: localStorage.getItem("ID")
+    usuario_id: localStorage.getItem("ID"),
+    lista_id: listaId  // Inclui o ID da lista
   });
 
   // Atualiza o estado dos dadosTask quando a prop tarefa é recebida
   useEffect(() => {
     if (tarefa) {
-      setDadosTask(tarefa);
+      setDadosTask({
+        ...tarefa,
+        lista_id: listaId, // Garante que o ID da lista seja mantido ao editar
+      });
       setAcao('editar_tarefa');
     } else {
       setDadosTask({
@@ -29,11 +33,12 @@ function Formulario({ tarefa, onClose }) {
         etiqueta: '',
         data: '',
         horario: '',
-        usuario_id: localStorage.getItem("ID")
+        usuario_id: localStorage.getItem("ID"),
+        lista_id: listaId  // Define o ID da lista ao criar uma nova tarefa
       });
       setAcao('criar_tarefa');
     }
-  }, [tarefa]);
+  }, [tarefa, listaId]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -44,6 +49,7 @@ function Formulario({ tarefa, onClose }) {
   };
 
   const handleSubmit = async (e) => {
+    console.log(dadosTask)
     e.preventDefault();
     try {
       const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
@@ -70,7 +76,7 @@ function Formulario({ tarefa, onClose }) {
   return (
     <Modal show onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>{dadosTask.acao === 'editar_tarefa' ? "Editar tarefa" : "Nova tarefa"}</Modal.Title>
+        <Modal.Title>{acao === 'editar_tarefa' ? "Editar tarefa" : "Nova tarefa"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -120,6 +126,13 @@ function Formulario({ tarefa, onClose }) {
               onChange={handleChange}
             />
           </Form.Group>
+          {mensagensErro.length > 0 && (
+            <div className="alert alert-danger">
+              {mensagensErro.map((erro, index) => (
+                <p key={index}>{erro}</p>
+              ))}
+            </div>
+          )}
           <Modal.Footer>
             <Button variant="secondary" onClick={onClose}>
               Fechar

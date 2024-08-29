@@ -52,6 +52,7 @@ def processar_dados(dados):
             dados_processados.get('data'),
             dados_processados.get('horario'),
             dados_processados.get('etiqueta'),
+            dados_processados.get('lista_id'),
             dados_processados.get('usuario_id')
         ]
 
@@ -82,8 +83,7 @@ def processar_dados(dados):
             if not mensagens_erro:
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
 
         # Função para validar o login do usuário e retornar os dados dele para serem mostrados no frontend
         if acao == 'efetuar_login':
@@ -92,11 +92,9 @@ def processar_dados(dados):
             user = selecionar_dados_cadastro(email, senha)
             if user and email == user[0] and senha == user[1]:
                 email, senha, id, nome_usuario, data_nasc = user
-                dados_cadastro = {'error': False, 'email': email, 'id': id,
-                                  'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
+                dados_cadastro = {'error': False, 'email': email, 'id': id,'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': 'Email ou senha inválido'}
+                dados_cadastro = {'error': True,'mensagens_erro': 'Email ou senha inválido'}
 
         if acao == 'criar_lista':
             criarLista(lista)
@@ -114,8 +112,7 @@ def processar_dados(dados):
         if mensagens_erro:
             dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
         else:
-            dados_cadastro = {
-                'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
+            dados_cadastro = {'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
 
     # Função para carregar os dados do usuário
     if acao == 'selecionar_dados_usuario':
@@ -130,6 +127,7 @@ def processar_dados(dados):
 
     # Função para criar uma nova tarefa no banco de dados
     if acao == 'criar_tarefa':
+        print(tarefa)
         criarTarefa(tarefa)
         dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
 

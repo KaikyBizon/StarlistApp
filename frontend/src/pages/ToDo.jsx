@@ -28,7 +28,7 @@ function ToDo() {
             const resultado = await resposta.json();
 
             if (resposta.ok) {
-                const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
+                const tarefasRecebidas = resultado.dados_tarefa;
 
                 const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
                     titulo: tarefa[0],
@@ -40,7 +40,6 @@ function ToDo() {
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
-                console.log(tarefasOrdenadas)
                 setTarefas(tarefasOrdenadas);
                 setFilteredTasks(tarefasOrdenadas);
             } else {
