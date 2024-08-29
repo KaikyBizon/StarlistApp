@@ -6,8 +6,9 @@ from actionsBD.gravar_bd import inserir_usuario
 from actionsBD.createTask_bd import criarTarefa
 from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
-from actionsBD.createList_bd import criarLista
 from actionsBD.editTask import editar_tarefa
+from actionsBD.createList_bd import criarLista
+
 
 from validacoes import (
     validar_nome,
@@ -18,8 +19,6 @@ from validacoes import (
 )
 
 # Função para processar os dados recebidos
-
-
 def processar_dados(dados):
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
@@ -57,7 +56,7 @@ def processar_dados(dados):
         # recebe os dados para criar uma nova lista no banco de dados
         lista = [
             dados_processados.get('nome'),
-            dados_processados.get('lista_id')
+            dados_processados.get('usuario_id')
         ]
 
         # Lista para armazenar mensagens de erro
