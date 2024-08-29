@@ -2,7 +2,7 @@ import socket
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 # Importe a função deletarUsuario
-from processamento import processar_dados, login, deletar_usuario
+from processamento import processar_dados, deletar_usuario
 app = Flask(__name__)
 CORS(app)  # Permita solicitações CORS
 
@@ -11,8 +11,7 @@ CORS(app)  # Permita solicitações CORS
 def receber_dados():
     dados = request.json
     listaCriada, dados_tarefa, dados_cadastro = processar_dados(dados)
-    ret_login = login(dados)
-    response_data = {"dados_processados": {"listaCriada": listaCriada, "dados_tarefa": dados_tarefa, 'dadosCadastro': dados_cadastro}, "login_status": ret_login}
+    response_data = {"dados_processados": {"listaCriada": listaCriada, "dados_tarefa": dados_tarefa, 'dadosCadastro': dados_cadastro}}
     return jsonify(response_data)
 
 
