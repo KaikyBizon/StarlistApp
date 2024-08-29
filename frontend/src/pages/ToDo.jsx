@@ -23,7 +23,7 @@ function ToDo() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ usuario_id: usuarioId })
+                body: JSON.stringify({acao: "carregar_tarefas", dados: usuarioId })
             });
             const resultado = await resposta.json();
 
@@ -40,6 +40,7 @@ function ToDo() {
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+                console.log(tarefasOrdenadas)
                 setTarefas(tarefasOrdenadas);
                 setFilteredTasks(tarefasOrdenadas);
             } else {
@@ -59,7 +60,7 @@ function ToDo() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+                body: JSON.stringify({ dados: id, acao: 'excluirTarefa' })
             });
             const resultado = await resposta.json();
 

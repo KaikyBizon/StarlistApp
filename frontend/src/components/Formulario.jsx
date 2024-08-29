@@ -4,10 +4,11 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 function Formulario({ tarefa, onClose }) {
-  const [mensagensErro, setMensagensErro] = useState([]); //Armazena as mensagens de erro retornadas do backend
-  //Constante para armazenar os dados da tarefa
+  const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
+  const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
+
+  // Constante para armazenar os dados da tarefa
   const [dadosTask, setDadosTask] = useState({
-    acao: 'criar_tarefa', //Ação usada para o backend saber qual função executar
     titulo: '',
     descricao: '',
     etiqueta: '',
@@ -19,10 +20,10 @@ function Formulario({ tarefa, onClose }) {
   // Atualiza o estado dos dadosTask quando a prop tarefa é recebida
   useEffect(() => {
     if (tarefa) {
-      setDadosTask({ ...tarefa, acao: 'editar_tarefa' });
+      setDadosTask(tarefa);
+      setAcao('editar_tarefa');
     } else {
       setDadosTask({
-        acao: 'criar_tarefa',
         titulo: '',
         descricao: '',
         etiqueta: '',
@@ -30,6 +31,7 @@ function Formulario({ tarefa, onClose }) {
         horario: '',
         usuario_id: localStorage.getItem("ID")
       });
+      setAcao('criar_tarefa');
     }
   }, [tarefa]);
 
@@ -42,7 +44,6 @@ function Formulario({ tarefa, onClose }) {
   };
 
   const handleSubmit = async (e) => {
-    console.log(dadosTask)
     e.preventDefault();
     try {
       const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
@@ -50,17 +51,17 @@ function Formulario({ tarefa, onClose }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dadosTask),
+        body: JSON.stringify({ acao: acao, dados: dadosTask }),
       });
 
-      const resultado = (await resposta.json()).dados_processados;
+      const resultado = await resposta.json();
 
       if (resposta.ok && !resultado.mensagens_erro) {
         onClose(); // Fecha o modal após a edição
+        window.location.reload(); // Recarrega a página após o fechamento do modal
       } else {
         setMensagensErro(resultado.mensagens_erro);
       }
-      window.location.reload()
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
     }
