@@ -113,7 +113,7 @@ def processar_dados(dados):
 
     # Função para carregar os dados do usuário
     if acao == 'selecionar_dados_usuario':
-        id = dados_processados.get('id')
+        id = dados_processados
         resultado_select = select_atualizar(id)
         if resultado_select is not None:  # Verificar se há resultados
             email, nome_usuario, data_nasc = resultado_select  # Desempacotar os resultados
