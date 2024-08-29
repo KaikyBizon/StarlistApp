@@ -10,9 +10,9 @@ function Kanban({ onListaSalva }) {
     const [categorias, setCategorias] = useState([]);
     const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
     const [novaLista, setNovaLista] = useState('');
+    const [exibirFormulario, setExibirFormulario] = useState(false)
 
     const [dadosList, setDadosList] = useState({
-        acao: 'criar_lista',
         nome: '',
         tarefa_id: localStorage.getItem("ID"),
         usuario_id: localStorage.getItem("ID")
@@ -46,7 +46,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,14 +90,17 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...dadosList,
-                    nome: novaLista
+                    acao: 'criar_lista',
+                    dados: {
+                        ...dadosList,
+                        nome: novaLista
+                    }
                 }),
             });
 
@@ -124,7 +127,7 @@ function Kanban({ onListaSalva }) {
 
     const handleDeleteLista = async (listaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/lista/${listaId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${listaId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -148,6 +151,11 @@ function Kanban({ onListaSalva }) {
 
     const handleClearInput = () => {
         setNovaLista('');
+    };
+
+    // Função para alternar a exibição do formulário
+    const handleExibirFormulario = () => {
+        setExibirFormulario(!exibirFormulario);
     };
 
     useEffect(() => {
