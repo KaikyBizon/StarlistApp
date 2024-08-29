@@ -18,7 +18,7 @@ function Kanban({ onListaSalva }) {
         usuario_id: localStorage.getItem("ID")
     });
 
-    // Função para buscar tarefas para uma categoria específic
+    // Função para buscar tarefas para uma categoria específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
             const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
@@ -161,7 +161,7 @@ function Kanban({ onListaSalva }) {
                                 ))}
                                 <div className="formulario-fixo">
                                     <button onClick={handleExibirFormulario}>Nova tarefa</button>
-                                    {exibirFormulario && <Formulario />} {/* Renderiza o formulário se o estado exibirFormulario for true */}
+                                    {exibirFormulario && <Formulario onClose={handleExibirFormulario} />}
                                 </div>
                             </div>
 
