@@ -49,16 +49,16 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: usuarioId }),
+        body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
       });
       const resultado = await resposta.json();
       if (resposta.ok) {
 
         // Atualiza a estrutura para incluir o ID
-        const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
+        const tarefasRecebidas = resultado.dados_tarefa;
         const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
           titulo: tarefa[0],
           etiqueta: tarefa[1],
@@ -133,7 +133,7 @@ export default function ToDo({ navigation, route }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.30:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
