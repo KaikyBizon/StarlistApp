@@ -10,9 +10,9 @@ function Kanban({ onListaSalva }) {
     const [categorias, setCategorias] = useState([]);
     const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
     const [novaLista, setNovaLista] = useState('');
+    const [exibirFormulario, setExibirFormulario] = useState(false);
 
     const [dadosList, setDadosList] = useState({
-        acao: 'criar_lista',
         nome: '',
         tarefa_id: localStorage.getItem("ID"),
         usuario_id: localStorage.getItem("ID")
@@ -21,7 +21,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para uma categoria específic
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ function Kanban({ onListaSalva }) {
             });
 
             const resultado = await resposta.json();
-            
+
             if (resposta.ok) {
                 return resultado;
             } else {
@@ -46,7 +46,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,19 +54,19 @@ function Kanban({ onListaSalva }) {
             });
 
             const categoriasResultado = await resposta.json();
-            
+
             if (resposta.ok) {
                 setCategorias(categoriasResultado);
-                
+
                 // Busca tarefas para cada categoria
                 const tarefasPromises = categoriasResultado.map(async (categoria) => {
                     const tarefas = await fetchTarefasParaCategoria(categoria.id);
                     return { [categoria.id]: tarefas };
                 });
-                
+
                 // Aguarda todas as promessas serem resolvidas
                 const tarefasArray = await Promise.all(tarefasPromises);
-                
+
                 // Converte o array de objetos em um único objeto
                 const tarefasMap = tarefasArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
                 setTarefasPorCategoria(tarefasMap);
@@ -90,28 +90,29 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...dadosList,
-                    nome: novaLista
+                    acao: 'criar_lista',
+                    dados: { ...dadosList, nome: novaLista }
                 }),
             });
 
-            const resultado = (await resposta.json()).dados_processados.listaCriada;
+            const resultado = (await resposta.json()).listaCriada;
 
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
                 const novaListaAtualizada = [...lista, novaLista];
                 setLista(novaListaAtualizada);
-                setNovaLista(''); 
+                setNovaLista('');
 
                 // Salva as listas no localStorage
                 localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
+                window.location.reload()
 
                 if (onListaSalva) {
                     onListaSalva();
@@ -123,7 +124,12 @@ function Kanban({ onListaSalva }) {
     };
 
     const handleClearInput = () => {
-        setNovaLista(''); 
+        setNovaLista('');
+    };
+
+    // Função para alternar a exibição do formulário
+    const handleExibirFormulario = () => {
+        setExibirFormulario(!exibirFormulario);
     };
 
     useEffect(() => {
@@ -154,14 +160,15 @@ function Kanban({ onListaSalva }) {
                                     </div>
                                 ))}
                                 <div className="formulario-fixo">
-                                    <Formulario />
+                                    <button onClick={handleExibirFormulario}>Nova tarefa</button>
+                                    {exibirFormulario && <Formulario />} {/* Renderiza o formulário se o estado exibirFormulario for true */}
                                 </div>
                             </div>
-                            
+
                         </section>
                     ))}
                     <div className="lista-adiciona">
-                        <input type="text" placeholder="Digite o nome da lista" value={novaLista} onChange={handleChange}/>
+                        <input type="text" placeholder="Digite o nome da lista" value={novaLista} onChange={handleChange} />
                         <div className='botões'>
                             <button className="botao-adicionaLista" onClick={handleSubmit}>Adicionar lista</button>
                             <button className="excluir" onClick={handleClearInput}>X</button>
