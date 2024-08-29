@@ -20,5 +20,5 @@ def selecionar_lista_tarefa(id_lista):
     cursor.execute(sql, val)
     listaTarefa = cursor.fetchall()
     conex.close()
-    print(listaTarefa)
+    print("TarefasLista: ", listaTarefa)
     return listaTarefa

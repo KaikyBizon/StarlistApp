@@ -21,7 +21,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para uma categoria específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,6 +29,7 @@ function Kanban({ onListaSalva }) {
             });
 
             const resultado = await resposta.json();
+            console.log("Resultado:", resultado)
 
             if (resposta.ok) {
                 return resultado;
@@ -104,7 +105,7 @@ function Kanban({ onListaSalva }) {
                 }),
             });
 
-            const resultado = (await resposta.json()).dados_processados.listaCriada;
+            const resultado = (await resposta.json()).listaCriada;
 
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
@@ -153,10 +154,10 @@ function Kanban({ onListaSalva }) {
         setNovaLista('');
     };
 
-    // Função para alternar a exibição do formulário
-    const handleExibirFormulario = () => {
-        setExibirFormulario(!exibirFormulario);
+    const handleExibirFormulario = (listaId) => {
+        setExibirFormulario(listaId);
     };
+
 
     useEffect(() => {
         fetchCategoriasETarefas();
@@ -186,8 +187,8 @@ function Kanban({ onListaSalva }) {
                                     </div>
                                 ))}
                                 <div className="formulario-fixo">
-                                    <button onClick={handleExibirFormulario}>Nova tarefa</button>
-                                    {exibirFormulario && <Formulario onClose={handleExibirFormulario} />}
+                                    <button onClick={() => handleExibirFormulario(categoria.id)}>Nova tarefa</button>
+                                    {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
                                 </div>
                             </div>
                         </section>

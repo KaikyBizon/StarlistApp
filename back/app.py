@@ -38,8 +38,7 @@ def lista(usuario_id):
     
 
 @app.route('/tarefas/<int:id_lista>', methods=['GET'])
-def tarefas(id_lista):
-    print(id_lista) 
+def tarefas(id_lista): 
     try:
         ret_tarefa = selecionar_lista_tarefa(id_lista)
         # Ajustar a estrutura de dados conforme necessário
