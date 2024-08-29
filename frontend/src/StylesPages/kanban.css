@@ -27,6 +27,12 @@
     background-color: #494545; /* Fundo branco para garantir que o campo seja legível */
     z-index: 2; /* Garante que o botão fique acima das tarefas */
     padding: 15px 0 20px 0;
+    flex-direction: column;
+}
+
+.excluir{
+    width: 10px;
+    height: 15px;
 }
 
 .lista-adiciona input {
@@ -39,7 +45,6 @@
 
 .lista-adiciona button.botao-adicionaLista {
     background-color: #faed27;
-  
     color:#535050;
     border: none;
     border-radius: 10px;
