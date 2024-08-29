@@ -11,7 +11,7 @@ CORS(app)  # Permita solicitações CORS
 def receber_dados():
     dados = request.json
     listaCriada, dados_tarefa, dados_cadastro = processar_dados(dados)
-    response_data = {"dados_processados": {"listaCriada": listaCriada, "dados_tarefa": dados_tarefa, 'dadosCadastro': dados_cadastro}}
+    response_data = {"listaCriada": listaCriada, "dados_tarefa": dados_tarefa, 'dadosCadastro': dados_cadastro}
     return jsonify(response_data)
 
 

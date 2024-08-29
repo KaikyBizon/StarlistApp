@@ -66,7 +66,7 @@ function Cadastro() {
                 body: JSON.stringify({acao: 'cadastro', dados: formValues}),
             });
 
-            const resultado = (await resposta.json()).dados_processados.dadosCadastro;
+            const resultado = (await resposta.json()).dadosCadastro;
 
 
             if (resultado.error) {

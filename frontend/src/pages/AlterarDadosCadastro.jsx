@@ -29,15 +29,15 @@ const AlterarDadosCadastro = () => {
                 },
                 body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: formAlter }),
             });
-            const dados = await resposta.json();
+            const dados = (await resposta.json()).dadosCadastro;
 
             setFormAlter({
-                nome: dados.dados_processados.dadosCadastro.nome_usuario,
-                email: dados.dados_processados.dadosCadastro.email,
-                dataNascimento: dados.dados_processados.dadosCadastro.data_nasc,
+                nome: dados.nome_usuario,
+                email: dados.email,
+                dataNascimento: dados.data_nasc,
                 id: localStorage.getItem("ID")
             });
-            setNomeUsuario(dados.dados_processados.dadosCadastro.nome_usuario);
+            setNomeUsuario(dados.nome_usuario);
         } catch (error) {
             console.error('Erro ao carregar dados!', error)
         }
@@ -90,8 +90,8 @@ const AlterarDadosCadastro = () => {
                 body: JSON.stringify({acao: 'atualizar_cadastro', dados: formAlter}),
             });
 
-            const resultado = (await resposta.json()).dados_processados.dadosCadastro;
-            console.log(resultado)
+            const resultado = (await resposta.json()).dadosCadastro;
+            console.log("Resposta: ", resultado)
 
             if (resultado.error) {
                 // Atualiza o estado com as mensagens de erro para exibição no formulário

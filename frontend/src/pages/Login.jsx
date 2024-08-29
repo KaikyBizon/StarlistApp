@@ -29,7 +29,7 @@ function LoginForm() {
         },
         body: JSON.stringify({acao: 'efetuar_login', dados: formValues}),
       });
-      const resultado = (await resposta.json()).dados_processados.dadosCadastro;
+      const resultado = (await resposta.json()).dadosCadastro;
 
       if (resultado.error) {
         // Atualiza o estado com as mensagens de erro para exibição no formulário
