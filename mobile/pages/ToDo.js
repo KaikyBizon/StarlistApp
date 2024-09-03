@@ -9,8 +9,9 @@ import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
-moment.locale('pt-br'); // Configura moment para usar português
+moment.locale('pt-br');// Configura moment para usar português
 
 /**
  * Nome do Componente: ToDo
@@ -33,11 +34,9 @@ moment.locale('pt-br'); // Configura moment para usar português
  * @returns {JSX.Element}
  */
 
-export default function ToDo({ navigation }) {
-  // Carrega a fonte Kanit_500Medium usando o hook useFonts do Expo
-  const [fontLoaded] = useFonts({
-    Kanit_500Medium,
-  });
+export default function ToDo({ navigation, route }) {
+  const [fontLoaded] = useFonts({ Kanit_500Medium });
+  const isFocused = useIsFocused(); // Verifica se a tela está focada
 
   // Estados para as tarefas buscadas no banco, data selecionada e visibilidade do DateTimePicker
   const [date, setDate] = useState(new Date());
@@ -49,21 +48,17 @@ export default function ToDo({ navigation }) {
   // Função para buscar tarefas do servidor
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
-
     try {
-      const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ usuario_id: usuarioId })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
       });
       const resultado = await resposta.json();
-
       if (resposta.ok) {
-        const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
 
         // Atualiza a estrutura para incluir o ID
+        const tarefasRecebidas = resultado.dados_tarefa;
         const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
           titulo: tarefa[0],
           etiqueta: tarefa[1],
@@ -72,7 +67,6 @@ export default function ToDo({ navigation }) {
           horario: tarefa[4],
           id: tarefa[3],
         }));
-
         const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
         setTarefas(tarefasOrdenadas);
         setFilteredTasks(tarefasOrdenadas);
@@ -91,20 +85,15 @@ export default function ToDo({ navigation }) {
     return tarefas.sort((a, b) => {
       const dataDateA = new Date(a.data);
       const dataDateB = new Date(b.data);
-
-      if (dataDateA.getTime() !== dataDateB.getTime()) {
-        return dataDateA - dataDateB;
-      }
+      if (dataDateA.getTime() !== dataDateB.getTime()) return dataDateA - dataDateB;
 
       if (a.horario && b.horario) {
         const [horaA, minutoA] = a.horario.split(':').map(Number);
         const [horaB, minutoB] = b.horario.split(':').map(Number);
         const tempoA = horaA * 60 + minutoA;
         const tempoB = horaB * 60 + minutoB;
-
         return tempoA - tempoB;
       }
-
       return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
     });
   };
@@ -114,32 +103,54 @@ export default function ToDo({ navigation }) {
     fetchTarefas();
   }, []);
 
+  useEffect(() => {
+    if (isFocused) {
+        if (route.params?.selectedDate) {
+            const selectedDate = new Date(route.params.selectedDate);
+            selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
+            setDate(selectedDate);
+        }
+
+        // Função se houver uma nova tarefa passada como parâmetro
+        if (route.params?.novaTarefa) {
+            const novaTarefa = route.params.novaTarefa;
+
+            setTarefas(prevTarefas => {
+                const tarefasAtualizadas = [...prevTarefas, novaTarefa];
+                const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+                setFilteredTasks(tarefasOrdenadas);
+                return tarefasOrdenadas;
+            });
+        }
+    }
+}, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
+
+
+
+
+  useEffect(() => {
+    const tarefasFiltradas = tarefas.filter(tarefa => moment(tarefa.data).isSame(date, 'day'));
+    setFilteredTasks(tarefasFiltradas);
+  }, [date, tarefas]);
+
   // Função para mostrar o DateTimePicker
-  const showDatePickerHandler = () => {
-    setShowDatePicker(true);
-  };
+  const showDatePickerHandler = () => setShowDatePicker(true);
 
   // Função chamada quando a data é alterada no DateTimePicker
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
-    // Filtra as tarefas com base na data selecionada
-    const tarefasFiltradas = tarefas.filter(tarefa => moment(tarefa.data).isSame(currentDate, 'day'));
-    setFilteredTasks(tarefasFiltradas);
   };
 
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.15:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.30:8085/receber-dados`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
       });
-
       if (resposta.ok) {
         Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
         // Atualiza a lista de tarefas após exclusão
@@ -158,10 +169,8 @@ export default function ToDo({ navigation }) {
     <View style={styles.background}>
       {/* Componente Menu para busca */}
       <MenuScreen />
-
       {/* Mostra o DateTimePicker e a data formatada */}
       <View style={styles.containerMenu}>
-        {/* Botão para abrir o DateTimePicker */}
         <TouchableOpacity onPress={showDatePickerHandler}>
           <Feather size={32} name="calendar" />
         </TouchableOpacity>
@@ -183,7 +192,7 @@ export default function ToDo({ navigation }) {
       {filteredTasks && filteredTasks.length > 0 ? (
         <FlatList
           data={filteredTasks}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           renderItem={({ item }) => {
             const { id, titulo, data, horario, etiqueta = 'Nenhuma' } = item;
             const tituloExibido = titulo || 'Título não informado';
@@ -219,7 +228,7 @@ export default function ToDo({ navigation }) {
                     <Text style={styles.cardFooterText}>{horarioExibido}</Text>
                   </View>
                   <View style={styles.iconContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity style={styles.editar}>
                       <Feather name="edit" size={24} color="#4682B4" style={styles.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => excluirTarefa(id)}>
@@ -235,7 +244,7 @@ export default function ToDo({ navigation }) {
         <Text>Nenhuma tarefa encontrada</Text>
       )}
 
-      <StatusBar style="auto"/>
+      <StatusBar style="auto" />
     </View>
   );
 }

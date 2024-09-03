@@ -23,12 +23,12 @@ function ToDo() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ usuario_id: usuarioId })
+                body: JSON.stringify({acao: "carregar_tarefas", dados: usuarioId })
             });
             const resultado = await resposta.json();
 
             if (resposta.ok) {
-                const tarefasRecebidas = resultado.dados_processados.dados_tarefa;
+                const tarefasRecebidas = resultado.dados_tarefa;
 
                 const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
                     titulo: tarefa[0],
@@ -59,7 +59,7 @@ function ToDo() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id: id, acao: 'excluirTarefa' })
+                body: JSON.stringify({ dados: id, acao: 'excluirTarefa' })
             });
             const resultado = await resposta.json();
 

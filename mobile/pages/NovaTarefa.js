@@ -83,46 +83,56 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
     };
 
     const handleSubmit = async (e) => {
-        navigation.navigate('TO DO')
-        e.preventDefault();
+    e.preventDefault();
 
-        const valuesTask = {
-            ...dadosTask,
-            data: convertDateToISO(dadosTask.data),
-        };
-
-        try {
-            const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(valuesTask),
-            });
-
-            const resultado = (await resposta.json()).dados_processados;
-
-            if (resultado.mensagens_erro) {
-                setMensagensErro(resultado.mensagens_erro);
-            } else {
-                setShow(false);
-                setDadosTask({
-                    titulo: '',
-                    descricao: '',
-                    data: formatDate(new Date()),
-                    horario: formatTime(new Date()),
-                    etiqueta: '',
-                    usuario_id: dadosTask.usuario_id,
-                });
-                setRefresh(!refresh) //Recarrega a página após inserir uma tarefa
-                if (onTarefaSalva) {
-                    onTarefaSalva();
-                }
-            }
-        } catch (error) {
-            console.error('Erro ao enviar dados:', error);
-        }
+    const valuesTask = {
+        ...dadosTask,
+        data: convertDateToISO(dadosTask.data),
     };
+
+    try {
+        const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ acao: 'criar_tarefa', dados: valuesTask }),
+        });
+
+        const resultado = await resposta.json();
+
+        if (resultado.mensagens_erro) {
+            setMensagensErro(resultado.mensagens_erro);
+        } else {
+            setShow(false);
+            setDadosTask({
+                titulo: '',
+                descricao: '',
+                data: formatDate(new Date()),
+                horario: formatTime(new Date()),
+                etiqueta: '',
+                usuario_id: dadosTask.usuario_id,
+            });
+            setRefresh(!refresh); // Recarrega a página após inserir uma tarefa
+
+            if (onTarefaSalva) {
+                onTarefaSalva();
+            }
+
+            // Adiciona um pequeno atraso para garantir que os dados estejam prontos
+            setTimeout(() => {
+                navigation.navigate('TO DO', {
+                    selectedDate: valuesTask.data,
+                    novaTarefa: valuesTask,
+                });
+            }, 300); // 300ms de atraso
+        }
+    } catch (error) {
+        console.error('Erro ao enviar dados:', error);
+    }
+};
+
+    
 
     const showMode = (currentMode) => {
         setShow(true);

@@ -108,23 +108,23 @@ function LoginForm({ navigation }) {
     // Envia os dados do formulário para o backend
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formValues);
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: formValues.email,
-                    senha: formValues.senha
-                }),
+                body: JSON.stringify({ acao: 'efetuar_login', dados: formValues }),
             });
-            const resultado = await resposta.json();
-            console.log('resposta', resultado);
+            const resultado = (await resposta.json()).dadosCadastro;
 
-            if (resposta.ok && resultado.login_status) {
-                const { id, email, nome_usuario } = resultado.login_status;
+            if (resposta.error) {
+                // Assume que resultado.login_status é um array com a mensagem de erro
+                const erroMensagem = resultado[0]?.error || 'Dados incorretos';
+                setMensagensErro([erroMensagem]);
+                setIsErrorModalVisible(true);
+            } else {
+                const { id, email, nome_usuario } = resultado;
 
                 // Verifica se os campos necessários estão presentes
                 if (id && email && nome_usuario) {
@@ -136,12 +136,6 @@ function LoginForm({ navigation }) {
                     setMensagensErro(['Dados do login inválidos']);
                     setIsErrorModalVisible(true);
                 }
-            } else {
-                // Assume que resultado.login_status é um array com a mensagem de erro
-                const erroMensagem = resultado[0]?.error || 'Dados incorretos';
-                setMensagensErro([erroMensagem]);
-                setIsErrorModalVisible(true);
-                console.log('---------', erroMensagem);
             }
         } catch (error) {
             console.error('Erro ao realizar login:', error);

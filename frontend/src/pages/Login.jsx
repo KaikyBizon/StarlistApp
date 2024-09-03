@@ -22,18 +22,18 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify({acao: 'efetuar_login', dados: formValues}),
       });
-      const resultado = (await resposta.json()).login_status;
+      const resultado = (await resposta.json()).dadosCadastro;
 
-      if (resposta.ok && resultado[1] === 401) {
+      if (resultado.error) {
         // Atualiza o estado com as mensagens de erro para exibição no formulário
-        setMensagensErro(resultado[0].error);
+        setMensagensErro(resultado.mensagens_erro);
       } else {
         localStorage.setItem('ID', resultado.id);
         localStorage.setItem('email', resultado.email);

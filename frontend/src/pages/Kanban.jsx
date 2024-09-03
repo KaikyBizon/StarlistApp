@@ -1,29 +1,85 @@
 import Geral from '../components/Geral';
 import Cabecalho from '../components/Cabecalho';
 import Formulario from '../components/Formulario';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../StylesPages/kanban.css';
 
 function Kanban({ onListaSalva }) {
     const [lista, setLista] = useState([]);
-    const [novaLista, setNovaLista] = useState(''); // Novo estado para o nome da nova tarefa
-    const [show, setShow] = useState(false);
-    const [mensagensErro, setMensagensErro] = useState([]);
-    const [dadosTask, setDadosTask] = useState({
-        acao: 'criar_lista',
+    const [categorias, setCategorias] = useState([]);
+    const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
+    const [novaLista, setNovaLista] = useState('');
+    const [exibirFormulario, setExibirFormulario] = useState(false)
+
+    const [dadosList, setDadosList] = useState({
         nome: '',
-        tarefa_id: localStorage.getItem("ID")
+        tarefa_id: localStorage.getItem("ID"),
+        usuario_id: localStorage.getItem("ID")
     });
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    // Função para buscar tarefas para uma categoria específica
+    const fetchTarefasParaCategoria = async (categoriaId) => {
+        try {
+            const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const resultado = await resposta.json();
+            console.log("Resultado:", resultado)
+
+            if (resposta.ok) {
+                return resultado;
+            } else {
+                console.error('Erro ao buscar tarefas:', resultado.mensagens_erro);
+                return [];
+            }
+        } catch (error) {
+            console.error('Erro ao buscar tarefas:', error);
+            return [];
+        }
+    };
+
+    // Função para buscar categorias e tarefas
+    const fetchCategoriasETarefas = async () => {
+        const usuarioId = localStorage.getItem('ID');
+        try {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${usuarioId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const categoriasResultado = await resposta.json();
+
+            if (resposta.ok) {
+                setCategorias(categoriasResultado);
+
+                // Busca tarefas para cada categoria
+                const tarefasPromises = categoriasResultado.map(async (categoria) => {
+                    const tarefas = await fetchTarefasParaCategoria(categoria.id);
+                    return { [categoria.id]: tarefas };
+                });
+
+                // Aguarda todas as promessas serem resolvidas
+                const tarefasArray = await Promise.all(tarefasPromises);
+
+                // Converte o array de objetos em um único objeto
+                const tarefasMap = tarefasArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+                setTarefasPorCategoria(tarefasMap);
+            } else {
+                console.error('Erro ao buscar categorias:', categoriasResultado.mensagens_erro);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar categorias:', error);
+        }
+    };
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
-        setDadosTask((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
+        setNovaLista(event.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -34,38 +90,76 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...dadosTask,
-                    nome: novaLista // Atualiza o nome da nova lista
+                    acao: 'criar_lista',
+                    dados: {
+                        ...dadosList,
+                        nome: novaLista
+                    }
                 }),
             });
 
-            const resultado = (await resposta.json()).dados_processados.listaCriada;
-
+            const resultado = (await resposta.json()).listaCriada;
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
-                // Atualize o estado da lista com a nova lista recebida do backend
-                setLista((prevList) => [...prevList, novaLista]);
-                setNovaLista(''); // Limpa o campo após adicionar
-                setShow(false);
-                setDadosTask({
-                    nome: '',
-                    tarefa_id: localStorage.getItem("ID")
-                });
+                const novaListaAtualizada = [...lista, novaLista];
+                setLista(novaListaAtualizada);
+                setNovaLista('');
+
+                // Salva as listas no localStorage
+                localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
+
                 if (onListaSalva) {
-                    onListaSalva(); // Chama a função de callback
+                    onListaSalva();
                 }
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
         }
     };
+
+    const handleDeleteLista = async (listaId) => {
+        try {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${listaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (resposta.ok) {
+                // Filtra a lista removendo a excluída
+                setCategorias(categorias.filter(categoria => categoria.id !== listaId));
+                // Atualiza o estado das tarefas
+                const novoTarefasPorCategoria = { ...tarefasPorCategoria };
+                delete novoTarefasPorCategoria[listaId];
+                setTarefasPorCategoria(novoTarefasPorCategoria);
+            } else {
+                console.error('Erro ao excluir lista');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir lista:', error);
+        }
+    };
+
+    const handleClearInput = () => {
+        setNovaLista('');
+    };
+
+    const handleExibirFormulario = (listaId) => {
+        setExibirFormulario(listaId);
+    };
+
+
+    useEffect(() => {
+        fetchCategoriasETarefas();
+    }, []);
 
     return (
         <>
@@ -74,27 +168,35 @@ function Kanban({ onListaSalva }) {
                 <section className='calendario-left'>
                     <Geral />
                 </section>
+
                 <section className='cartoes-kanban'>
-                    <div className="listaAdiciona">
-                        <div className="lista-adiciona">
-                            <input
-                                type="text"
-                                placeholder="Digite o nome da lista"
-                                value={novaLista}
-                                onChange={(e) => setNovaLista(e.target.value)}
-                            />
-                            <button className="botao-adicionaLista" onClick={handleSubmit}>Adicionar lista</button>
-                        </div>
-                        <button className="excluir">X</button>
-                    </div>
-                    {lista.map((item, index) => (
-                        <section key={index} className="status-kanban">
+                    {categorias.map((categoria) => (
+                        <section key={categoria.id} className="status-kanban">
                             <div className="kanban">
-                                <p className='status-tarefa'>{item}</p>
-                                <Formulario />
+                                <div className='titulo-lista'>
+                                    <h4 className='status-tarefa'>{categoria.nome}</h4>
+                                </div>
+                                {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
+                                    <div key={index} className="tarefa-item">
+                                        <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
+                                        <p className='data-hora'>Data: {tarefa.data}</p>
+                                        <p className='data-hora'>Hora: {tarefa.horario}</p>
+                                    </div>
+                                ))}
+                                <div className="formulario-fixo">
+                                    <button onClick={() => handleExibirFormulario(categoria.id)}>Nova tarefa</button>
+                                    {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
+                                </div>
                             </div>
                         </section>
                     ))}
+                    <div className="lista-adiciona">
+                        <input type="text" placeholder="Digite o nome da lista" value={novaLista} onChange={handleChange} />
+                        <div className='botões'>
+                            <button className="botao-adicionaLista" onClick={handleSubmit}>Adicionar lista</button>
+                            <button className="excluir" onClick={handleClearInput}>X</button>
+                        </div>
+                    </div>
                 </section>
             </section>
         </>
