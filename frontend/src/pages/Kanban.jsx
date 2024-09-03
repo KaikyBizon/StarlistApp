@@ -1,6 +1,5 @@
 import Geral from '../components/Geral';
-import Menu from '../components/menu';
-import Options from '../components/Options';
+import Cabecalho from '../components/Cabecalho';
 import Formulario from '../components/Formulario';
 import { useState } from 'react';
 import '../StylesPages/kanban.css';
@@ -70,8 +69,7 @@ function Kanban({ onListaSalva }) {
 
     return (
         <>
-            <Menu />
-            <Options />
+            <Cabecalho/>
             <section className='interacao'>
                 <section className='calendario-left'>
                     <Geral />

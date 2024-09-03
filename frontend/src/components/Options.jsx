@@ -3,7 +3,7 @@ import { Container, Nav, Navbar, NavDropdown, Modal, Button, Form, Alert } from 
 import Formulario from './Formulario.jsx';
 import '../StylesPages/novatarefa.css';
 import AddParticipantes from './AddParticipantes.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // Importar useLocation
 
 function Options() {
     const defaultName = 'Nome da lista';
@@ -11,12 +11,14 @@ function Options() {
     const [recipientName, setRecipientName] = useState(defaultName);
     const [tempName, setTempName] = useState(defaultName);
     const [error, setError] = useState('');
-    const [showFormulario, setShowFormulario] = useState(false); // Estado para controlar a exibição do formulário
+    const [showFormulario, setShowFormulario] = useState(false);
+
+    const location = useLocation(); // Usar useLocation para obter o caminho atual
 
     useEffect(() => {
         const modalState = localStorage.getItem('modalVisible');
         const name = localStorage.getItem('recipientName');
-        
+
         if (modalState !== null) {
             setShowModal(JSON.parse(modalState));
         }
@@ -55,11 +57,11 @@ function Options() {
     };
 
     const handleShowFormulario = () => {
-        setShowFormulario(true); // Exibe o formulário
+        setShowFormulario(true);
     };
 
     const handleCloseFormulario = () => {
-        setShowFormulario(false); // Fecha o formulário
+        setShowFormulario(false);
     };
 
     return (
@@ -67,7 +69,7 @@ function Options() {
             <Navbar expand="lg" className="bg-body-tertiary nav-fixed">
                 <Container>
                     <div className='nav-utensilios'>
-                        <Navbar.Brand href="#home" onClick={handleShow}> {recipientName}</Navbar.Brand>
+                        <Navbar.Brand href="#home" onClick={handleShow}>{recipientName}</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">
@@ -89,7 +91,10 @@ function Options() {
                         </Navbar.Collapse>
                     </div>
                     <div className="create-nova">
-                        <Button variant="primary" className='btn-novatarefa' onClick={handleShowFormulario}>Nova Tarefa</Button>
+                        {/* Condição para exibir o botão com base no caminho atual */}
+                        {location.pathname !== '/kanban' && (
+                            <Button variant="primary" className='btn-novatarefa' onClick={handleShowFormulario}>Nova Tarefa</Button>
+                        )}
                     </div>
                 </Container>
             </Navbar>

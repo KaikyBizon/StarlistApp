@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+
+#fundo_empresarial {
+    background-image: url(../../public/images/fundo_cadastro_empresarial.png);
+    background-size: 1550px;
+    height: 100vh;
+}
+
+#geral_empresarial {
+    display: flex;
+    height: 645px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#geral_empresarial .msg {
+    font-size: 35pt;
+    color: #000000;
+}
+
+.login_empresarial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 200px;
+    width: 300px;
+}
+
+#right-login_empresarial input {
+    display: flex;
+    justify-content: center;
+    max-width: 400px; /* Ajuste aqui para aumentar a largura máxima */
+}
+
+.textos_empresarial {
+    display: flex;
+    flex-direction: column; /* Exibe a label e o select um abaixo do outro */
+    align-items: flex-start; /* Alinha itens à esquerda */
+    margin-bottom: 20px; /* Espaçamento inferior para separação dos elementos subsequentes */
+}
+
+.textos_empresarial input {
+    display: block;
+    width: 400px; /* Aumenta a largura do input */
+    height: 50px; /* Aumenta a altura do input */
+    margin-top: 20px; /* Reduzido para 20px para manter um bom espaçamento */
+    font-size: 16px; /* Aumenta o tamanho da fonte */
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #c9c9c9;
+    padding: 10px; /* Adiciona padding para melhorar a experiência de digitação */
+}
+
+.titulo_empresarial {
+    color: #000000;
+    font-weight: 30pt;
+    padding: 30px;
+}
+.textos_empresarial input {
+    color: #c9c9c9;
+}
+
+.textos_empresarial input::placeholder {
+    color: #c9c9c9;
+    font-size: 12pt; /* Aumenta o tamanho da fonte do placeholder */
+    opacity: 0.8;
+}
+
+.textos_empresarial input:focus {
+    outline: 0;
+    color: #c9c9c9; /* Ajuste de cor no foco */
+}
+
+.btn-cadastro,
+#btn-submit-empresarial,
+#btn-cancel-empresarial {
+    cursor: pointer;
+    border-radius: 15px;
+    width: 150px;
+    height: 50px;
+    border: 0;
+    padding: 12px 30px;
+    background-color: #faed27;
+}
+
+.btn-cadastro:hover,
+#btn-submit-empresarial:hover,
+#btn-cancel-empresarial:hover {
+    color: #faed27;
+    background-color: #000000;
+}
+
+.botoes_empresarial {
+    display: flex;
+    justify-content: space-around;
+}
+
+.error-validation {
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    text-align: center;
+    color: #b51919;
+}
+
+.erro {
+    color: red;
+    font-size: 14px;
+    padding: 0;
+    width: 400px; /* Aumenta a largura para coincidir com o tamanho do input */
+}

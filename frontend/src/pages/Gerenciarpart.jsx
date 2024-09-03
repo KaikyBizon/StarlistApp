@@ -1,13 +1,11 @@
 import Cardgerenciar from "../components/Cardgerenciar"
-import Menu from '../components/menu';
-import Options from '../components/Options';
+import Cabecalho from "../components/Cabecalho";
 import '../StylesPages/gerenciarpart.css'
 
 function Gerenciarpart() {
     return (
         <>
-            <Menu />
-            <Options />
+            <Cabecalho/>
             <section id="gerenciar-part">
                 <div id="title-gerenciar">
                     <h1>Gerenciar participantes</h1>

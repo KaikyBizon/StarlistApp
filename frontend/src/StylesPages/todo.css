@@ -14,13 +14,13 @@
 /* Cards de tarefas */
 .cards-tarefa {
     background-color: #413F3F;
-    color: #faed27;
     border-radius: 15px 0 0 0;
     height: 28%;
     width: 100%; /* Garante que o card ocupe toda a largura disponível */
     max-width: 1000px; /* Limita a largura máxima do card */
     margin-bottom: 10px; /* Espaçamento entre os cards */
 }
+
 
 
 .interacao {
@@ -38,7 +38,11 @@ p {
 .titulo-important {
     display: flex;
     align-items: center;
+    color: #F1D327;
+    border-bottom: 1px solid;
+    border-color: #696969;
 }
+
 
 /*Definindo tamanho e borda das tags coloridas de etiquetas nos cards*/
 .blueTask,
@@ -77,10 +81,48 @@ p {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal; /*Permite quebra de linha*/
+    margin: 5px 20px 0 20px;
 }
 
-.content-dataTask{
+.content-infoTask{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+/* Ajustes na etiqueta */
+.etiqueta {
+    width: 15px; 
+    height: 10px; 
+    border-radius: 5px; 
+    margin-top: 7px;
+    background-color: #333; /* Define a cor de fundo da etiqueta */
+    padding: 5px 15px;
+}
+
+.data_etiqueta{
+    width: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    color: #F1D327;
+}
+
+.card-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.todo-horario{
+    margin-left: 20px;
+    margin-right: 0px;
+    color: #F1D327;
+}
+
+.descricao{
+  color:#fff8b8;  
+  
+}
+
+.titulo-todo{
+    margin: 0px;
 }

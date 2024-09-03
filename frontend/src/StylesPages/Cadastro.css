@@ -34,11 +34,21 @@
     justify-content: space-around;
 }
 
+#right-login{
+    margin-left: 100px;
+}
 
 #right-login input {
     display: flex;
     justify-content: center;
     max-width: 300px;
+}
+
+.textos {
+    display: flex;
+    flex-direction: column; /* Exibe a label e o select um abaixo do outro */
+    align-items: flex-start; /* Alinha itens à esquerda */
+    margin-bottom: 20px; /* Espaçamento inferior para separação dos elementos subsequentes */
 }
 
 .textos input {
@@ -66,6 +76,44 @@
     color: #000000;
 }
 
+/* Estilo para o dropdown */
+.textos select {
+    display: block;
+    width: 300px;
+    margin: 20px 0; /* Ajuste de margem para espaço entre elementos */
+    background: transparent; /* Removendo o fundo branco */
+    border: 0;
+    border-bottom: 1px solid #000000;
+    color: #000000; /* Mesma cor dos placeholders */
+    font-size: 8pt; /* Mesma fonte dos placeholders */
+    opacity: 0.8; /* Mesma opacidade dos placeholders */
+}
+
+/* Estilo para a opção de "placeholder" (primeira opção) */
+.textos select option:first-child {
+    color: #000000;
+    font-size: 8pt;
+    opacity: 0.8;
+}
+
+/* Estilo específico para a opção de "placeholder" (primeira opção) */
+.textos select option:first-child {
+    color: #000000;
+    font-size: 8pt;
+    opacity: 0.8;
+}
+
+/* Remove as setas padrão do select */
+.textos select::-ms-expand {
+    display: none;
+} 
+
+/* Ajustes ao focar no dropdown */
+.textos select:focus {
+    outline: none;  /* Remove a borda de foco padrão */
+    border-bottom: 1px solid #000000;  /* Mantém o estilo ao focar */
+}
+
 .btn-cadastro,
 #btn-submit,
 #btn-cancel {
@@ -73,6 +121,8 @@
     border-radius: 30px;
     border: 0;
     padding: 12px 30px;
+    width: 140px;
+    height: 50px;
     background-color: rgb(255, 197, 0);
 }
 
@@ -86,6 +136,12 @@
 .botoes {
     display: flex;
     justify-content: space-around;
+    margin-right: 70px;
+}
+
+.Link_JaTemConta{
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
 
 .error-validation {
