@@ -106,7 +106,6 @@ function Kanban({ onListaSalva }) {
             });
 
             const resultado = (await resposta.json()).listaCriada;
-
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
