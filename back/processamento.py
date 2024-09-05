@@ -10,6 +10,7 @@ from actionsBD.editTask import editar_tarefa
 from actionsBD.createList_bd import criarLista
 from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
+from actionsBD.editNameList import editar_nome_lista
 
 from validacoes import (
     validar_nome,
@@ -45,12 +46,12 @@ def processar_dados(dados):
             dados_processados.get('plano')
         ]
 
-        #valores recebidos para o cadastro da equipe
+        # valores recebidos para o cadastro da equipe
         cadastro_empresarial = [
             dados_processados.get('cnpj'),
             dados_processados.get('nomeEquipe'),
             dados_processados.get('pessoasEquipe'),
-           # dados_processados.get('cargo')
+            # dados_processados.get('cargo')
         ]
 
         # recebe os valores para alteração do cadastro
@@ -94,7 +95,6 @@ def processar_dados(dados):
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-
         # Inserir usuário
         # Kaiky
         # Alterado em 15/08/24
@@ -119,9 +119,9 @@ def processar_dados(dados):
                 print("Cadastro: ", cadastro)
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro}
 
-        
         # Efetuar cadastro empresarial
         # Gabriel
         # Criado dia 05/09/2024
@@ -133,7 +133,6 @@ def processar_dados(dados):
         # Essa função indica se acao é um cadastro empresarial, caso seja, as informaçõe serão inseridas no banco, caso o contrairo, aparecerá uma mensagem de erro
         if acao == 'cadastro_empresarial':
             cadastroEmpresarial(cadastro_empresarial)
-
 
         # Efetuar login
         # Kaiky
@@ -171,6 +170,23 @@ def processar_dados(dados):
         else:
             listaCriada = {}
     listaCriada = {}
+
+    # Atualizar nome da lista
+    # Davi
+    # criado em 05/09/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # mensagens_erro - lista - retira da lista a mensagem de erro de senha, pois como não tem senha nesse caso, ele valida como inválida
+    # alteracao - lista - recebe os dados que o usuário alterou e usa como valores para alterar no banco
+    # Retorno:
+    # erro - string - retornar aas mensagens de erro correspondentes
+    # Esta condição verifica se a acao indica uma atualização dos dados do cadastro, e caso seja, ele executa a função para inserir os novos dados no banco ou retorna as mensagens de erro correspondentes
+    if acao == 'editar_nome_lista':
+        id_lista = dados_processados.get('id')
+        new_name_list = dados_processados.get('nomeEditando')
+        editar_nome_lista(new_name_list, id_lista)
+
+
 
     # Atualizar cadastro
     # Kaiky

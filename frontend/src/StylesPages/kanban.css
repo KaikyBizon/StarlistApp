@@ -19,28 +19,37 @@
     margin-right: 5px;
     min-height: 150px;
     border: 2px solid #565656;
-    max-height: 600px; /* Ajuste conforme necessário */
-    overflow-y: auto; /* Adiciona a rolagem vertical */
-    padding-right: 10px; /* Adiciona espaço para a barra de rolagem */
-    margin-bottom: 20px; /* Espaçamento entre as listas */
-    position: relative; /* Necessário para que o sticky funcione corretamente */
+    max-height: 600px;
+    /* Ajuste conforme necessário */
+    overflow-y: auto;
+    /* Adiciona a rolagem vertical */
+    padding-right: 10px;
+    /* Adiciona espaço para a barra de rolagem */
+    margin-bottom: 20px;
+    /* Espaçamento entre as listas */
+    position: relative;
+    /* Necessário para que o sticky funcione corretamente */
 }
 
 /* Estiliza a barra de rolagem */
 .kanban::-webkit-scrollbar {
-    width: 8px; /* Largura da barra de rolagem */
+    width: 8px;
+    /* Largura da barra de rolagem */
     border-radius: 50px;
 }
 
 /* Estiliza o "thumb" da barra de rolagem (a parte que você arrasta) */
 .kanban::-webkit-scrollbar-thumb {
-    background-color: #fff454; /* Cor da barra de rolagem */
-    border-radius: 10px; /* Arredonda a barra de rolagem */
+    background-color: #fff454;
+    /* Cor da barra de rolagem */
+    border-radius: 10px;
+    /* Arredonda a barra de rolagem */
 }
 
 /* Estiliza o "track" da barra de rolagem (a área de fundo da rolagem) */
 .kanban::-webkit-scrollbar-track {
-    background-color: #494545; /* Cor de fundo da área de rolagem */
+    background-color: #494545;
+    /* Cor de fundo da área de rolagem */
 }
 
 /* Nome da tarefa (a fazer, fazendo, feito, etc.) */
@@ -49,39 +58,44 @@
     text-align: center;
     position: sticky;
     top: 0;
-    background-color: #494545; /* Fundo branco para garantir que o texto seja legível */
-    z-index: 2; /* Garante que o título fique acima das tarefas */
+    background-color: #494545;
+    /* Fundo branco para garantir que o texto seja legível */
+    z-index: 2;
+    /* Garante que o título fique acima das tarefas */
     padding: 15px;
-    
+    cursor: pointer;
+
 }
 
 .tarefa-item {
-    border-radius: 5px; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    background-color: #514d4d; 
-    color:#c9c9c9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #514d4d;
+    color: #c9c9c9;
 }
 
-.titulo-tarefa{
+.titulo-tarefa {
     font-size: 19px;
     color: #dfd764;
 }
 
-.data-hora{
+.data-hora {
     font-size: 14px;
 }
 
 .formulario-fixo {
     position: sticky;
     bottom: 0;
-    background-color: #494545; /* Fundo branco para garantir que o campo seja legível */
-    z-index: 2; /* Garante que o botão fique acima das tarefas */
+    background-color: #494545;
+    /* Fundo branco para garantir que o campo seja legível */
+    z-index: 2;
+    /* Garante que o botão fique acima das tarefas */
     padding: 15px 0 20px 0;
     flex-direction: column;
 }
 
-.nova-tarefa{
+.nova-tarefa {
     background-color: #faed27;
     color: #535050;
     border: none;
@@ -89,12 +103,12 @@
     width: 121px;
 }
 
-.nova-tarefa:hover{
-    background-color: #282727 ;
+.nova-tarefa:hover {
+    background-color: #282727;
     color: #faed26;
 }
 
-.excluir{
+.excluir {
     width: 28px;
     margin-left: 60px;
 }
@@ -135,7 +149,7 @@
 
 .lista-adiciona button.botao-adicionaLista {
     background-color: #faed27;
-    color:#535050;
+    color: #535050;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -149,7 +163,7 @@
 }
 
 .lista-adiciona button.botao-adicionaLista:hover {
-    background-color: #282727 ;
+    background-color: #282727;
     color: #faed26;
 }
 
@@ -163,7 +177,8 @@
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999; /* Certifique-se de que o modal tenha um z-index mais alto */
+    z-index: 9999;
+    /* Certifique-se de que o modal tenha um z-index mais alto */
 }
 
 .modalContent {
@@ -177,7 +192,7 @@
 
 button.botoesConfirmarExclusao {
     background-color: #faed27;
-    color:#535050;
+    color: #535050;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -190,21 +205,130 @@ button.botoesConfirmarExclusao:hover {
 }
 
 button.botoesConfirmarExclusao:hover {
-    background-color: #282727 ;
+    background-color: #282727;
     color: #faed26;
 }
 
-.editar-lista {
-    width: 20px;
-    margin-left: 15px;
+.editar-tarefa {
+    width: 28px;
+    position: relative;
+    /* Necessário para ajustes de posição */
+    top: 25px;
+    /* Ajuste este valor para mover o botão mais para baixo */
+    left: 50px;
+    /* Ajuste este valor para mover o botão mais para a esquerda */
 }
+
 
 .titulo-editar {
     display: flex;
-    align-items: center; /* Alinha verticalmente o título e a imagem */
+    align-items: center;
+    /* Alinha verticalmente o título e a imagem */
+
+
 }
 
 .botoes_adLista {
     display: flex;
     justify-content: space-around;
+}
+
+.modal-edicao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.botoesConfirmarEdicao {
+    margin: 5px;
+}
+
+/* Estilos para o novo modal */
+.modal-overlay-editar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conte-editar {
+    background-color: #919191;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+}
+
+.modal-conte-editar h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.modal-conte-editar form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-conte-editar form .salvar {
+    background-color: #6C757D;
+    color: #FAED27;
+
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.modal-conte-editar form .fechar {
+    background-color: #000000;
+    color: #FAED27;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-conte-editar form .salvar:hover {
+    background-color: #45a049;
+}
+
+.modal-conte-editar form .fechar:hover {
+    background-color: #d32f2f;
+}
+
+.modal-conte-editar form input[name="nome"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    color: #000000;
 }

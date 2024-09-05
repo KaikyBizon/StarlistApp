@@ -15,7 +15,8 @@ function Kanban({ onListaSalva }) {
     const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
     const [editandoListaId, setEditandoListaId] = useState(null); // Estado para controlar qual lista está sendo editada
-    const [nomeEditado, setNomeEditado] = useState(''); // Estado para armazenar o novo nome da lista
+    const [exibirModal, setExibirModal] = useState(null);
+    const [nomeEditando, setNomeEditando] = useState('');
 
     // Define um estado 'dadosList' como um objeto inicial com campos 'nome', 'tarefa_id', e 'usuario_id'.
     // 'nome' é uma string vazia, enquanto 'tarefa_id' e 'usuario_id' são obtidos do 'localStorage'.
@@ -49,7 +50,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para uma categoria específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -167,9 +168,9 @@ function Kanban({ onListaSalva }) {
             setMensagensErro(['O nome da lista não pode estar vazio']);
             return;
         }
-    
+
         try {
-            const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,26 +183,98 @@ function Kanban({ onListaSalva }) {
                     }
                 }),
             });
-    
+
             const resultado = (await resposta.json()).listaCriada;
-    
+
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
                 const novaListaAtualizada = [...lista, novaLista];
                 setLista(novaListaAtualizada);
                 setNovaLista('');
-    
+
                 // Salva as listas no localStorage
                 localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
-    
+
                 if (onListaSalva) {
                     onListaSalva();
                 }
+                window.location.reload()
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
         }
+    };
+
+    const handleEditList = async (listaId) => {
+        console.log(listaId)
+        try {
+            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    acao: 'editar_nome_lista',
+                    dados: {
+                        id: listaId, // Enviar o ID da lista junto com os dados
+                        nomeEditando
+                    }
+                }),
+            });
+
+            const resultado = (await resposta.json()).listaCriada;
+
+            if (!resposta.ok || resultado.mensagens_erro) {
+                setMensagensErro(resultado.mensagens_erro);
+            } else {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+        }
+    };
+
+
+
+    // Função para editar lista (abre o modal)
+    const handleEditarTitle = (listaId) => {
+        const categoria = categorias.find(categoria => categoria.id === listaId);
+        if (categoria) {
+            setNomeEditando(categoria.nome); // Define o nome da lista no estado
+            setExibirModal(listaId); // Abre o modal para a lista específica
+        }
+    };
+
+
+    // Função para salvar a lista
+    const handleSalvarLista = async (id, novoNome) => {
+        try {
+            const resposta = await fetch(`http://10.135.60.30:8085/lista/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nome: novoNome }),
+            });
+
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                setCategorias(categorias.map(categoria =>
+                    categoria.id === id ? { ...categoria, nome: novoNome } : categoria
+                ));
+                setExibirModal(null); // Fecha o modal após salvar
+            } else {
+                console.error('Erro ao atualizar lista:', resultado.mensagens_erro);
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar lista:', error);
+        }
+    };
+
+    const handleFecharModal = () => {
+        setExibirModal(null);
     };
 
     // Define a função assíncrona 'handleDeleteLista' que será chamada ao tentar excluir uma lista, recebendo 'listaId' como parâmetro.
@@ -236,7 +309,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.22:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -311,15 +384,14 @@ function Kanban({ onListaSalva }) {
                     {categorias.map((categoria) => (
                         <section key={categoria.id} className="status-kanban">
                             <div className="kanban">
-                                <div className='titulo-lista'>
+                                <div className='titulo-lista' onClick={() => handleEditarTitle(categoria.id)}>
                                     <h4 className='status-tarefa'>{categoria.nome}</h4>
-                                    
                                 </div>
                                 {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                                     <div key={index} className="tarefa-item">
                                         <div className='titulo-editar'>
                                             <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
-                                            <img className='editar-lista' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
+                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
@@ -328,9 +400,36 @@ function Kanban({ onListaSalva }) {
                                 <div className="formulario-fixo">
                                     <button onClick={() => handleExibirFormulario(categoria.id)} className='nova-tarefa'>Nova tarefa</button>
                                     {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
-                                    <img src="../../public/images/lixeira.png" alt="Excluir lista" onClick={() => handleDeleteLista(categoria.id)} className='excluir'/>
+                                    <img src="../../public/images/lixeira.png" alt="Excluir lista" onClick={() => handleDeleteLista(categoria.id)} className='excluir' />
                                 </div>
                             </div>
+                            {exibirModal === categoria.id && (
+                                <div className="modal-overlay-editar">
+                                    <div className="modal-conte-editar">
+                                        <h3>Editar Nome da Lista</h3>
+                                        <form
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const novoNome = nomeEditando;
+                                                handleEditList(exibirModal); // Passar o ID da lista
+                                            }}
+                                        >
+                                            <input
+                                                type="text"
+                                                name="nome"
+                                                value={nomeEditando}
+                                                onChange={(e) => setNomeEditando(e.target.value)} // Atualiza o estado corretamente
+                                                placeholder="Digite o novo nome"
+                                                required
+                                            />
+                                            <button className="salvar" type="submit">Salvar</button>
+                                            <button className="fechar" type="button" onClick={handleFecharModal}>Fechar</button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            )}
+
                         </section>
                     ))}
                     <div className="lista-adiciona">
@@ -342,24 +441,24 @@ function Kanban({ onListaSalva }) {
                     </div>
                 </section>
 
-            {modalVisivel && (
-                <div className="modal-confirmacao">
-                    <div className="modalContent">
-                        <p>Deseja mesmo excluir a lista e suas tarefas?</p>
-                        <div>
-                            <button className="botoesConfirmarExclusao" onClick={confirmarExclusao}>Confirmar</button>
-                            <button className="botoesConfirmarExclusao" onClick={cancelarExclusao}>Cancelar</button>
+                {modalVisivel && (
+                    <div className="modal-confirmacao">
+                        <div className="modalContent">
+                            <p>Deseja mesmo excluir a lista e suas tarefas?</p>
+                            <div>
+                                <button className="botoesConfirmarExclusao" onClick={confirmarExclusao}>Confirmar</button>
+                                <button className="botoesConfirmarExclusao" onClick={cancelarExclusao}>Cancelar</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {showFormulario && (
-                <Formulario
-                    tarefa={tarefaSelecionada} // Passa a tarefa selecionada para o formulário
-                    onClose={handleFecharFormulario} // Função para fechar o formulário
-                />
-            )}
+                {showFormulario && (
+                    <Formulario
+                        tarefa={tarefaSelecionada} // Passa a tarefa selecionada para o formulário
+                        onClose={handleFecharFormulario} // Função para fechar o formulário
+                    />
+                )}
             </section>
         </>
     );
