@@ -28,6 +28,7 @@ def processar_dados(dados):
     # Recebe a ação que deve ser executada
     acao = dados.get('acao')
     dados_cadastro = {}
+    dados_tarefa = {}
 
     '''
     Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções. 

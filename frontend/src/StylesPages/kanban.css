@@ -203,3 +203,8 @@ button.botoesConfirmarExclusao:hover {
     display: flex;
     align-items: center; /* Alinha verticalmente o título e a imagem */
 }
+
+.botoes_adLista {
+    display: flex;
+    justify-content: space-around;
+}
