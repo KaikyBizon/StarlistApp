@@ -95,6 +95,25 @@ def validar_data_nascimento(dataNascimento):
         return {'erro': False, 'mensagem_idade': ''}
     except ValueError:
         return {'erro': True, 'mensagem_idade': 'Data de nascimento inválida.'}
+    
+
+# validar_plano
+# Gabriel
+# Criado em 03/09/24
+# Parâmetros de entrada: plano - string - O plano selecionado pelo usuário.
+# Retorno: erro retorna True se o plano for inválido, caso contrário, False.
+# Mensagem de erro aparece se o plano não atender aos requisitos.
+# Esta função valida o plano selecionado. Verifica se o plano está na lista de planos válidos.
+# Se o plano não estiver na lista, retorna um erro e uma mensagem de erro.
+# Se o plano for válido, retorna False para erro e uma mensagem vazia.
+
+def validar_plano(plano):
+    planos_validos = ['gratuito', 'mensal', 'anual', 'empresarial']
+    if plano not in planos_validos:
+        return {'erro': True, 'mensagem_plano': 'Por favor, selecione um plano válido.'}
+    return {'erro': False, 'mensagem_plano': ''}
+
+
 
 
 

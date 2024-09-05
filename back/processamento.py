@@ -18,6 +18,7 @@ from validacoes import (
     validar_data_nascimento,
     validar_senha,
     confirmar_senha,
+    validar_plano
 )
 
 # Função para processar os dados recebidos
@@ -91,6 +92,8 @@ def processar_dados(dados):
             dados_processados.get('senha', '')))
         mensagens_erro.append(confirmar_senha(dados_processados.get(
             'senha', ''), dados_processados.get('confirme', '')))
+        mensagens_erro.append(validar_plano(
+            dados_processados.get('plano', '')))
 
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
@@ -108,7 +111,15 @@ def processar_dados(dados):
         if acao == 'cadastro':
             nome_plano = dados_processados.get('plano')
             id_plano = selecionarPlanos(nome_plano)
-            id_plano = id_plano[0][0]
+
+            # Verifique se id_plano não está vazio antes de tentar acessar o índice
+            if id_plano and len(id_plano) > 0 and len(id_plano[0]) > 0:
+                id_plano = id_plano[0][0]
+            else:
+                # Trate o caso onde id_plano está vazio ou não contém o índice esperado
+                id_plano = None
+                mensagens_erro.append('Plano não encontrado.')
+
             print(cadastro)
 
             for i in range(len(cadastro)):
@@ -119,8 +130,7 @@ def processar_dados(dados):
                 print("Cadastro: ", cadastro)
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
 
         # Efetuar cadastro empresarial
         # Gabriel
@@ -185,8 +195,6 @@ def processar_dados(dados):
         id_lista = dados_processados.get('id')
         new_name_list = dados_processados.get('nomeEditando')
         editar_nome_lista(new_name_list, id_lista)
-
-
 
     # Atualizar cadastro
     # Kaiky

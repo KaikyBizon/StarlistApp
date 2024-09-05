@@ -180,7 +180,7 @@ function Cadastro() {
 
                         <ul className='erro'>
                             {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_plano}</li> /* Adapte conforme necessário */
+                                <li key={index}>{mensagem.mensagem_plano}</li> 
                             ))}
                         </ul>
 

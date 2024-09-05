@@ -48,7 +48,6 @@
     display: flex;
     flex-direction: column; /* Exibe a label e o select um abaixo do outro */
     align-items: flex-start; /* Alinha itens à esquerda */
-    margin-bottom: 20px; /* Espaçamento inferior para separação dos elementos subsequentes */
 }
 
 .textos input {
