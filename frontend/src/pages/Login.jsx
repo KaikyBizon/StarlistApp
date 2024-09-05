@@ -22,7 +22,7 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function LoginForm() {
           <a href="#">Ainda não tem conta? <Link to="/cadastro" className='crieUma'>Crie uma</Link></a>
 
 
-          <div className="botoes">
+          <div className="botoes_Login">
             <div className="btn-login">
               <button className="btn-entrar" type="submit" name="submit" value="Entrar" onClick={handleSubmit} disabled={!formValues.email || !formValues.senha}>Enviar</button>
             </div>

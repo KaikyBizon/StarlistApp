@@ -31,7 +31,7 @@ import '../StylesPages/Cadastro.css';
      *   - Exibe mensagens de erro abaixo dos campos correspondentes.
      *   - Possui botões para confirmar o cadastro e cancelar.
      *
-     * @returns {JSX.Element}
+     * 
      */
 
 function Cadastro() {
@@ -43,7 +43,6 @@ function Cadastro() {
         dataNascimento: '',
         plano: ''
     });
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues((prevValues) => ({
@@ -52,10 +51,13 @@ function Cadastro() {
         }));
     };
 
+
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
+        console.log(formValues)
         e.preventDefault();
+        
 
         try {
             const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
@@ -66,7 +68,6 @@ function Cadastro() {
                 },
                 body: JSON.stringify({acao: 'cadastro', dados: formValues}),
             });
-
 
             const resultado = (await resposta.json()).dadosCadastro;
 
@@ -108,7 +109,7 @@ function Cadastro() {
                     <div className="amarelo">Organize sua vida</div>com apenas uma tela
                 </h1>
                 <div className="login">
-                    <div className="titulo">
+                    <div className="titulo_Cadastro">
                         <h1>CADASTRE-SE</h1>
                     </div>
 
@@ -184,7 +185,7 @@ function Cadastro() {
                         </ul>
 
                         <div className='Link_JaTemConta'>
-                            <a href="#" className='JaTemConta'>Já tem uma conta? <Link to="/login" className='VaParaLogin'>Faça Login</Link></a>
+                            <p className='JaTemConta'>Já tem uma conta? <Link to="/login" className='VaParaLogin'>Faça Login</Link></p>
                         </div>
 
                         <div className="botoes">

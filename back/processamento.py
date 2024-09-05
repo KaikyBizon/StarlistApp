@@ -8,6 +8,7 @@ from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
 from actionsBD.editTask import editar_tarefa
 from actionsBD.createList_bd import criarLista
+from actionsBD.selectPlanos import selecionarPlanos
 
 
 from validacoes import (
@@ -31,8 +32,8 @@ def processar_dados(dados):
     dados_tarefa = {}
 
     '''
-    Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções. 
-    Sem essa condição, quando dados_processados é apenas um número, como por exemplo apenas o id do usuário, 
+    Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções.
+    Sem essa condição, quando dados_processados é apenas um número, como por exemplo apenas o id do usuário,
     ele apresenta um erro por não se tratar de um dicionário
     '''
     if isinstance(dados_processados, dict):
@@ -40,7 +41,8 @@ def processar_dados(dados):
             dados_processados.get('dataNascimento'),
             dados_processados.get('nome'),
             dados_processados.get('email'),
-            dados_processados.get('senha')
+            dados_processados.get('senha'),
+            dados_processados.get('plano')
         ]
 
         # recebe os valores para alteração do cadastro
@@ -84,6 +86,7 @@ def processar_dados(dados):
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
+
         # Inserir usuário
         # Kaiky
         # Alterado em 15/08/24
@@ -95,11 +98,20 @@ def processar_dados(dados):
         # erro - string - retornar o erro correspondente ao dado que não passa nas validações
         # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
         if acao == 'cadastro':
+            nome_plano = dados_processados.get('plano')
+            id_plano = selecionarPlanos(nome_plano)
+            id_plano = id_plano[0][0]
+            print(cadastro)
+
+            for i in range(len(cadastro)):
+                if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
+                    cadastro[i] = id_plano
+
             if not mensagens_erro:
+                print("Cadastro: ", cadastro)
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
 
         # Efetuar login
         # Kaiky

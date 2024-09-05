@@ -95,3 +95,6 @@ def validar_data_nascimento(dataNascimento):
         return {'erro': False, 'mensagem_idade': ''}
     except ValueError:
         return {'erro': True, 'mensagem_idade': 'Data de nascimento inválida.'}
+
+
+

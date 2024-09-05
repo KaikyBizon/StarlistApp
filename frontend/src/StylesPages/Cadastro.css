@@ -60,9 +60,11 @@
     border-bottom: 1px solid #000000;
 }
 
-.titulo {
+.titulo_Cadastro {
     color: #000000;
     font-weight: 30pt;
+    padding: 50px;
+
 }
 
 .textos input::placeholder {

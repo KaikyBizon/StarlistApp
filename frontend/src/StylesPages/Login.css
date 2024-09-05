@@ -67,7 +67,7 @@
     color: #faed27;
 }
 
-.botoes {
+.botoes_Login {
     display: flex;
     justify-content: space-around;
 }
