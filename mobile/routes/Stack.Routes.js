@@ -9,19 +9,21 @@ import TabRoutes from './Tab.Routes';
 import Pagamento from '../pages/Pagamento';
 import PlanCarousel from '../pages/PlanCarousel'
 import CarouselCardItem from '../pages/PlanCarousel';
+import CadastroEmpresarial from '../pages/CadastroEmpresarial';
 
 const Stack = createNativeStackNavigator();
 
 export default function StackRoutes() {
   return (
     <Stack.Navigator initialRouteName="Bemvindo" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Bemvindo" component={BoasVindas} screenOptions={{ headerShown: false }} />
-      <Stack.Screen name="Cadastro" component={Cadastro} />
-      <Stack.Screen name="home" component={TabRoutes} />
-      <Stack.Screen name="Login" component={LoginForm} />
-      <Stack.Screen name="Pagamento" component={Pagamento} />
-      <Stack.Screen name="Planos" component={PlanCarousel} />
-      <Stack.Screen name="." component={CarouselCardItem} />
+      <Stack.Screen name="Bemvindo" component={BoasVindas} screenOptions={{ headerShown: false }}/>
+      <Stack.Screen name="Cadastro" component={Cadastro}/>
+      <Stack.Screen name="CadastroEmpresarial" component={CadastroEmpresarial}/>
+      <Stack.Screen name="home" component={TabRoutes}/>
+      <Stack.Screen name="Login" component={LoginForm}/>
+      <Stack.Screen name="Pagamento" component={Pagamento}/>
+      <Stack.Screen name="Planos" component={PlanCarousel}/>
+      <Stack.Screen name="." component={CarouselCardItem}/>
     </Stack.Navigator>
   );
 }

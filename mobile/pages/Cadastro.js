@@ -29,12 +29,12 @@
  * @returns {JSX.Element}
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, TextInput, View, KeyboardAvoidingView, Image, TouchableOpacity, Modal, TouchableHighlight } from 'react-native';
-import { useState } from 'react';
-import styles from '../styles/StylesCadastro.js';
+import { Picker } from '@react-native-picker/picker';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
+import styles from '../styles/StylesCadastro.js';
 import { TextInputMask } from 'react-native-masked-text';
 
 export default function Cadastro({ navigation }) {
@@ -50,12 +50,12 @@ export default function Cadastro({ navigation }) {
             - Os dados são enviados para o backend via requisição pela função handleSubmit.
     */}
   const [formValues, setFormValues] = useState({
-    acao: 'cadastro',
     nome: '',
     email: '',
     senha: '',
     confirme: '',
     dataNascimento: '',
+    plano: '',
   });
 
   {/*
@@ -103,23 +103,53 @@ export default function Cadastro({ navigation }) {
     };
 
     try {
-      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.15:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSend),
+        body: JSON.stringify({ acao: 'cadastro', dados: dataToSend }),
       });
 
-      const resultado = (await resposta.json()).dados_processados;
-
-      // Verifica se houve erro na resposta
-      if (!resposta.ok || resultado.mensagens_erro.length > 0) {
-        setMensagensErro(resultado.mensagens_erro);
-        setModalVisible(true);  // Exibe o modal com as mensagens de erro
-      } else {
-        navigation.navigate("Login"); // Navega para a tela inicial em caso de sucesso
+      if (!resposta.ok) {
+        throw new Error('Erro na resposta do servidor');
       }
+
+      const resultadoTexto = await resposta.text();
+      console.log('Resposta do servidor:', resultadoTexto);
+
+      let resultado;
+      try {
+        resultado = JSON.parse(resultadoTexto);
+      } catch (error) {
+        throw new Error('Resposta não é um JSON válido');
+      }
+
+      if (resultado.dadosCadastro.error) {
+        // Mapeia as mensagens de erro para um array simples de strings
+        const mensagens = resultado.dadosCadastro.mensagens_erro.map((erro) => {
+          return Object.values(erro).filter(msg => typeof msg === 'string').join();
+        });
+
+        setMensagensErro(mensagens);
+        setModalVisible(true); // Exibir modal com as mensagens de erro
+      } else {
+        switch (formValues.plano) {
+          case 'gratuito':
+            navigation.navigate('Login');
+            break;
+          case 'mensal':
+          case 'anual':
+            navigation.navigate('Pagamento');
+            break;
+          case 'empresarial':
+            navigation.navigate('CadastroEmpresarial');
+            break;
+          default:
+            break;
+        }
+      }
+
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
     }
@@ -146,12 +176,11 @@ export default function Cadastro({ navigation }) {
   });
 
   if (!fontLoaded) {
-    return null; // Aguarda a carga da fonte
+    return null;
   }
 
   return (
     <KeyboardAvoidingView style={styles.background}>
-
       <View style={styles.containerLogo}>
         <Image style={styles.logo} source={require('../assets/images/logo_starlistMobile.png')} resizeMode='contain' />
       </View>
@@ -172,11 +201,24 @@ export default function Cadastro({ navigation }) {
         <Text style={styles.label}>DATA DE NASCIMENTO</Text>
         <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY' }} placeholder='Data de nascimento' placeholderTextColor="#2F4F4F" value={formValues.dataNascimento} />
 
+        <Text style={styles.label}>ESCOLHA SEU PLANO</Text>
+        <View style={styles.inputs}>
+          <Picker
+            selectedValue={formValues.plano}
+            onValueChange={(itemValue) => handleChange('plano', itemValue)}
+            style={{ color: 'black', fontFamily: 'Kanit_500Medium' }}
+          >
+            <Picker.Item label="Gratuito" value="gratuito" />
+            <Picker.Item label="Mensal" value="mensal" />
+            <Picker.Item label="Anual" value="anual" />
+            <Picker.Item label="Empresarial" value="empresarial" />
+          </Picker>
+        </View>
+
         <Text style={styles.temconta}>Já tem uma conta? <Text style={styles.facalogin} onPress={() => navigation.navigate('Login')}>Faça login</Text></Text>
         <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
           <Text style={styles.submitTxt}>CADASTRAR</Text>
         </TouchableOpacity>
-
       </View>
 
       <Modal
@@ -190,20 +232,20 @@ export default function Cadastro({ navigation }) {
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Erros no cadastro:</Text>
           {mensagensErro.map((mensagem, index) => (
-            <Text key={index} style={styles.modalErrorText}>{mensagem.mensagem_nome || mensagem.mensagem_email || mensagem.mensagem_senha || mensagem.mensagem_confirmar || mensagem.mensagem_idade}</Text>
+            <Text key={index} style={styles.modalErrorText}>{mensagem}</Text>
           ))}
           <TouchableHighlight
-            style={styles.closeButton}
+            style={styles.modalCloseButton}
             onPress={() => {
               setModalVisible(!modalVisible);
             }}
           >
-            <Text style={styles.closeButtonText}>Fechar</Text>
+            <Text style={styles.textStyle}>Fechar</Text>
           </TouchableHighlight>
         </View>
       </Modal>
 
-      <StatusBar style='auto' />
+      <StatusBar style="auto" />
     </KeyboardAvoidingView>
   );
 }

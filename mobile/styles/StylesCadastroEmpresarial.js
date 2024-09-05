@@ -1,9 +1,9 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#9d9d9d",
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -14,11 +14,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 50,
     width: 380,
-    paddingHorizontal: 10,  // padding horizontal para alinhamento
+    paddingHorizontal: 6,
     marginBottom: 8,
     fontFamily: 'Kanit_500Medium',
     color: "black",
-    justifyContent: 'center', // Alinhamento vertical no centro
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: 'transparent',
+    backgroundColor: "#cecece",
+    borderRadius: 10,
+    height: 50,
+    width: 380,
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  picker: {
+    color: "black",
+    fontFamily: 'Kanit_500Medium',
   },
   containerLogo: {
     width: 380,
@@ -37,7 +50,8 @@ const styles = StyleSheet.create({
     width: 380,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 10,
+    marginTop: 10,
   },
   label: {
     color: "#ffffff",
@@ -45,18 +59,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Kanit_500Medium',
   },
   submitTxt: {
-    color: "#8f8e8e",
+    color: "black",
     fontSize: 18,
     fontFamily: 'Kanit_500Medium',
-  },
-  temconta: {
-    fontFamily: 'Kanit_500Medium',
-    fontSize: 17,
-    marginBottom: 2,
-  },
-  facalogin: {
-    color: "#191919",
-    textDecorationLine: 'underline',
   },
   modalView: {
     margin: 20,
@@ -96,22 +101,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  picker: {
-    height: 50,
-    width: 380,
-    backgroundColor: "#cecece",
-    borderRadius: 10,
-    justifyContent: 'center',
-    marginBottom: 8,
-    fontFamily: 'Kanit_500Medium', // Fonte personalizada
-    color: 'black', // Cor do texto selecionado
-  },
-  pickerItem: {
-    fontFamily: 'Kanit_500Medium', // Fonte personalizada para itens
-    color: 'black', // Cor dos itens
-    fontSize: 16, // Tamanho do texto
-    backgroundColor: "#cecece", // Cor de fundo dos itens
-  },
 });
 
-export default styles
+export default styles;

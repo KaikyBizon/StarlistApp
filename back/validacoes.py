@@ -113,7 +113,65 @@ def validar_plano(plano):
         return {'erro': True, 'mensagem_plano': 'Por favor, selecione um plano válido.'}
     return {'erro': False, 'mensagem_plano': ''}
 
+# validar_cnpj
+# Nathan
+# Criado em 05/09/24
+# Esta função faz com que apenas números sejam permitidos no campo CNPJ, verifica se possui 14 caracteres e faz o cálculo dos 2 digitos verificadores
+# Parametros entrada
+# data_nascimento - string - receber a data de nascimento no formato "YYYY-MM-DD"
+# Retorno
+# erro - string - retornar algum erro caso tenha
+def validar_cnpj(cnpj):
+    # Remove qualquer caractere não numérico
+    cnpj = re.sub(r'\D', '', cnpj)
 
+    # Verifica se o CNPJ tem 14 dígitos
+    if len(cnpj) != 14:
+        return {'erro': True, 'mensagem_cnpj': 'CNPJ deve conter 14 dígitos.'}
+    
+    # Cálculo dos dois dígitos verificadores do CNPJ
+    def calcular_digito(cnpj, peso):
+        soma = 0
+        for i in range(len(peso)):
+            soma += int(cnpj[i]) * peso[i]
+        resto = soma % 11
+        return 0 if resto < 2 else 11 - resto
+    
+    # Pesos para cálculo do primeiro e segundo dígitos verificadores
+    peso1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+    peso2 = [6] + peso1
 
+    # Verifica o primeiro dígito verificador
+    digito1 = calcular_digito(cnpj[:12], peso1)
+    if digito1 != int(cnpj[12]):
+        return {'erro': True, 'mensagem_cnpj': 'CNPJ inválido.'}
+    
+    # Verifica o segundo dígito verificador
+    digito2 = calcular_digito(cnpj[:13], peso2)
+    if digito2 != int(cnpj[13]):
+        return {'erro': True, 'mensagem_cnpj': 'CNPJ inválido.'}
+    return {'erro': False, 'mensagem_cnpj': ''}
 
+def validar_nome_equipe(nome_equipe):
+    # Verifica se o nome da equipe tem pelo menos 2 caracteres
+    if len(nome_equipe) < 2:
+        return {'erro': True, 'mensagem_nome_equipe': 'O nome da equipe deve conter 2 ou mais caracteres.'}
+    return {'erro': False, 'mensagem_nome_equipe': ''}
 
+def validar_numero_participantes(numero_participantes):
+    # Verifica se o campo está vazio
+    if not numero_participantes:
+        return {'erro': True, 'mensagem_numero_participantes': 'Você deve definir o número de participantes.'}
+    
+    # Verifica se o número de participantes é igual a 0
+    if int(numero_participantes) <= 0:
+        return {'erro': True, 'mensagem_numero_participantes': 'O número de participantes deve ser no mínimo 1.'}
+    
+    return {'erro': False, 'mensagem_numero_participantes': ''}
+
+def validar_cargo(cargo):
+    cargos_validos = ['Líder', 'Colaborador']
+    
+    if cargo not in cargos_validos:
+        return {'erro': True, 'mensagem_cargo': 'Você precisa escolher um cargo.'}
+    return {'erro': False, 'mensagem_cargo': ''}
