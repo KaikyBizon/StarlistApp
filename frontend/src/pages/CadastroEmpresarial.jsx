@@ -32,7 +32,7 @@ function CadastroEmpresarial() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({acao: 'cadastro_empresarial', dados: formValues}),
+                body: JSON.stringify({ acao: 'cadastro_empresarial', dados: formValues }),
             });
 
             const resultado = (await resposta.json()).dados_processados;
@@ -111,14 +111,16 @@ function CadastroEmpresarial() {
                         </ul>
 
                         <div className="textos_empresarial">
-                            <input
-                                type="text"
+                            <select className='cargo_empresarial'
                                 name="cargo"
-                                placeholder="Cargo"
                                 required
                                 value={formValues.cargo}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="">Selecione o cargo</option>
+                                <option value="lider">Líder</option>
+                                <option value="colaborador">Colaborador</option>
+                            </select>
                         </div>
                         <ul className='erro'>
                             {mensagensErro.map((mensagem, index) => (
