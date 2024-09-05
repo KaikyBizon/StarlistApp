@@ -1,12 +1,46 @@
-/* Estilo do input e botão de adicionar lista */
-.lista-adiciona {
+/* Layout dos cartões Kanban */
+.cartoes-kanban {
+    width: 100vw;
+    height: calc(100vh - 116px);
     display: flex;
     flex-direction: column;
-    background-color: #494545;
-    height: 150px;
-    width: 265px;
     padding: 20px;
+    background-color: #535050;
+    max-height: 634px;
+    flex-direction: row;
+}
+
+/* Estilização dos cards */
+.kanban {
+    background-color: #494545;
+    width: 265px;
+    padding: 0 20px 0 20px;
     border-radius: 20px;
+    margin-right: 5px;
+    min-height: 150px;
+    border: 2px solid #565656;
+    max-height: 600px; /* Ajuste conforme necessário */
+    overflow-y: auto; /* Adiciona a rolagem vertical */
+    padding-right: 10px; /* Adiciona espaço para a barra de rolagem */
+    margin-bottom: 20px; /* Espaçamento entre as listas */
+    position: relative; /* Necessário para que o sticky funcione corretamente */
+}
+
+/* Estiliza a barra de rolagem */
+.kanban::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de rolagem */
+    border-radius: 50px;
+}
+
+/* Estiliza o "thumb" da barra de rolagem (a parte que você arrasta) */
+.kanban::-webkit-scrollbar-thumb {
+    background-color: #fff454; /* Cor da barra de rolagem */
+    border-radius: 10px; /* Arredonda a barra de rolagem */
+}
+
+/* Estiliza o "track" da barra de rolagem (a área de fundo da rolagem) */
+.kanban::-webkit-scrollbar-track {
+    background-color: #494545; /* Cor de fundo da área de rolagem */
 }
 
 /* Nome da tarefa (a fazer, fazendo, feito, etc.) */
@@ -21,6 +55,23 @@
     
 }
 
+.tarefa-item {
+    border-radius: 5px; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    background-color: #514d4d; 
+    color:#c9c9c9;
+}
+
+.titulo-tarefa{
+    font-size: 19px;
+    color: #dfd764;
+}
+
+.data-hora{
+    font-size: 14px;
+}
+
 .formulario-fixo {
     position: sticky;
     bottom: 0;
@@ -30,10 +81,49 @@
     flex-direction: column;
 }
 
-.excluir{
-    width: 10px;
-    height: 15px;
+.nova-tarefa{
+    background-color: #faed27;
+    color: #535050;
+    border: none;
+    border-radius: 10px;
+    width: 121px;
 }
+
+.nova-tarefa:hover{
+    background-color: #282727 ;
+    color: #faed26;
+}
+
+.excluir{
+    width: 28px;
+    margin-left: 60px;
+}
+
+.lista-adiciona button.excluir {
+    margin-left: 10px;
+    background-color: transparent;
+    color: #faed27;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.lista-adiciona button.excluir:hover {
+    color: #e0d425;
+}
+
+
+/* Estilo do input e botão de adicionar lista */
+.lista-adiciona {
+    display: flex;
+    flex-direction: column;
+    background-color: #494545;
+    height: 150px;
+    width: 265px;
+    padding: 20px;
+    border-radius: 20px;
+}
+
 
 .lista-adiciona input {
     padding: 10px;
@@ -58,84 +148,58 @@
     background-color: #e0d425;
 }
 
-
-.lista-adiciona button.excluir {
-    margin-left: 10px;
-    background-color: transparent;
-    color: #faed27;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
+.lista-adiciona button.botao-adicionaLista:hover {
+    background-color: #282727 ;
+    color: #faed26;
 }
 
-.lista-adiciona button.excluir:hover {
-    color: #e0d425;
-}
-
-/* Estilização dos cards */
-.kanban {
-    background-color: #494545;
-    width: 265px;
-    padding: 0 20px 0 20px;
-    border-radius: 20px;
-    margin-right: 5px;
-    min-height: 150px;
-    border: 2px solid #565656;
-    max-height: 600px; /* Ajuste conforme necessário */
-    overflow-y: auto; /* Adiciona a rolagem vertical */
-    padding-right: 10px; /* Adiciona espaço para a barra de rolagem */
-    margin-bottom: 20px; /* Espaçamento entre as listas */
-    position: relative; /* Necessário para que o sticky funcione corretamente */
-}
-
-/* Seção de interação */
-.interacao {
+.modal-confirmacao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
-    background-color: #535050;
-    
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999; /* Certifique-se de que o modal tenha um z-index mais alto */
 }
 
-/* Layout dos cartões Kanban */
-.cartoes-kanban {
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
+.modalContent {
+    background-color: white;
     padding: 20px;
-    background-color: #535050;
-    max-height: 634px;
-    flex-direction: row;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 300px;
 }
 
-.tarefa-item {
-    border-radius: 5px; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    background-color: #514d4d; 
-    color:#c9c9c9;
+button.botoesConfirmarExclusao {
+    background-color: #faed27;
+    color:#535050;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
+    width: 115px;
 }
 
-.data-hora{
-    font-size: 14px;
+button.botoesConfirmarExclusao:hover {
+    background-color: #e0d425;
 }
 
-.titulo-tarefa{
-    font-size: 19px;
-    color: #dfd764;
+button.botoesConfirmarExclusao:hover {
+    background-color: #282727 ;
+    color: #faed26;
 }
 
-/* Estiliza a barra de rolagem */
-.kanban::-webkit-scrollbar {
-    width: 8px; /* Largura da barra de rolagem */
-    border-radius: 50px;
+.editar-lista {
+    width: 20px;
+    margin-left: 15px;
 }
 
-/* Estiliza o "thumb" da barra de rolagem (a parte que você arrasta) */
-.kanban::-webkit-scrollbar-thumb {
-    background-color: #fff454; /* Cor da barra de rolagem */
-    border-radius: 10px; /* Arredonda a barra de rolagem */
-}
-
-/* Estiliza o "track" da barra de rolagem (a área de fundo da rolagem) */
-.kanban::-webkit-scrollbar-track {
-    background-color: #494545; /* Cor de fundo da área de rolagem */
+.titulo-editar {
+    display: flex;
+    align-items: center; /* Alinha verticalmente o título e a imagem */
 }
