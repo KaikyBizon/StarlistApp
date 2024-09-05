@@ -9,7 +9,7 @@ from actionsBD.deleteTask import excluir_tarefa
 from actionsBD.editTask import editar_tarefa
 from actionsBD.createList_bd import criarLista
 from actionsBD.selectPlanos import selecionarPlanos
-
+from actionsBD.createEquipe import cadastroEmpresarial
 
 from validacoes import (
     validar_nome,
@@ -43,6 +43,14 @@ def processar_dados(dados):
             dados_processados.get('email'),
             dados_processados.get('senha'),
             dados_processados.get('plano')
+        ]
+
+        #valores recebidos para o cadastro da equipe
+        cadastro_empresarial = [
+            dados_processados.get('cnpj'),
+            dados_processados.get('nomeEquipe'),
+            dados_processados.get('pessoasEquipe'),
+           # dados_processados.get('cargo')
         ]
 
         # recebe os valores para alteração do cadastro
@@ -112,6 +120,20 @@ def processar_dados(dados):
                 inserir_usuario(cadastro)
             else:
                 dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
+
+        
+        # Efetuar cadastro empresarial
+        # Gabriel
+        # Criado dia 05/09/2024
+        # Parametros entrada:
+        # acao - string - receber a acao para verificar se deve ser executado este if
+        # cadastroEmpresarial - lista - recebe as informações que o usuario colocou no cadastro empresarial
+        # Retorno:
+        # erro - string - retornar a mensagem de erro caso algum dos dados esteja incorreto
+        # Essa função indica se acao é um cadastro empresarial, caso seja, as informaçõe serão inseridas no banco, caso o contrairo, aparecerá uma mensagem de erro
+        if acao == 'cadastro_empresarial':
+            cadastroEmpresarial(cadastro_empresarial)
+
 
         # Efetuar login
         # Kaiky

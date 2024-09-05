@@ -5,7 +5,6 @@ import '../StylesPages/CadastroEmpresarial.css';
 
 function CadastroEmpresarial() {
     const [formValues, setFormValues] = useState({
-        acao: 'cadastroEmpresarial',
         cnpj: '',
         nomeEquipe: '',
         pessoasEquipe: '',
@@ -24,24 +23,22 @@ function CadastroEmpresarial() {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        console.log(formValues)
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.18:8085/receber-dados-empresarial', {
+            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formValues),
+                body: JSON.stringify({acao: 'cadastro_empresarial', dados: formValues}),
             });
 
             const resultado = (await resposta.json()).dados_processados;
             console.log(resposta.ok)
 
-            if (resposta.ok && resultado.mensagens_erro.length > 0) {
-                console.error('Erro no servidor:', resultado.mensagens_erro);
-                setMensagensErro(resultado.mensagens_erro);
-            } else {
+            if (resposta.ok) {
                 console.log('Dados processados com sucesso!', resultado);
                 navigate("/login");
                 setFormValues({
