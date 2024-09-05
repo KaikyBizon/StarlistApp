@@ -13,6 +13,8 @@ import Equipe from './Equipe';
 import Forma_pg from './Forma_pg'; 
 import GerenciarEquipe from './GerenciarEquipe';
 import AlterarDadosCadastro from "../pages/AlterarDadosCadastro";
+import Pagamento from "../pages/Pagamento";
+import { CadastroEmpresarial } from "../pages/CadastroEmpresarial";
 
 
 
@@ -22,6 +24,8 @@ const Content = props => (
             <Route path="/" exact element={<Home />}></Route>
             <Route path="/login" element={<LoginForm />}></Route>
             <Route path="/cadastro" element={<Cadastro />}></Route>
+            <Route path="/cadastroempresarial" element={<CadastroEmpresarial/>}></Route>
+            <Route path="/pagamento" element={<Pagamento/>}></Route>
             <Route path="/gerenciarpart" element={<Gerenciarpart />}></Route>
             <Route path="/kanban" element={<Kanban />}></Route>
             <Route path="/todo" element={<ToDo />}></Route> 

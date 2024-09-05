@@ -25,10 +25,15 @@ def processar_dados(dados):
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
-
+    # Recebe a ação que deve ser executada
     acao = dados.get('acao')
     dados_cadastro = {}
 
+    '''
+    Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções. 
+    Sem essa condição, quando dados_processados é apenas um número, como por exemplo apenas o id do usuário, 
+    ele apresenta um erro por não se tratar de um dicionário
+    '''
     if isinstance(dados_processados, dict):
         cadastro = [
             dados_processados.get('dataNascimento'),
@@ -78,24 +83,53 @@ def processar_dados(dados):
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-        # Função para criar uma novo usuário no banco de dados
+        # Inserir usuário
+        # Kaiky
+        # Alterado em 15/08/24
+        # Parametros entrada:
+        # acao - string - receber a acao para verificar se deve ser executado este if
+        # mensagens_erro - lista - Verifica se não teve nenhuma mensagem de erro na validação para executar o cadastro
+        # cadastro - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
+        # Retorno:
+        # erro - string - retornar o erro correspondente ao dado que não passa nas validações
+        # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
         if acao == 'cadastro':
             if not mensagens_erro:
                 inserir_usuario(cadastro)
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro}
 
-        # Função para validar o login do usuário e retornar os dados dele para serem mostrados no frontend
+        # Efetuar login
+        # Kaiky
+        # Alterado em 29/08/24
+        # Parametros entrada:
+        # acao - string - receber a acao para verificar se deve ser executado este if
+        # email, senha - string - parâmetros com os valores inseridos pelo usuário em email e senha enviados para o backend verificar se os dados constam no banco e retorna os dados necessários
+        # Retorno:
+        # erro - string - retornar a mensagem de erro caso algum dos dados esteja incorreto
+        # Esta condição verifica se a acao indica um login, e caso seja, ele executa a função para buscar os dados no banco de acordo com o email e senha e retorna os dados do usuário ou as mensagens de erro correspondentes
         if acao == 'efetuar_login':
             email = dados_processados.get('email')
             senha = dados_processados.get('senha')
             user = selecionar_dados_cadastro(email, senha)
             if user and email == user[0] and senha == user[1]:
                 email, senha, id, nome_usuario, data_nasc = user
-                dados_cadastro = {'error': False, 'email': email, 'id': id,'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
+                dados_cadastro = {'error': False, 'email': email, 'id': id,
+                                  'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
             else:
-                dados_cadastro = {'error': True,'mensagens_erro': 'Email ou senha inválido'}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': 'Email ou senha inválido'}
 
+        # Criar lista
+        # Letícia
+        # Criado em 22/08/24
+        # Parametros entrada:
+        # acao - string - receber a acao para verificar se deve ser executado este if
+        # lista - lista - recebe os dados do usuário para criar uma lista
+        # Retorno:
+        # erro - string - retorna que a lista foi criada com sucesso, caso contrário não retorna nada
+        # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
         if acao == 'criar_lista':
             criarLista(lista)
             listaCriada = {'Lista criada': 'Lista criada com sucesso!'}
@@ -103,7 +137,16 @@ def processar_dados(dados):
             listaCriada = {}
     listaCriada = {}
 
-    # Função para atualizar dados do cadastro
+    # Atualizar cadastro
+    # Kaiky
+    # Alterado em 15/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # mensagens_erro - lista - retira da lista a mensagem de erro de senha, pois como não tem senha nesse caso, ele valida como inválida
+    # alteracao - lista - recebe os dados que o usuário alterou e usa como valores para alterar no banco
+    # Retorno:
+    # erro - string - retornar aas mensagens de erro correspondentes
+    # Esta condição verifica se a acao indica uma atualização dos dados do cadastro, e caso seja, ele executa a função para inserir os novos dados no banco ou retorna as mensagens de erro correspondentes
     if acao == 'atualizar_cadastro':
         atualizar_cadastro(alteracao)
         # Filtra a lista removendo o erro de senha
@@ -112,9 +155,19 @@ def processar_dados(dados):
         if mensagens_erro:
             dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
         else:
-            dados_cadastro = {'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
+            dados_cadastro = {
+                'error': False, 'Alteração realizada': "Alteração realizada com sucesso!"}
 
-    # Função para carregar os dados do usuário
+    # Selecionar dados do usuário
+    # Kaiky
+    # Alterado em 15/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # dados_processados - int - recebe o id do usuário para buscar os dados dele no banco
+    # Retorno:
+    # erro - string - retornar uma mensagem de erro caso não recupere os dados
+    # dados_cadastro - dados do usuário inseridos no banco
+    # Esta condição verifica se a acao indica uma seleção de dados do usuário, e caso seja, ele executa a função para buscar os dados no banco de acordo com o id ou retorna as mensagens de erro correspondentes
     if acao == 'selecionar_dados_usuario':
         id = dados_processados
         resultado_select = select_atualizar(id)
@@ -125,13 +178,29 @@ def processar_dados(dados):
         else:
             dados_cadastro = {'error': 'Dados não recuperados!'}
 
-    # Função para criar uma nova tarefa no banco de dados
+    # Inserir usuário
+    # Kaiky
+    # Alterado em 15/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
+    # Retorno:
+    # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
+    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
     if acao == 'criar_tarefa':
         print(tarefa)
         criarTarefa(tarefa)
         dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
 
-    # Função para editar tarefa
+    # Editar tarefa
+    # Kaiky
+    # Criado em 20/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # tarefa  - lista - dados inseridos pelo usuário para editar uma tarefa (insere o id da tarefa na lista para identificar e remove o id do usuario que nao precisa ser usado)
+    # Retorno:
+    # dados_tarefa - retorna quando a tarefa for editada
+    # Esta condição verifica se a acao indica um tarefa a ser editada, e caso seja, ele executa a função para inserir os dados no banco e atualizar a tarefa
     if acao == 'editar_tarefa':
         # Adiciona o ID ao final da lista de dados da tarefa
         tarefa.append(dados_processados.get('id'))
@@ -140,14 +209,29 @@ def processar_dados(dados):
         editar_tarefa(tarefa)
         dados_tarefa = {'Tarefa editada': 'Tarefa editada com sucesso!'}
 
-    # Código para enviar as tarefas do usuário para o frontend e mostrar na tela (refatorar o mais rápido possível)
+    # Carregar tarefas
+    # Kaiky
+    # Alterado em 20/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # id_usuario - int - usa o id do usuario para buscar as tarefas dele
+    # dados_tarefa - armazena as tarefas do usuario para retornar ao frontend
+    # Retorno:
+    # erro - string - retornar algum erro caso tenha
+    # Esta condição verifica se a acao indica uma renderização de tarefas, e caso seja, ele executa a função para buscar as os dados no banco e retorna todas as tarefas do usuário
     if acao == 'carregar_tarefas':
         id_usuario = dados_processados
         dados_tarefa = selecionar_dados_tarefa(id_usuario)
-    else:
-        dados_tarefa = {"Status_acao": "Tarefas renderizadas!"}
 
-    # Função para excluir tarefa do banco de dados
+    # Excluir tarefa
+    # Kaiky
+    # Alterado em 22/08/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # id_tarefa - int - recebe o id da tarefa para excluir a respectiva tarefa
+    # Retorno:
+    # dados_tarefa - retorna que a tarefa foi excluída com sucesso
+    # Esta condição verifica se a acao indica uma exclusão de tarefa, e caso seja, ele executa a função para excluir a tarefa no banco
     if acao == 'excluirTarefa':
         id_tarefa = dados_processados
         excluir_tarefa(id_tarefa)

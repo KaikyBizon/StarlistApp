@@ -49,7 +49,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
@@ -105,14 +105,27 @@ export default function ToDo({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
-      // Ajuste a conversão de data para lidar com fuso horário
-      if (route.params?.selectedDate) {
-        const selectedDate = new Date(route.params.selectedDate);
-        selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
-        setDate(selectedDate);
-      }
+        if (route.params?.selectedDate) {
+            const selectedDate = new Date(route.params.selectedDate);
+            selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
+            setDate(selectedDate);
+        }
+
+        // Função se houver uma nova tarefa passada como parâmetro
+        if (route.params?.novaTarefa) {
+            const novaTarefa = route.params.novaTarefa;
+
+            setTarefas(prevTarefas => {
+                const tarefasAtualizadas = [...prevTarefas, novaTarefa];
+                const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+                setFilteredTasks(tarefasOrdenadas);
+                return tarefasOrdenadas;
+            });
+        }
     }
-  }, [isFocused, route.params?.selectedDate]);
+}, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
+
+
 
 
   useEffect(() => {
@@ -133,7 +146,7 @@ export default function ToDo({ navigation, route }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.30:8085/receber-dados`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
@@ -215,7 +228,7 @@ export default function ToDo({ navigation, route }) {
                     <Text style={styles.cardFooterText}>{horarioExibido}</Text>
                   </View>
                   <View style={styles.iconContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity style={styles.editar}>
                       <Feather name="edit" size={24} color="#4682B4" style={styles.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => excluirTarefa(id)}>

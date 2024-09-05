@@ -26,11 +26,12 @@
 .drop-options a:focus,
 .drop-options a:hover {
     color: #c1c1c1 !important;
-    text-decoration: none; /* Remove o sublinhado ao focar ou passar o mouse */
-} 
+    text-decoration: none;
+    /* Remove o sublinhado ao focar ou passar o mouse */
+}
 
 /* Garante que o dropdown não altere a cor ao perder o foco */
-.drop-options.show > .dropdown-toggle {
+.drop-options.show>.dropdown-toggle {
     color: #c1c1c1 !important;
 }
 
@@ -54,7 +55,7 @@
 .fecharlista {
     border: none;
     background-color: #696969;
-     margin: 0;
+    margin: 0;
 
 }
 
@@ -67,19 +68,27 @@
     opacity: 0.5;
 }
 
-.inputlista{
+.inputlista {
     border: none;
-    border-color: initial; /* Garante que a cor da borda seja a padrão */
-    box-shadow: none; /* Remove a sombra do campo */
-    background-color: #fff; /* Define a cor de fundo padrão */
+    border-color: initial;
+    /* Garante que a cor da borda seja a padrão */
+    box-shadow: none;
+    /* Remove a sombra do campo */
+    background-color: #fff;
+    /* Define a cor de fundo padrão */
 }
+
 .inputlista:focus {
-    border-color: initial; /* Garante que a cor da borda não mude quando o campo está focado */
-    box-shadow: none; /* Remove a sombra do campo quando está focado */
+    border-color: initial;
+    /* Garante que a cor da borda não mude quando o campo está focado */
+    box-shadow: none;
+    /* Remove a sombra do campo quando está focado */
 }
 
 .nav-utensilios .navbar-brand {
-    color: #c1c1c1; /* Define a cor do texto para preto ou qualquer cor desejada */
-    transition: color 0.3s ease; /* Adiciona uma transição suave para a mudança de cor */
+    color: #c1c1c1;
+    /* Define a cor do texto para preto ou qualquer cor desejada */
+    transition: color 0.3s ease;
+    /* Adiciona uma transição suave para a mudança de cor */
     font-size: 17px;
 }

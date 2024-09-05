@@ -5,8 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Options from '../components/Options'
-import Navbar from '../components/Navbar'
+import Cabecalho from '../components/Cabecalho';
 
 const AlterarDadosCadastro = () => {
     const [nomeUsuario, setNomeUsuario] = useState('');
@@ -18,6 +17,7 @@ const AlterarDadosCadastro = () => {
         dataNascimento: '',
         id: localStorage.getItem("ID")
     });
+
 
     //Constante para buscar os dados do usuário no backend ao carregar a página
     const showDados = async () => {
@@ -57,8 +57,7 @@ const AlterarDadosCadastro = () => {
     const handleDelete = async () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
-            const resposta = await fetch('http://10.135.60.19:8085/delete-usuario', {
-                method: 'POST',
+            const resposta = await fetch('http://10.135.60.18:8085/delete-usuario', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -82,7 +81,7 @@ const AlterarDadosCadastro = () => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,8 +111,7 @@ const AlterarDadosCadastro = () => {
 
     return (
         <>
-            <Navbar />
-            <Options />
+            <Cabecalho/>
             <section className='editar_usuario'>
                 <div className="titulo_alterar_dados">
                     <h1>EDITAR USUÁRIO</h1>

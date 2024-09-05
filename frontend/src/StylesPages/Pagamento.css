@@ -1,0 +1,201 @@
+/* Estilo de fundo para a tela principal */
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #9d9d9d;
+    min-height: 100vh; /* Altura mínima para preencher a tela */
+}
+
+/* Removido o estilo da logo */
+
+/* Container para o botão de voltar */
+
+/* Removido o estilo para o botão de voltar */
+
+/* Estilo para o container de fundo */
+.backgroundContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Container principal para os conteúdos */
+.containerPagamento {
+    width: 80%; /* Largura fixa para o container */
+    max-width: 600px; /* Largura máxima para limitar o tamanho */
+    background-color: #696969;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.8);
+    margin-top: 20px;
+    display: flex; /* Alinha o conteúdo de forma consistente */
+    flex-direction: column; /* Exibe o conteúdo em coluna */
+    justify-content: center; /* Centraliza verticalmente o conteúdo */
+    align-items: center; /* Centraliza horizontalmente o conteúdo */
+    min-height: 400px; /* Altura mínima para manter o tamanho consistente */
+}
+
+/* Estilo para o método de pagamento */
+.metodoPagamento {
+    margin-bottom: 10px;
+    width: 100%; /* Garante que o método de pagamento ocupe toda a largura do container */
+    text-align: center;
+}
+
+/* Estilo para textos informativos */
+.txtInfo {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #c9c9c9;
+    text-align: center;
+}
+
+/* Estilo para o container de escolha de botão */
+.btnEscolha {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Estilo para o botão de método de pagamento */
+.btnMetodo {
+    padding: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+}
+
+/* Estilo para o botão de método de pagamento selecionado */
+.btnMetodoSelected {
+    background-color: #faed27;
+}
+
+/* Estilo para o texto do botão */
+.txtBotao {
+    font-size: 16px;
+    color: #696969;
+}
+
+/* Estilo para o container do código QR */
+.codigoQr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo para informações de pagamento */
+.infoPagamento {
+    font-size: 16px;
+    font-weight: bold;
+    color: #c9c9c9;
+}
+
+/* Estilo para o código PIX */
+.codigoPix {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #fff;
+}
+
+/* Estilo para informações de QR */
+.infoQr {
+    font-size: 16px;
+    font-weight: bold;
+    color: #c9c9c9;
+}
+
+/* Estilo para a imagem do código QR */
+.imagemQr img {
+    width: 400px; /* Define a largura da imagem */
+    height: 400px; /* Define a altura da imagem */
+    object-fit: contain; /* Garante que a imagem se ajuste dentro do tamanho especificado sem distorção */
+}
+
+/* Estilo para a imagem do código QR */
+.code {
+    width: 200px;
+    height: 200px;
+}
+
+/* Estilo para o botão de pagar */
+.btnPagar {
+    margin-top: 20px;
+    background-color: #faed27;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+}
+
+/* Estilo para o texto do botão de pagar */
+.txtPagar {
+    font-size: 18px;
+    font-weight: bold;
+    color: #696969;
+}
+
+/* Estilo para o container dos dados do cartão */
+.dadosCartao {
+    margin-top: 20px;
+}
+
+/* Estilo para os campos de entrada */
+.input {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%; /* Alargado para desktop */
+    box-sizing: border-box;
+    color: black;
+    border: 1px solid #ccc;
+}
+
+/* Estilo para a linha de inputs */
+.linha {
+    display: flex;
+    justify-content: space-between; /* Espalha igualmente os inputs */
+    width: 100%; /* Garante que a linha ocupe toda a largura do container pai */
+    gap: 10px; /* Espaçamento entre os inputs */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+/* Estilo para os inputs dentro da linha */
+.inputLinha {
+    flex: 1; /* Permite que cada .inputLinha ocupe metade da largura do espaço disponível */
+    margin: 0 5px; /* Pequeno espaço entre os inputs */
+    display: flex; /* Usa flexbox para gerenciar os inputs */
+    flex-direction: column; /* Mantém os inputs em coluna */
+    align-items: stretch; /* Faz com que os inputs ocupem toda a largura */
+}
+
+/* Estilo para o input no meio da linha */
+.inputMeio {
+    width: 100%; /* Garante que os inputs ocupem 100% da largura do container */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: black;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+.dadosCartao, .codigoQr {
+    width: 100%; /* Garante que ambos ocupem a mesma largura dentro do container */
+    /* Adicione uma altura mínima se necessário */
+    min-height: 200px;
+}

@@ -18,7 +18,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ function ToDo() {
 
     const excluirTarefa = async (id) => {
         try {
-            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,22 +151,34 @@ function ToDo() {
                             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
                             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
+                            // Definindo a cor da etiqueta baseada no valor
+                            const corEtiqueta = etiqueta === 'Importante' ? 'red' :
+                                etiqueta === 'Pendência' ? 'orange' :
+                                    etiqueta === 'Reunião' ? 'blue' :
+                                        'transparent';
+
                             return (
-                                <Card className='cards-tarefa' style={{ width: '1000px' }} key={id}>
+                                <Card className='cards-tarefa' key={id}>
                                     <Card.Header>
-                                        {dataExibida}
-                                        <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
-                                        <img src="../../public/images/editar.png" alt="" onClick={() => handleEditarClick(tarefa)} />
+                                        <div className='data_etiqueta'>
+                                            {dataExibida}
+                                            <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}>
+                                                {/*etiqueta || 'Nenhuma'*/}
+                                            </div>
+                                        </div>
+                                        <div className='card_icons'>
+                                            <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
+                                            <img src="../../public/images/editar.png" alt="" onClick={() => handleEditarClick(tarefa)} />
+                                        </div>
                                     </Card.Header>
-                                    <Card.Body className="content-dataTask">
+                                    <Card.Body className="content-infoTask">
                                         <div className='titulo-important'>
-                                            <Card.Title>{tituloExibido}</Card.Title>
-                                            <div className='default-etiqueta'></div>
+                                            <Card.Title className='titulo-todo'>{tituloExibido}</Card.Title>
                                         </div>
                                         <Card.Text className='descricao'>
                                             {descricaoExibida}
                                         </Card.Text>
-                                        <Card.Text className='todo-textcard'>
+                                        <Card.Text className='todo-horario'>
                                             {`Horário: ${horarioExibido}`}
                                         </Card.Text>
                                     </Card.Body>

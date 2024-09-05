@@ -1,5 +1,5 @@
-import Menu from '../components/menu';
-import Options from '../components/Options';
+import Geral from '../components/Geral';
+import Cabecalho from '../components/Cabecalho';
 import Formulario from '../components/Formulario';
 import { useState, useEffect } from 'react';
 import '../StylesPages/kanban.css';
@@ -167,7 +167,7 @@ function Kanban({ onListaSalva }) {
             setMensagensErro(['O nome da lista não pode estar vazio']);
             return;
         }
-
+    
         try {
             const resposta = await fetch('http://10.135.60.22:8085/receber-dados', {
                 method: 'POST',
@@ -182,19 +182,19 @@ function Kanban({ onListaSalva }) {
                     }
                 }),
             });
-
+    
             const resultado = (await resposta.json()).listaCriada;
-
+    
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
                 const novaListaAtualizada = [...lista, novaLista];
                 setLista(novaListaAtualizada);
                 setNovaLista('');
-
+    
                 // Salva as listas no localStorage
                 localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
-
+    
                 if (onListaSalva) {
                     onListaSalva();
                 }
@@ -301,21 +301,25 @@ function Kanban({ onListaSalva }) {
 
     return (
         <>
-            <Menu />
-            <Options />
+            <Cabecalho />
+            <section className='interacao'>
+                <section className='calendario-left'>
+                    <Geral />
+                </section>
+
                 <section className='cartoes-kanban'>
                     {categorias.map((categoria) => (
                         <section key={categoria.id} className="status-kanban">
                             <div className="kanban">
                                 <div className='titulo-lista'>
                                     <h4 className='status-tarefa'>{categoria.nome}</h4>
-                                    <img className='editar-nomeLista' src="../../public/images/editar_lista.png" alt="" />
+                                    
                                 </div>
                                 {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                                     <div key={index} className="tarefa-item">
                                         <div className='titulo-editar'>
                                             <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
-                                            <img className='editar-lista' src="../../public/images/editar_lista.png" alt="" onClick={() => handleEditarClick(tarefa)} />
+                                            <img className='editar-lista' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
@@ -324,14 +328,14 @@ function Kanban({ onListaSalva }) {
                                 <div className="formulario-fixo">
                                     <button onClick={() => handleExibirFormulario(categoria.id)} className='nova-tarefa'>Nova tarefa</button>
                                     {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
-                                    <img src="../../public/images/lixeira.png" alt="" onClick={() => handleDeleteLista(categoria.id)} className='excluir'/>
+                                    <img src="../../public/images/lixeira.png" alt="Excluir lista" onClick={() => handleDeleteLista(categoria.id)} className='excluir'/>
                                 </div>
                             </div>
                         </section>
                     ))}
                     <div className="lista-adiciona">
                         <input type="text" placeholder="Digite o nome da lista" value={novaLista} onChange={handleChange} />
-                        <div className='botões'>
+                        <div className='botoes_adLista'>
                             <button className="botao-adicionaLista" onClick={handleSubmit}>Adicionar lista</button>
                             <button className="excluir" onClick={handleClearInput}>X</button>
                         </div>
@@ -356,6 +360,7 @@ function Kanban({ onListaSalva }) {
                     onClose={handleFecharFormulario} // Função para fechar o formulário
                 />
             )}
+            </section>
         </>
     );
 }
