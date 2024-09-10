@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../StylesPages/CadastroEmpresarial.css';
 
+// Função para formatar o CNPJ
+const formatCNPJ = (cnpj) => {
+    cnpj = cnpj.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+
+    // Aplica a formatação do CNPJ conforme o usuário digita
+    if (cnpj.length <= 2) return cnpj;
+    if (cnpj.length <= 5) return `${cnpj.slice(0, 2)}.${cnpj.slice(2)}`;
+    if (cnpj.length <= 8) return `${cnpj.slice(0, 2)}.${cnpj.slice(2, 5)}.${cnpj.slice(5)}`;
+    if (cnpj.length <= 12) return `${cnpj.slice(0, 2)}.${cnpj.slice(2, 5)}.${cnpj.slice(5, 8)}/${cnpj.slice(8)}`;
+    return `${cnpj.slice(0, 2)}.${cnpj.slice(2, 5)}.${cnpj.slice(5, 8)}/${cnpj.slice(8, 12)}-${cnpj.slice(12, 14)}`;
+};
+
 function CadastroEmpresarial() {
     const [formValues, setFormValues] = useState({
         cnpj: '',
@@ -13,11 +25,27 @@ function CadastroEmpresarial() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
+
+        if (name === 'cnpj') {
+            const formattedCNPJ = formatCNPJ(value);
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                cnpj: formattedCNPJ,
+            }));
+        } else if (name === 'pessoasEquipe') {
+            const numeroPessoas = value < 0 ? 0 : value; // Impede que o valor seja negativo
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                pessoasEquipe: numeroPessoas,
+            }));
+        } else {
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                [name]: value,
+            }));
+        }
     };
+
 
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
@@ -32,7 +60,7 @@ function CadastroEmpresarial() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({acao: 'cadastro_empresarial', dados: formValues}),
+                body: JSON.stringify({ acao: 'cadastro_empresarial', dados: formValues }),
             });
 
             const resultado = (await resposta.json()).dadosCadastro;
@@ -41,7 +69,7 @@ function CadastroEmpresarial() {
             if (resultado.error) {
                 setMensagensErro(resultado.mensagens_erro);
             }
-            else{
+            else {
                 console.log('Dados processados com sucesso!', resultado);
                 navigate("/pagamento");
                 setFormValues({
@@ -73,6 +101,7 @@ function CadastroEmpresarial() {
                                 required
                                 value={formValues.cnpj}
                                 onChange={handleChange}
+                                maxLength={18}
                             />
                         </div>
                         <ul className='erro'>
@@ -89,6 +118,7 @@ function CadastroEmpresarial() {
                                 required
                                 value={formValues.nomeEquipe}
                                 onChange={handleChange}
+                                maxLength={40}
                             />
                         </div>
                         <ul className='erro'>
@@ -101,10 +131,11 @@ function CadastroEmpresarial() {
                             <input
                                 type="number"
                                 name="pessoasEquipe"
-                                placeholder="Número de pessoas na equipe"
+                                placeholder="Quantidade de Pessoas na Equipe"
                                 required
                                 value={formValues.pessoasEquipe}
                                 onChange={handleChange}
+                                min="0" // Define o valor mínimo como 0
                             />
                         </div>
                         <ul className='erro'>
