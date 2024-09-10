@@ -35,21 +35,21 @@
 
 .textos_empresarial {
     display: flex;
-    flex-direction: column; /* Exibe a label e o select um abaixo do outro */
-    align-items: flex-start; /* Alinha itens à esquerda */
-    margin-bottom: 20px; /* Espaçamento inferior para separação dos elementos subsequentes */
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px; /* Espaçamento reduzido */
+    position: relative; /* Torna o layout mais estável */
 }
 
 .textos_empresarial input {
-    display: block;
-    width: 400px; /* Aumenta a largura do input */
-    height: 50px; /* Aumenta a altura do input */
-    margin-top: 20px; /* Reduzido para 20px para manter um bom espaçamento */
-    font-size: 16px; /* Aumenta o tamanho da fonte */
+    width: 400px;
+    height: 50px;
+    font-size: 16px;
+    margin-top: 10px; /* Ajusta o espaçamento superior */
     background: transparent;
     border: 0;
     border-bottom: 1px solid #c9c9c9;
-    padding: 10px; /* Adiciona padding para melhorar a experiência de digitação */
+    padding: 10px;
 }
 
 .titulo_empresarial {
@@ -85,6 +85,11 @@
     padding: 10px; /* Adiciona padding para melhorar a experiência de digitação */
 }
 
+/* Estiliza as opções do select */
+.cargo_empresarial option {
+    background-color: #000000; /* Cor de fundo das opções */
+    color: #faed27; /* Cor do texto das opções */
+}
 
 .btn-cadastro,
 #btn-submit-empresarial,
@@ -122,5 +127,13 @@
     color: red;
     font-size: 14px;
     padding: 0;
-    width: 400px; /* Aumenta a largura para coincidir com o tamanho do input */
+    width: 400px;
+    min-height: 20px; /* Define uma altura mínima */
+    margin-top: 5px; /* Espaçamento superior */
+    margin-bottom: -5px; /* Espaçamento inferior para evitar afastamento */
+}
+
+/* Opcional: alinhamento centralizado da mensagem de erro */
+.erro li {
+    text-align: left; /* Centraliza ou alinha à esquerda as mensagens de erro */
 }
