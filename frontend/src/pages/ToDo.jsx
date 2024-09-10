@@ -167,8 +167,8 @@ function ToDo() {
                                             </div>
                                         </div>
                                         <div className='card_icons'>
-                                            <img src="../../public/images/excluir.png" alt="" onClick={() => excluirTarefa(id)} />
-                                            <img src="../../public/images/editar.png" alt="" onClick={() => handleEditarClick(tarefa)} />
+                                            <img src="../../public/images/lixeira.png" alt="" onClick={() => excluirTarefa(id)} />
+                                            <img src="../../public/images/editar_lista.png" alt="" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                     </Card.Header>
                                     <Card.Body className="content-infoTask">
