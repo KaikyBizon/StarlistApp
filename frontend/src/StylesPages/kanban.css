@@ -3,12 +3,31 @@
     width: 100vw;
     height: calc(100vh - 116px);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 20px;
     background-color: #535050;
     max-height: 634px;
-    flex-direction: row;
+    overflow-x: auto;
+    /* Adiciona a rolagem horizontal */
+    overflow-y: hidden;
+    /* Evita a rolagem vertical no container */
 }
+
+/* Estiliza a barra de rolagem horizontal */
+.cartoes-kanban::-webkit-scrollbar {
+    height: 8px;
+    /* Altura da barra de rolagem horizontal */
+}
+
+.cartoes-kanban::-webkit-scrollbar-thumb {
+    background-color: #fff454;
+    border-radius: 10px;
+}
+
+.cartoes-kanban::-webkit-scrollbar-track {
+    background-color: #494545;
+}
+
 
 /* Estilização dos cards */
 .kanban {
@@ -73,7 +92,7 @@
     margin-bottom: 10px;
     background-color: #514d4d;
     color: #c9c9c9;
-    
+
 }
 
 
@@ -214,10 +233,11 @@ button.botoesConfirmarExclusao:hover {
 
 .editar-tarefa {
     width: 22px;
-    position: absolute; 
-    right: 10px; 
-    top: 50%; 
-    transform: translateY(-220%); /* Ajuste para centralizar corretamente */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-220%);
+    /* Ajuste para centralizar corretamente */
     margin-bottom: 40px;
 }
 
