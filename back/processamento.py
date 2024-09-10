@@ -18,7 +18,11 @@ from validacoes import (
     validar_data_nascimento,
     validar_senha,
     confirmar_senha,
-    validar_plano
+    validar_plano,
+    validar_cnpj,
+    validar_nome_equipe,
+    validar_numero_participantes,
+    validar_cargo
 )
 
 # Função para processar os dados recebidos
@@ -32,6 +36,7 @@ def processar_dados(dados):
     acao = dados.get('acao')
     dados_cadastro = {}
     dados_tarefa = {}
+    print(dados_processados)
 
     '''
     Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções.
@@ -84,19 +89,23 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        mensagens_erro.append(validar_email(
-            dados_processados.get('email', '')))
-        mensagens_erro.append(validar_data_nascimento(
-            dados_processados.get('dataNascimento', '')))
-        mensagens_erro.append(validar_senha(
-            dados_processados.get('senha', '')))
-        mensagens_erro.append(confirmar_senha(dados_processados.get(
-            'senha', ''), dados_processados.get('confirme', '')))
-        mensagens_erro.append(validar_plano(
-            dados_processados.get('plano', '')))
-
+        mensagens_erro.append(validar_email(dados_processados.get('email', '')))
+        mensagens_erro.append(validar_data_nascimento(dados_processados.get('dataNascimento', '')))
+        mensagens_erro.append(validar_senha(dados_processados.get('senha', '')))
+        mensagens_erro.append(confirmar_senha(dados_processados.get('senha', ''), dados_processados.get('confirme', '')))
+        mensagens_erro.append(validar_plano(dados_processados.get('plano', '')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
+
+        #Lista para armazenar erros do cadastro empresarial
+        mensagens_erro_empresarial = []
+
+        mensagens_erro_empresarial.append(validar_cnpj(dados_processados.get('cnpj', '')))
+        mensagens_erro_empresarial.append(validar_nome_equipe(dados_processados.get('nomeEquipe', '')))
+        mensagens_erro_empresarial.append(validar_numero_participantes(dados_processados.get('pessoasEquipe', '')))
+        #Filtra apenas os erros que foram encontradas
+        mensagens_erro_empresarial = [msg for msg in mensagens_erro_empresarial if msg['erro']]
+
 
         # Inserir usuário
         # Kaiky
@@ -120,8 +129,6 @@ def processar_dados(dados):
                 id_plano = None
                 mensagens_erro.append('Plano não encontrado.')
 
-            print(cadastro)
-
             for i in range(len(cadastro)):
                 if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
                     cadastro[i] = id_plano
@@ -142,7 +149,12 @@ def processar_dados(dados):
         # erro - string - retornar a mensagem de erro caso algum dos dados esteja incorreto
         # Essa função indica se acao é um cadastro empresarial, caso seja, as informaçõe serão inseridas no banco, caso o contrairo, aparecerá uma mensagem de erro
         if acao == 'cadastro_empresarial':
-            cadastroEmpresarial(cadastro_empresarial)
+            if not mensagens_erro_empresarial:
+                cadastroEmpresarial(cadastro_empresarial)
+            else:
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial} 
+                print(dados_cadastro)
+
 
         # Efetuar login
         # Kaiky
