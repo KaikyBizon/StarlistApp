@@ -8,7 +8,7 @@ import styles from '../styles/StylesCadastroEmpresarial.js';
 const formatCNPJ = (cnpj) => {
     // Remove qualquer caractere não numérico
     cnpj = cnpj.replace(/\D/g, '');
-    
+
     // Aplica a formatação
     if (cnpj.length <= 2) return cnpj;
     if (cnpj.length <= 5) return `${cnpj.slice(0, 2)}.${cnpj.slice(2)}`;
@@ -19,7 +19,6 @@ const formatCNPJ = (cnpj) => {
 
 export default function CadastroEmpresarial({ navigation }) {
     const [formValues, setFormValues] = useState({
-        acao: 'cadastro_empresarial',
         cnpj: '',
         nomeEquipe: '',
         numeroParticipantes: '',
@@ -44,22 +43,24 @@ export default function CadastroEmpresarial({ navigation }) {
         };
 
         try {
-            const resposta = await fetch('http://10.135.60.15:8085/receber-dados-empresarial', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataToSend),
+                body: JSON.stringify({ acao: 'cadastro_empresarial', dados: dataToSend }),
             });
 
-            const responseText = await resposta.text();
-            console.log('Raw response:', responseText);
+            const resultado = (await resposta.json()).dadosCadastro;
+            console.log('Raw response:', resultado.mensagens_erro);
 
-            const resultado = JSON.parse(responseText); // Tente fazer o parse do texto como JSON
+            if (resultado.dadosCadastro?.error) {
+                const mensagens = resultado.dadosCadastro.mensagens_erro.map((erro) => {
+                    return Object.values(erro).filter(msg => typeof msg === 'string').join();
+                });
 
-            if (!resposta.ok || resultado.mensagens_erro.length > 0) {
-                setMensagensErro(resultado.mensagens_erro);
-                setModalVisible(true);
+                setMensagensErro(mensagens);
+                setModalVisible(true); // Exibe o modal com as mensagens de erro
             } else {
                 navigation.navigate("Login");
             }

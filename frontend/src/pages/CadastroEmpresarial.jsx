@@ -27,20 +27,23 @@ function CadastroEmpresarial() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'cadastro_empresarial', dados: formValues }),
+                body: JSON.stringify({acao: 'cadastro_empresarial', dados: formValues}),
             });
 
-            const resultado = (await resposta.json()).dados_processados;
-            console.log(resposta.ok)
+            const resultado = (await resposta.json()).dadosCadastro;
+            console.log(resultado.mensagens_erro)
 
-            if (resposta.ok) {
+            if (resultado.error) {
+                setMensagensErro(resultado.mensagens_erro);
+            }
+            else{
                 console.log('Dados processados com sucesso!', resultado);
-                navigate("/login");
+                navigate("/pagamento");
                 setFormValues({
                     cnpj: '',
                     nomeEquipe: '',
@@ -90,7 +93,7 @@ function CadastroEmpresarial() {
                         </div>
                         <ul className='erro'>
                             {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_nomeEquipe}</li>
+                                <li key={index}>{mensagem.mensagem_nome_equipe}</li>
                             ))}
                         </ul>
 
@@ -106,7 +109,7 @@ function CadastroEmpresarial() {
                         </div>
                         <ul className='erro'>
                             {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_pessoasEquipe}</li>
+                                <li key={index}>{mensagem.mensagem_numero_participantes}</li>
                             ))}
                         </ul>
 
