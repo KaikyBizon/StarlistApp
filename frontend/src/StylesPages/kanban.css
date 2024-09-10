@@ -73,7 +73,9 @@
     margin-bottom: 10px;
     background-color: #514d4d;
     color: #c9c9c9;
+    
 }
+
 
 .titulo-tarefa {
     font-size: 19px;
@@ -209,14 +211,14 @@ button.botoesConfirmarExclusao:hover {
     color: #faed26;
 }
 
+
 .editar-tarefa {
-    width: 28px;
-    position: relative;
-    /* Necessário para ajustes de posição */
-    top: 25px;
-    /* Ajuste este valor para mover o botão mais para baixo */
-    left: 50px;
-    /* Ajuste este valor para mover o botão mais para a esquerda */
+    width: 22px;
+    position: absolute; 
+    right: 10px; 
+    top: 50%; 
+    transform: translateY(-220%); /* Ajuste para centralizar corretamente */
+    margin-bottom: 40px;
 }
 
 
@@ -227,6 +229,7 @@ button.botoesConfirmarExclusao:hover {
 
 
 }
+
 
 .botoes_adLista {
     display: flex;
@@ -296,7 +299,6 @@ button.botoesConfirmarExclusao:hover {
 .modal-conte-editar form .salvar {
     background-color: #6C757D;
     color: #FAED27;
-
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
