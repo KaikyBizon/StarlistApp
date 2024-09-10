@@ -117,10 +117,12 @@ def validar_plano(plano):
 # Nathan
 # Criado em 05/09/24
 # Esta função faz com que apenas números sejam permitidos no campo CNPJ, verifica se possui 14 caracteres e faz o cálculo dos 2 digitos verificadores
-# Parametros entrada
-# data_nascimento - string - receber a data de nascimento no formato "YYYY-MM-DD"
-# Retorno
-# erro - string - retornar algum erro caso tenha
+# Parâmetros de entrada:
+# cnpj - string - recebe o CNPJ no formato "XX.XXX.XXX/XXXX-XX" ou sem pontuação, apenas números
+# Retorno:
+# erro retorna True se o CNPJ for inválido, e uma mensagem explicando o erro ou confirmando a validade.
+# Esta função remove os caracteres não numéricos do CNPJ, valida o número de dígitos, 
+# e realiza os cálculos dos dígitos verificadores. Caso o CNPJ não seja válido, retorna um erro.
 def validar_cnpj(cnpj):
     # Remove qualquer caractere não numérico
     cnpj = re.sub(r'\D', '', cnpj)
@@ -152,12 +154,31 @@ def validar_cnpj(cnpj):
         return {'erro': True, 'mensagem_cnpj': 'CNPJ inválido.'}
     return {'erro': False, 'mensagem_cnpj': ''}
 
+# validar_nome_equipe
+# Nathan
+# Criado em 05/09/2024
+# Esta função verifica se o nome da equipe tem o comprimento mínimo necessário
+# Parâmetros de entrada:
+# nome_equipe - string - recebe o nome da equipe como input
+# Retorno:
+# erro retorna True se o nome for inválido, e uma mensagem explicando o erro ou confirmando a validade.
+# Esta função verifica se o nome da equipe contém pelo menos 2 caracteres. Caso não atenda a esse critério, retorna um erro.
 def validar_nome_equipe(nome_equipe):
     # Verifica se o nome da equipe tem pelo menos 2 caracteres
     if len(nome_equipe) < 2:
         return {'erro': True, 'mensagem_nome_equipe': 'O nome da equipe deve conter 2 ou mais caracteres.'}
     return {'erro': False, 'mensagem_nome_equipe': ''}
 
+
+# validar_numero_participantes
+# Nathan
+# Criado em 05/09/2024
+# Esta função verifica se o número de participantes é válido e maior que zero
+# Parâmetros de entrada:
+# numero_participantes - string - recebe o número de participantes como input
+# Retorno:
+# erro retorna True se o número for inválido, e uma mensagem explicando o erro ou confirmando a validade.
+# Esta função primeiro verifica se o campo está vazio e se o valor inserido é maior que 0. Caso contrário, retorna um erro.
 def validar_numero_participantes(numero_participantes):
     # Verifica se o campo está vazio
     if not numero_participantes:
@@ -169,6 +190,17 @@ def validar_numero_participantes(numero_participantes):
     
     return {'erro': False, 'mensagem_numero_participantes': ''}
 
+
+# validar_cargo
+# Nathan
+# Criado em 05/09/2024
+# Esta função verifica se o cargo selecionado é válido
+# Parâmetros de entrada:
+# cargo - string - recebe o cargo selecionado como input
+# Retorno:
+# erro retorna True se o cargo for inválido,e uma mensagem explicando o erro ou confirmando a validade.
+# Esta função verifica se o cargo inserido está dentro da lista de cargos válidos (Líder ou Colaborador).
+# Caso contrário, retorna um erro.
 def validar_cargo(cargo):
     cargos_validos = ['Líder', 'Colaborador']
     
