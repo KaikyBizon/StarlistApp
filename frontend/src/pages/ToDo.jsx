@@ -13,6 +13,9 @@ function ToDo() {
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
+    const [modalVisivel, setModalVisivel] = useState(false); // Controle de exibição do modal de exclusão
+    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null); // Armazena a tarefa a ser excluída
+
 
     const fetchTarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
@@ -73,7 +76,25 @@ function ToDo() {
             }
         } catch (error) {
             console.error('Erro ao excluir a tarefa:', error);
+        } finally {
+            setModalVisivel(false); // Fecha o modal após a exclusão
         }
+    };
+
+    const confirmarExclusao = () => {
+        if (tarefaParaExcluir) {
+            excluirTarefa(tarefaParaExcluir); // Chama a função de exclusão passando o ID
+        }
+    };
+
+    const cancelarExclusao = () => {
+        setModalVisivel(false); // Fecha o modal sem excluir
+        setTarefaParaExcluir(null); // Limpa a tarefa para exclusão
+    };
+
+    const handleExcluirClick = (id) => {
+        setTarefaParaExcluir(id); // Define a tarefa que será excluída
+        setModalVisivel(true); // Abre o modal de confirmação
     };
 
     const ordenarTarefas = (tarefas) => {
@@ -145,41 +166,29 @@ function ToDo() {
                     {filteredTasks && filteredTasks.length > 0 ? (
                         filteredTasks.map((tarefa) => {
                             const { id, titulo, etiqueta, descricao, data, horario } = tarefa;
-
-                            const tituloExibido = titulo || 'Título não informado';
-                            const descricaoExibida = descricao || 'Descrição não informada';
-                            const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
-                            const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
-
-                            // Definindo a cor da etiqueta baseada no valor
                             const corEtiqueta = etiqueta === 'Importante' ? 'red' :
                                 etiqueta === 'Pendência' ? 'orange' :
-                                    etiqueta === 'Reunião' ? 'blue' :
-                                        'transparent';
+                                    etiqueta === 'Reunião' ? 'blue' : 'transparent';
 
                             return (
                                 <Card className='cards-tarefa' key={id}>
                                     <Card.Header>
                                         <div className='data_etiqueta'>
-                                            {dataExibida}
-                                            <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}>
-                                                {/*etiqueta || 'Nenhuma'*/}
-                                            </div>
+                                            {data || 'Data não informada'}
+                                            <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}></div>
                                         </div>
                                         <div className='card_icons'>
-                                            <img src="../../public/images/lixeira.png" alt="" onClick={() => excluirTarefa(id)} />
-                                            <img src="../../public/images/editar_lista.png" alt="" onClick={() => handleEditarClick(tarefa)} />
+                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(id)} />
+                                            <img src="../../public/images/editar_lista.png" alt="Editar" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                     </Card.Header>
                                     <Card.Body className="content-infoTask">
-                                        <div className='titulo-important'>
-                                            <Card.Title className='titulo-todo'>{tituloExibido}</Card.Title>
-                                        </div>
+                                        <Card.Title className='titulo-todo'>{titulo || 'Título não informado'}</Card.Title>
                                         <Card.Text className='descricao'>
-                                            {descricaoExibida}
+                                            {descricao || 'Descrição não informada'}
                                         </Card.Text>
                                         <Card.Text className='todo-horario'>
-                                            {`Horário: ${horarioExibido}`}
+                                            {`Horário: ${horario || 'Horário não informado'}`}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -193,9 +202,21 @@ function ToDo() {
 
             {showFormulario && (
                 <Formulario
-                    tarefa={tarefaSelecionada} // Passa a tarefa selecionada para o formulário
-                    onClose={handleFecharFormulario} // Função para fechar o formulário
+                    tarefa={tarefaSelecionada}
+                    onClose={handleFecharFormulario}
                 />
+            )}
+
+            {modalVisivel && (
+                <div className="modal-confirmacao">
+                    <div className="modalContent">
+                        <p>Deseja realmente excluir esta tarefa?</p>
+                        <div>
+                            <button className="botoesConfirmarExclusao" onClick={confirmarExclusao}>Confirmar</button>
+                            <button className="botoesConfirmarExclusao" onClick={cancelarExclusao}>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     );
