@@ -71,45 +71,50 @@ function Perfil({ navigation }) {
     id: ''
   });
 
-  // useEffect para carregar os dados do usuário ao montar o componente
   useEffect(() => {
     const showDados = async () => {
-      const id = await AsyncStorage.getItem('ID');
-      setUserId(id);
-      console.log(userId)
       try {
-        const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: userId }),
-        });
-        const dados = (await resposta.json()).dadosCadastro;
-        console.log("Dados: ", dados)
-        setFormAlter({
-          nome: dados.nome_usuario,
-          email: dados.email,
-          dataNascimento: dados.data_nasc,
-          id: id
-        });
+        const id = await AsyncStorage.getItem('ID');
+        setUserId(id);
+        console.log("ID", id);
 
-        setNomeUsuario(dados.nome_usuario);
-        setName(dados.nome_usuario);
-        setEmail(dados.email);
-        setDob(dados.data_nasc);
+        // Só faz a requisição se o userId estiver presente
+        if (id) {
+          const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ acao: 'selecionar_dados_usuario', dados: id }),
+          });
+          const dados = (await resposta.json()).dadosCadastro;
+          console.log(dados);
+
+          setFormAlter({
+            nome: dados.nome_usuario,
+            email: dados.email,
+            dataNascimento: dados.data_nasc,
+            id: id,
+          });
+
+          setNomeUsuario(dados.nome_usuario);
+          setName(dados.nome_usuario);
+          setEmail(dados.email);
+          setDob(dados.data_nasc);
+        }
       } catch (error) {
         console.error('Erro ao carregar dados!', error);
         Alert.alert('Erro', 'Erro ao carregar dados!');
       }
-    }
+    };
 
-    showDados();
+    showDados(); // Chama a função ao montar o componente
   }, []);
+
 
   // Armazenando dados atualizados no AsyncStorage
   AsyncStorage.setItem('email', formAlter.email);
-  AsyncStorage.setItem('nome_usuario', formAlter.nome);
+  AsyncStorage.setItem('nome', formAlter.nome);
 
   // Função para formatar a data de nascimento
   const formatDate = (text) => {
