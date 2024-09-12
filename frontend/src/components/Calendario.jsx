@@ -33,9 +33,36 @@ const Calendario = ({ events }) => {
     }
   };
 
+  // Função para normalizar as datas no formato dd,mm,yyyy
+  const formatDate = (dateString) => {
+    // Divida a string da data em partes usando '/' como delimitador
+    const [day, month, year] = dateString.split('/').map(Number);
+  
+    // Verifica se a data tem três partes e todas são números
+    if (day && month && year) {
+      // Ajusta o mês para ser zero-indexed e cria a data
+      return new Date(year, month - 1, day);
+    }
+  
+    // Se a data não for válida, retorna um objeto de data inválido
+    return new Date(NaN);
+  };
+  
+  
+
   const hasEvent = (day) => {
+    console.log('Verificando dia:', day + 1);  // Adiciona log para depuração
+  
     return events.some(event => {
-      const eventDate = new Date(event.data);
+      const eventDate = formatDate(event.data);  // Converte a data do evento
+      console.log('Data do evento formatada:', eventDate);  // Log para verificar a data formatada
+  
+      // Verifica se a data formatada é válida
+      if (isNaN(eventDate.getTime())) {
+        console.error('Data do evento inválida:', event.data);
+        return false;
+      }
+  
       return (
         eventDate.getDate() === day + 1 &&
         eventDate.getMonth() === currentMonth &&
@@ -43,6 +70,7 @@ const Calendario = ({ events }) => {
       );
     });
   };
+  
 
   return (
     <div className="calendar">
@@ -63,7 +91,7 @@ const Calendario = ({ events }) => {
         {[...Array(daysInMonth).keys()].map((day) => (
           <div key={day} className="day">
             <span className="day-number">{day + 1}</span>
-            {hasEvent(day - 1) && <span className="event-dot"></span>}
+            {hasEvent(day) && <span className="event-dot"></span>}
           </div>
         ))}
       </div>
