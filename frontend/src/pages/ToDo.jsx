@@ -130,12 +130,11 @@ function ToDo() {
         }
 
         const filtered = tarefas.filter(tarefa => {
-            return tarefa.titulo.toLowerCase().includes(searchTerm.toLowerCase());
+            return tarefa.titulo.toLowerCase().startsWith(searchTerm.toLowerCase());
         });
 
         setFilteredTasks(filtered);
     };
-
     const handleEditarClick = (tarefa) => {
         setTarefaSelecionada(tarefa); // Define a tarefa a ser editada
         setShowFormulario(true); // Exibe o formulário
