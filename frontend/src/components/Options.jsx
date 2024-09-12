@@ -91,8 +91,8 @@ function Options() {
                         </Navbar.Collapse>
                     </div>
                     <div className="create-nova">
-                        {/* Condição para exibir o botão com base no caminho atual */}
-                        {location.pathname !== '/kanban' && (
+                        {/* Condição para exibir o botão apenas na tela de ToDo */}
+                        {location.pathname === '/todo' && (
                             <Button variant="primary" className='btn-novatarefa' onClick={handleShowFormulario}>Nova Tarefa</Button>
                         )}
                     </div>
