@@ -15,7 +15,7 @@ def selecionar_dados_lista(id_usuario):
 def selecionar_lista_tarefa(id_lista):
     conex = conexao.conectar()
     cursor = conex.cursor()
-    sql = "SELECT tarefa.id, titulo, etiqueta, DATE_FORMAT(data_task, '%Y-%m-%d') as data_task, DATE_FORMAT(hora, '%H:%i') as hora, id_lista, nome FROM tarefa JOIN lista ON tarefa.id_lista = lista.id WHERE lista.ID = %s ORDER BY DATA_TASK, HORA"
+    sql = "SELECT tarefa.id, titulo, etiqueta, DATE_FORMAT(data_task, '%d/%m/%Y') as data_task, DATE_FORMAT(hora, '%H:%i') as hora, id_lista, nome FROM tarefa JOIN lista ON tarefa.id_lista = lista.id WHERE lista.ID = %s ORDER BY DATA_TASK, HORA"
     val = (id_lista,)
     cursor.execute(sql, val)
     listaTarefa = cursor.fetchall()
