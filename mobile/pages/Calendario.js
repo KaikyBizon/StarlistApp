@@ -19,7 +19,7 @@
  *
  * Estrutura JSX:
  *   - Exibe um calendário interativo com dias marcados e estilizados conforme as tarefas agendadas.
- *   - Integra um componente de menu para navegação adicional na aplicação.
+ *   - Integra um componente de menu para navegação adicional na aplicação
  *
  * @returns {JSX.Element}
  */
