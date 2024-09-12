@@ -47,10 +47,10 @@ function Kanban({ onListaSalva }) {
  *   - Em caso de erro, a função captura e loga o erro no console, retornando um array vazio como fallback.
  *   - A URL utilizada no fetch inclui o `categoriaId` como parâmetro de rota para especificar a categoria desejada.
  */
-    // Função para buscar tarefas para uma categoria específica
+    // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,6 @@ function Kanban({ onListaSalva }) {
             });
 
             const resultado = await resposta.json();
-            console.log("Resultado:", resultado)
 
             if (resposta.ok) {
                 return resultado;
@@ -95,11 +94,11 @@ function Kanban({ onListaSalva }) {
  *   - Em caso de erro na busca das categorias ou das tarefas, os erros são capturados e logados no console.
  */
 
-    // Função para buscar categorias e tarefas
+    // Função para buscar cada lista
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,6 +106,7 @@ function Kanban({ onListaSalva }) {
             });
 
             const categoriasResultado = await resposta.json();
+            console.log("Resultado:", categoriasResultado)
 
             if (resposta.ok) {
                 setCategorias(categoriasResultado);
@@ -170,7 +170,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -192,6 +192,8 @@ function Kanban({ onListaSalva }) {
                 const novaListaAtualizada = [...lista, novaLista];
                 setLista(novaListaAtualizada);
                 setNovaLista('');
+                // Recarrega as listas ao criar uma nova
+                fetchCategoriasETarefas();
 
                 // Salva as listas no localStorage
                 localStorage.setItem('listas', JSON.stringify(novaListaAtualizada));
@@ -199,7 +201,6 @@ function Kanban({ onListaSalva }) {
                 if (onListaSalva) {
                     onListaSalva();
                 }
-                window.location.reload()
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
@@ -209,7 +210,7 @@ function Kanban({ onListaSalva }) {
     const handleEditList = async (listaId) => {
         console.log(listaId)
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -250,7 +251,7 @@ function Kanban({ onListaSalva }) {
     // Função para salvar a lista
     const handleSalvarLista = async (id, novoNome) => {
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/lista/${id}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -309,7 +310,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.19:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
