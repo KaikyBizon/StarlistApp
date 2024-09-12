@@ -82,7 +82,7 @@ function LoginForm() {
 
           <div className="botoes_Login">
             <div className="btn-login">
-              <button className="btn-entrar" type="submit" name="submit" value="Entrar" onClick={handleSubmit} disabled={!formValues.email || !formValues.senha}>Enviar</button>
+              <button className="btn-entrar" type="submit" name="submit" value="Entrar" onClick={handleSubmit} disabled={!formValues.email || !formValues.senha}>Entrar</button>
             </div>
             <div className="btn-login">
               <button className="btn-entrar" type="button" name="botao" value="Cancelar" onClick={handleCancel} >Cancelar</button>
