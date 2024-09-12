@@ -11,6 +11,7 @@ from actionsBD.createList_bd import criarLista
 from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
+from actionsBD.insertCargoUser import inserirCargo
 
 from validacoes import (
     validar_nome,
@@ -36,7 +37,6 @@ def processar_dados(dados):
     acao = dados.get('acao')
     dados_cadastro = {}
     dados_tarefa = {}
-    print(dados_processados)
 
     '''
     Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções.
@@ -93,7 +93,6 @@ def processar_dados(dados):
         mensagens_erro.append(validar_data_nascimento(dados_processados.get('dataNascimento', '')))
         mensagens_erro.append(validar_senha(dados_processados.get('senha', '')))
         mensagens_erro.append(confirmar_senha(dados_processados.get('senha', ''), dados_processados.get('confirme', '')))
-        mensagens_erro.append(validar_plano(dados_processados.get('plano', '')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
@@ -134,7 +133,6 @@ def processar_dados(dados):
                     cadastro[i] = id_plano
 
             if not mensagens_erro:
-                print("Cadastro: ", cadastro)
                 inserir_usuario(cadastro)
             else:
                 dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
@@ -145,15 +143,19 @@ def processar_dados(dados):
         # Parametros entrada:
         # acao - string - receber a acao para verificar se deve ser executado este if
         # cadastroEmpresarial - lista - recebe as informações que o usuario colocou no cadastro empresarial
+        # cargo - string - Armazena o cargo do usuário na equipe
+        # id_usuario - int - Usa o id do usuário para dar o cargo dele
         # Retorno:
         # erro - string - retornar a mensagem de erro caso algum dos dados esteja incorreto
         # Essa função indica se acao é um cadastro empresarial, caso seja, as informaçõe serão inseridas no banco, caso o contrairo, aparecerá uma mensagem de erro
         if acao == 'cadastro_empresarial':
+            cargo = dados_processados.get('cargo')
+            email_user = dados_processados.get('emailUser')
             if not mensagens_erro_empresarial:
                 cadastroEmpresarial(cadastro_empresarial)
+                inserirCargo(cargo, email_user)
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial} 
-                print(dados_cadastro)
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial}
 
 
         # Efetuar login
@@ -259,7 +261,6 @@ def processar_dados(dados):
     # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
     # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
     if acao == 'criar_tarefa':
-        print(tarefa)
         criarTarefa(tarefa)
         dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
 

@@ -7,7 +7,6 @@ function Formulario({ tarefa, onClose, listaId }) {
   const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
   const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
 
-  // Constante para armazenar os dados da tarefa
   const [dadosTask, setDadosTask] = useState({
     titulo: '',
     descricao: '',
@@ -15,15 +14,14 @@ function Formulario({ tarefa, onClose, listaId }) {
     data: '',
     horario: '',
     usuario_id: localStorage.getItem("ID"),
-    lista_id: listaId  // Inclui o ID da lista
+    lista_id: listaId || null  // Armazena null se listaId não existir
   });
 
-  // Atualiza o estado dos dadosTask quando a prop tarefa é recebida
   useEffect(() => {
     if (tarefa) {
       setDadosTask({
         ...tarefa,
-        lista_id: listaId, // Garante que o ID da lista seja mantido ao editar
+        lista_id: tarefa.lista_id || listaId || null, // Armazena null se listaId não existir
       });
       setAcao('editar_tarefa');
     } else {
@@ -34,11 +32,12 @@ function Formulario({ tarefa, onClose, listaId }) {
         data: '',
         horario: '',
         usuario_id: localStorage.getItem("ID"),
-        lista_id: listaId  // Define o ID da lista ao criar uma nova tarefa
+        lista_id: listaId || null  // Armazena null se listaId não existir
       });
       setAcao('criar_tarefa');
     }
   }, [tarefa, listaId]);
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -49,7 +48,6 @@ function Formulario({ tarefa, onClose, listaId }) {
   };
 
   const handleSubmit = async (e) => {
-    console.log(dadosTask)
     e.preventDefault();
     try {
       const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {

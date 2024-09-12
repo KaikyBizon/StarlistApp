@@ -229,7 +229,8 @@ function Kanban({ onListaSalva }) {
             if (!resposta.ok || resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
-                window.location.reload()
+                fetchCategoriasETarefas();
+                setExibirModal(false);
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);

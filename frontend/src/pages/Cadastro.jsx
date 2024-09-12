@@ -43,6 +43,8 @@ function Cadastro() {
         dataNascimento: '',
         plano: ''
     });
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues((prevValues) => ({
@@ -55,12 +57,13 @@ function Cadastro() {
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
+        localStorage.setItem('email', formValues.email)
         console.log(formValues)
         e.preventDefault();
         
 
         try {
-            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
 
                 method: 'POST',
                 headers: {
