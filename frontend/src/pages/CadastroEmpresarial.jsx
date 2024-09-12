@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../StylesPages/CadastroEmpresarial.css';
@@ -20,7 +20,8 @@ function CadastroEmpresarial() {
         cnpj: '',
         nomeEquipe: '',
         pessoasEquipe: '',
-        cargo: ''
+        cargo: '',
+        emailUser: localStorage.getItem('email')
     });
 
     const handleChange = (e) => {
@@ -55,7 +56,7 @@ function CadastroEmpresarial() {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

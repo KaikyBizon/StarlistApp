@@ -65,7 +65,7 @@ export default function ToDo({ navigation, route }) {
           descricao: tarefa[2],
           data: tarefa[3],
           horario: tarefa[4],
-          id: tarefa[3],
+          id: tarefa[5],
         }));
         const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
         setTarefas(tarefasOrdenadas);
@@ -146,7 +146,7 @@ export default function ToDo({ navigation, route }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.30:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
