@@ -78,7 +78,6 @@ p {
 .cards-tarefa .descricao{
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /*Mostra até 2 linhas antes de cortar*/
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal; /*Permite quebra de linha*/
@@ -126,4 +125,5 @@ p {
 
 .titulo-todo{
     margin: 0px;
+    color:#F1D327 ;
 }
