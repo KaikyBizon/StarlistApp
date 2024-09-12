@@ -49,7 +49,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
