@@ -99,25 +99,35 @@ function ToDo() {
 
     const ordenarTarefas = (tarefas) => {
         return tarefas.sort((a, b) => {
-            const dataDateA = new Date(a.data);
-            const dataDateB = new Date(b.data);
-
+            // Função para converter string no formato dd/mm/yyyy para um objeto Date
+            const converterParaData = (dataString) => {
+                const [dia, mes, ano] = dataString.split('/').map(Number);
+                return new Date(ano, mes - 1, dia); // Cria uma data no formato correto
+            };
+    
+            const dataDateA = converterParaData(a.data);
+            const dataDateB = converterParaData(b.data);
+    
+            // Ordenar primeiro pelas datas mais próximas
             if (dataDateA.getTime() !== dataDateB.getTime()) {
                 return dataDateA - dataDateB;
             }
-
+    
+            // Se as datas forem iguais, ordenar pelos horários
             if (a.horario && b.horario) {
                 const [horaA, minutoA] = a.horario.split(':').map(Number);
                 const [horaB, minutoB] = b.horario.split(':').map(Number);
                 const tempoA = horaA * 60 + minutoA;
                 const tempoB = horaB * 60 + minutoB;
-
+    
                 return tempoA - tempoB;
             }
-
+    
+            // Caso não tenha horário, manter a tarefa com horário preenchido antes
             return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
         });
     };
+    
 
     useEffect(() => {
         fetchTarefas();
