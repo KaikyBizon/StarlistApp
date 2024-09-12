@@ -49,7 +49,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
@@ -105,25 +105,35 @@ export default function ToDo({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
-        if (route.params?.selectedDate) {
-            const selectedDate = new Date(route.params.selectedDate);
-            selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
-            setDate(selectedDate);
-        }
+      if (route.params?.selectedDate) {
+        const selectedDate = new Date(route.params.selectedDate);
+        selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
+        setDate(selectedDate);
+      }
 
-        // Função se houver uma nova tarefa passada como parâmetro
-        if (route.params?.novaTarefa) {
-            const novaTarefa = route.params.novaTarefa;
+      // Função se houver uma nova tarefa passada como parâmetro
+      if (route.params?.novaTarefa) {
+        const novaTarefa = route.params.novaTarefa;
 
-            setTarefas(prevTarefas => {
-                const tarefasAtualizadas = [...prevTarefas, novaTarefa];
-                const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
-                setFilteredTasks(tarefasOrdenadas);
-                return tarefasOrdenadas;
-            });
+        // Verifica se a nova tarefa já existe na lista para evitar duplicação
+        const tarefaExistente = tarefas.find(
+          (tarefa) => tarefa.titulo === novaTarefa.titulo && tarefa.data === novaTarefa.data && tarefa.horario === novaTarefa.horario
+        );
+
+        if (!tarefaExistente) {
+          const tarefasAtualizadas = [...tarefas, novaTarefa];
+          const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
+
+          setTarefas(tarefasOrdenadas);
+          setFilteredTasks(tarefasOrdenadas.filter(tarefa => moment(tarefa.data).isSame(date, 'day')));
         }
+      } else {
+        // Apenas carrega as tarefas se não houver nova tarefa
+        fetchTarefas();
+      }
+
     }
-}, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
+  }, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
 
 
 
@@ -146,24 +156,47 @@ export default function ToDo({ navigation, route }) {
   // Função para excluir tarefa
   const excluirTarefa = async (id) => {
     try {
-      const resposta = await fetch(`http://10.135.60.19:8085/receber-dados`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
-      });
-      if (resposta.ok) {
-        Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
-        // Atualiza a lista de tarefas após exclusão
-        const novasTarefas = tarefas.filter(tarefa => tarefa.id !== id);
-        setTarefas(novasTarefas);
-        setFilteredTasks(novasTarefas);
-      } else {
-        console.error('Erro ao excluir tarefa:', await resposta.text());
-      }
+      // Solicita confirmação ao usuário
+      Alert.alert(
+        'Confirmação',
+        'Você tem certeza que deseja excluir esta tarefa?',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Excluir',
+            onPress: async () => {
+              try {
+                const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
+                });
+
+                if (resposta.ok) {
+                  Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
+
+                  // Atualiza a lista de tarefas após exclusão
+                  const novasTarefas = tarefas.filter(tarefa => tarefa.id !== id);
+                  setTarefas(novasTarefas);
+
+                  // Atualiza o filtro das tarefas
+                  const tarefasFiltradas = novasTarefas.filter(tarefa => moment(tarefa.data).isSame(date, 'day'));
+                  setFilteredTasks(tarefasFiltradas);
+                } else {
+                  console.error('Erro ao excluir tarefa:', await resposta.text());
+                }
+              } catch (error) {
+                console.error('Erro ao excluir tarefa:', error);
+              }
+            }
+          }
+        ]
+      );
     } catch (error) {
-      console.error('Erro ao excluir tarefa:', error);
+      console.error('Erro ao solicitar confirmação de exclusão:', error);
     }
   };
+
 
   return (
     <View style={styles.background}>
@@ -229,7 +262,7 @@ export default function ToDo({ navigation, route }) {
                   </View>
                   <View style={styles.iconContainer}>
                     <TouchableOpacity style={styles.editar}>
-                      <Feather name="edit" size={24} color="#4682B4" style={styles.icon} />
+                      <Feather name="edit" size={24} color="#4682B4" style={styles.icon} onPress={() => navigation.navigate('NOVA TAREFA')} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => excluirTarefa(id)}>
                       <Feather name="trash-2" size={24} color="#FF6347" style={styles.icon} />
