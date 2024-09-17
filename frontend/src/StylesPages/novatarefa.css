@@ -92,3 +92,111 @@
     /* Adiciona uma transição suave para a mudança de cor */
     font-size: 17px;
 }
+
+/*Cores da navbar*/
+nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
+    background-color: #494545 !important;
+}
+
+.dropdown-menu.show {
+    background-color: #535050;
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: #696969;
+}
+
+.nav-fixed a {
+    color: #c1c1c1;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+/*Cor padrão do botão "+" (adicionar nova tarefa)*/
+.btn-novatarefa {
+    background-color: #faed27;
+    border: 0;
+    color: #000000;
+}
+
+/*Cor do botão "+" quando passar o mouse em cima*/
+.btn-novatarefa:hover {
+    background-color: #000000;
+    color: #faed27;
+    border: 0;
+}
+
+/*ajustando tamanho e posição do input de etiqueta*/
+#formEtiqueta {
+    width: 430px;
+    margin-left: 20px;
+}
+
+label.form-label {
+    color: #faed27;
+}
+
+/*Tirando borda quando clicar no input no modal de nova tarefa*/
+.nome-evento input,
+.data-evento input {
+    margin: 0 20px;
+    border: 1px solid #000000;
+    box-shadow: 0 0 0 0;
+    outline: 0;
+}
+
+/*Tirando borda quando clicar na área de "descrição" do modal de nova tarefa*/
+textarea#exampleForm\.ControlTextarea1 {
+    border: 1px solid #000000;
+    box-shadow: 0 0 0 0;
+    outline: 0;
+}
+
+/*Cor de fundo do modal de nova tarefa*/
+.modal-content {
+    background-color: #919191;
+}
+
+/*Borda na parte de cima do modal de nova tarefa*/
+.modal-header {
+    border-bottom: 1px solid #000000;
+}
+
+/*Tirando borda inferior do modal*/
+.modal-footer {
+    border: 0;
+}
+
+/*Alinhando botões de etiquetas*/
+.button {
+    text-align: center;
+}
+
+/*Estilizando botão no modal para salvar tarefa*/
+button.btn.btn-primary.save-task {
+    background-color: #000000;
+    border: 0;
+    border-radius: 15px;
+    color: #faed27;
+}
+
+/*Borda e cor do texto do botao "fechar"*/
+button.btn.btn-secondary {
+    border: 0;
+    border-radius: 15px;
+    color: #faed27;
+}
+
+/*Hover dos botões de fechar e salvar no modal*/
+button.btn.btn-primary.save-task:hover,
+button.btn.btn-secondary:hover {
+    transition: 0.4s;
+    padding: 10px;
+}
+
+/*Margem da área de descrição no modal*/
+.descricao {
+    margin: 0 20px;
+}
+

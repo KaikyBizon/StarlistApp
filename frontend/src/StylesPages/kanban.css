@@ -250,6 +250,10 @@ button.botoesConfirmarExclusao:hover {
 
 }
 
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
 
 .botoes_adLista {
     display: flex;

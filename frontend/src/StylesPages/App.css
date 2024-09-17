@@ -9,74 +9,6 @@ body {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-/*Posicionando os itens do menu, definindo o tamanho e a cor deu fundo*/
-.menu {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 55px;
-  justify-content: space-between;
-  background-image: linear-gradient(to right, #4b4b4b, rgb(255, 197, 0));
-}
-
-/*Definindo tamanho da logo*/
-.logo img {
-  max-width: 200px;
-  max-height: 100px;
-}
-
-
-/*Posicionando os icones do menu*/
-.icones {
-  display: flex;
-  align-items: center;
-}
-
-
-/*Definindo tamanho dos icones e tirando eles da borda*/
-.icones img {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-}
-
-/*Definindo cor, tamanho, borda e tamanho da barra de pesquisa*/
-.search input {
-  border-radius: 40px;
-  background-color: #6e6e6e;
-  padding-left: 20px;
-  width: 500px;
-  height: 40px;
-  border: 0;
-  margin: 0;
-}
-
-/*Cursor da barra de pesquisa*/
-.search input:hover {
-  cursor: pointer;
-}
-
-/*Definindo barra de pesquisa com a imagem da lupa para esconder o input*/
-.search {
-  width: 550px;
-  display: flex;
-  align-items: center;
-  background-color: #6e6e6e;
-  border-radius: 40px;
-}
-
-/*Definindo a cor do que for digitado no input*/
-.search input:focus {
-  color: #faed27;
-  font-size: 17px;
-}
-
-/*Estilizando placeholder da barra de pesquisa*/
-.search input::placeholder {
-  color: #faed27;
-  font-size: 18px;
-}
-
 /*Posicionando imagem do calendário e definindo tamanho da div dele*/
 .Calendario {
   width: 390px;
@@ -103,11 +35,6 @@ body {
 /*Colocando os cards de tarefas ao lado do calendário e etiquetas*/
 .calendario-left {
   display: flex;
-}
-
-/*Tirar a borda ao clicar no input da barra de pesquisa*/
-input#pesquisar {
-  outline: none;
 }
 
 /*Dando tamanho e cor para os botões */
@@ -161,97 +88,8 @@ input#pesquisar {
   background-color: orange;
 }
 
-/*Cor padrão do botão "+" (adicionar nova tarefa)*/
-.btn-novatarefa {
-  background-color: #faed27;
-  border: 0;
-  color: #000000;
-}
-
-/*Cor do botão "+" quando passar o mouse em cima*/
-.btn-novatarefa:hover {
-  background-color: #000000;
-  color: #faed27;
-  border: 0;
-}
-
-/*alinhando inputs do modal de nova tarefa*/
-.nome-evento,
-.data-evento {
-  display: flex;
-}
-
-/*ajustando tamanho e posição do input de etiqueta*/
-#formEtiqueta {
-  width: 430px;
-  margin-left: 20px;
-}
-
 .Criartask_titulo{
   color: #faed27;
-}
-
-/*Tirando borda quando clicar no input no modal de nova tarefa*/
-.nome-evento input,
-.data-evento input {
-  margin: 0 20px;
-  border: 1px solid #000000;
-  box-shadow: 0 0 0 0;
-  outline: 0;
-}
-
-/*Tirando borda quando clicar na área de "descrição" do modal de nova tarefa*/
-textarea#exampleForm\.ControlTextarea1 {
-  border: 1px solid #000000;
-  box-shadow: 0 0 0 0;
-  outline: 0;
-}
-
-/*Cor de fundo do modal de nova tarefa*/
-.modal-content {
-  background-color: #919191;
-}
-
-/*Borda na parte de cima do modal de nova tarefa*/
-.modal-header {
-  border-bottom: 1px solid #000000;
-}
-
-/*Tirando borda inferior do modal*/
-.modal-footer {
-  border: 0;
-}
-
-/*Alinhando botões de etiquetas*/
-.button {
-  text-align: center;
-}
-
-/*Estilizando botão no modal para salvar tarefa*/
-button.btn.btn-primary.save-task {
-  background-color: #000000;
-  border: 0;
-  border-radius: 15px;
-  color: #faed27;
-}
-
-/*Borda e cor do texto do botao "fechar"*/
-button.btn.btn-secondary {
-  border: 0;
-  border-radius: 15px;
-  color: #faed27;
-}
-
-/*Hover dos botões de fechar e salvar no modal*/
-button.btn.btn-primary.save-task:hover,
-button.btn.btn-secondary:hover {
-  transition: 0.4s;
-  padding: 10px;
-}
-
-/*Margem da área de descrição no modal*/
-.descricao {
-  margin: 0 20px;
 }
 
 /*Cor do botão "+" quando clicar nele*/
@@ -280,24 +118,9 @@ button.btn.btn-secondary:hover {
   padding-left: 10px;
 }
 
-
-
 /*Zerando margem dos "h5" da página*/
 h5 {
   margin: 0;
-}
-
-/*Cores da navbar*/
-nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
-  background-color: #494545 !important;
-}
-
-.dropdown-menu.show {
-  background-color: #535050;
-}
-
-.dropdown-menu {
-  --bs-dropdown-link-active-bg: #696969;
 }
 
 /*Fixando navbar*/
@@ -307,13 +130,6 @@ nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   left: 0;
 
   width: 100%;
-}
-
-.nav-fixed a {
-  color: #c1c1c1;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
 }
 
 .nav-fixed a:hover {
@@ -332,25 +148,4 @@ nav.bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   justify-content: space-evenly;
   width: 100%;
   height: 750px;
-}
-
-/*Estilizando o botão para alterar os dados de cadastro do usuário*/
-#dropdown-basic {
-  background-color: #FDC400;
-  border-color: #FDC400;
-  padding: 0;
-}
-
-.alterar_dados {
-  color: #c1c1c1;
-  --bs-dropdown-link-hover-bg: var(--bs-btn-active-bg)
-}
-
-.alterar_dados:hover {
-  color: #faed27;
-}
-
-p.alterar_dados {
-  padding-left: 15px;
-  color: #faed27;
 }
