@@ -51,15 +51,12 @@ const Calendario = ({ events }) => {
   
 
   const hasEvent = (day) => {
-    console.log('Verificando dia:', day + 1);  // Adiciona log para depuração
   
     return events.some(event => {
       const eventDate = formatDate(event.data);  // Converte a data do evento
-      console.log('Data do evento formatada:', eventDate);  // Log para verificar a data formatada
   
       // Verifica se a data formatada é válida
       if (isNaN(eventDate.getTime())) {
-        console.error('Data do evento inválida:', event.data);
         return false;
       }
   

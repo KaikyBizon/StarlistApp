@@ -89,22 +89,29 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        mensagens_erro.append(validar_email(dados_processados.get('email', '')))
-        mensagens_erro.append(validar_data_nascimento(dados_processados.get('dataNascimento', '')))
-        mensagens_erro.append(validar_senha(dados_processados.get('senha', '')))
-        mensagens_erro.append(confirmar_senha(dados_processados.get('senha', ''), dados_processados.get('confirme', '')))
+        mensagens_erro.append(validar_email(
+            dados_processados.get('email', '')))
+        mensagens_erro.append(validar_data_nascimento(
+            dados_processados.get('dataNascimento', '')))
+        mensagens_erro.append(validar_senha(
+            dados_processados.get('senha', '')))
+        mensagens_erro.append(confirmar_senha(dados_processados.get(
+            'senha', ''), dados_processados.get('confirme', '')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
-        #Lista para armazenar erros do cadastro empresarial
+        # Lista para armazenar erros do cadastro empresarial
         mensagens_erro_empresarial = []
 
-        mensagens_erro_empresarial.append(validar_cnpj(dados_processados.get('cnpj', '')))
-        mensagens_erro_empresarial.append(validar_nome_equipe(dados_processados.get('nomeEquipe', '')))
-        mensagens_erro_empresarial.append(validar_numero_participantes(dados_processados.get('pessoasEquipe', '')))
-        #Filtra apenas os erros que foram encontradas
-        mensagens_erro_empresarial = [msg for msg in mensagens_erro_empresarial if msg['erro']]
-
+        mensagens_erro_empresarial.append(
+            validar_cnpj(dados_processados.get('cnpj', '')))
+        mensagens_erro_empresarial.append(validar_nome_equipe(
+            dados_processados.get('nomeEquipe', '')))
+        mensagens_erro_empresarial.append(validar_numero_participantes(
+            dados_processados.get('pessoasEquipe', '')))
+        # Filtra apenas os erros que foram encontradas
+        mensagens_erro_empresarial = [
+            msg for msg in mensagens_erro_empresarial if msg['erro']]
 
         # Inserir usuário
         # Kaiky
@@ -120,17 +127,17 @@ def processar_dados(dados):
             nome_plano = dados_processados.get('plano')
             id_plano = selecionarPlanos(nome_plano)
 
-            # Verifique se id_plano não está vazio antes de tentar acessar o índice
+               # Verifique se id_plano não está vazio antes de tentar acessar o índice
             if id_plano and len(id_plano) > 0 and len(id_plano[0]) > 0:
-                id_plano = id_plano[0][0]
+                    id_plano = id_plano[0][0]
             else:
-                # Trate o caso onde id_plano está vazio ou não contém o índice esperado
-                id_plano = None
-                mensagens_erro.append('Plano não encontrado.')
+                    # Trate o caso onde id_plano está vazio ou não contém o índice esperado
+                    id_plano = None
+                    mensagens_erro.append({'erro': True, 'mensagem_plano': 'Plano não encontrado.'})
 
             for i in range(len(cadastro)):
-                if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
-                    cadastro[i] = id_plano
+                    if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
+                        cadastro[i] = id_plano
 
             if not mensagens_erro:
                 inserir_usuario(cadastro)
@@ -155,8 +162,8 @@ def processar_dados(dados):
                 cadastroEmpresarial(cadastro_empresarial)
                 inserirCargo(cargo, email_user)
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial}
-
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro_empresarial}
 
         # Efetuar login
         # Kaiky

@@ -106,7 +106,7 @@ function Planos() {
 
                         <h3 className="card-preco-header">Empresarial</h3>
 
-                        <div className="preco"><sup>R$</sup>500<span>Anual</span></div>
+                        <div className="preco"><sup>R$</sup>300<span>Anual</span></div>
 
                         <ul className="preco-ul">
 

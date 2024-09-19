@@ -43,7 +43,7 @@ export default function CadastroEmpresarial({ navigation }) {
         };
 
         try {
-            const resposta = await fetch('http://10.135.60.7:8085/receber-dados', {
+            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

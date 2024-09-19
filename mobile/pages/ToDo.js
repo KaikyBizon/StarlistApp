@@ -49,7 +49,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
@@ -166,7 +166,7 @@ export default function ToDo({ navigation, route }) {
             text: 'Excluir',
             onPress: async () => {
               try {
-                const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+                const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),

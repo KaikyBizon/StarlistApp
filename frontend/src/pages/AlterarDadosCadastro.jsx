@@ -22,7 +22,7 @@ const AlterarDadosCadastro = () => {
     //Constante para buscar os dados do usuário no backend ao carregar a página
     const showDados = async () => {
         try {
-            const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const AlterarDadosCadastro = () => {
     const handleDelete = async () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
-            const resposta = await fetch('http://10.135.60.18:8085/delete-usuario', {
+            const resposta = await fetch('http://192.168.137.1:8085/delete-usuario', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -81,7 +81,7 @@ const AlterarDadosCadastro = () => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.18:8085/receber-dados', {
+            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

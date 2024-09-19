@@ -50,7 +50,7 @@ function Formulario({ tarefa, onClose, listaId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.19:8085/receber-dados', {
+      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

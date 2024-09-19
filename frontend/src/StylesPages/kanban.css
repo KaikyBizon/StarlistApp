@@ -87,13 +87,15 @@
 }
 
 .tarefa-item {
+    position: relative;
+    /* Necessário para posicionar o ícone corretamente */
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
     background-color: #514d4d;
     color: #c9c9c9;
-
 }
+
 
 
 .titulo-tarefa {
@@ -132,6 +134,7 @@
 .excluir {
     width: 28px;
     margin-left: 60px;
+    cursor: pointer;
 }
 
 .lista-adiciona button.excluir {
@@ -231,14 +234,13 @@ button.botoesConfirmarExclusao:hover {
 }
 
 
+
 .editar-tarefa {
-    width: 22px;
     position: absolute;
+    top: 10px;
     right: 10px;
-    top: 50%;
-    transform: translateY(-220%);
-    /* Ajuste para centralizar corretamente */
-    margin-bottom: 40px;
+    width: 22px;
+    cursor: pointer;
 }
 
 
