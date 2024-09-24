@@ -50,7 +50,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://192.168.137.1:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://192.168.137.1:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ function Kanban({ onListaSalva }) {
     const handleEditList = async (listaId) => {
         console.log(listaId)
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -245,33 +245,6 @@ function Kanban({ onListaSalva }) {
         if (categoria) {
             setNomeEditando(categoria.nome); // Define o nome da lista no estado
             setExibirModal(listaId); // Abre o modal para a lista específica
-        }
-    };
-
-
-    // Função para salvar a lista
-    const handleSalvarLista = async (id, novoNome) => {
-        try {
-            const resposta = await fetch(`http://192.168.137.1:8085/lista/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ nome: novoNome }),
-            });
-
-            const resultado = await resposta.json();
-
-            if (resposta.ok) {
-                setCategorias(categorias.map(categoria =>
-                    categoria.id === id ? { ...categoria, nome: novoNome } : categoria
-                ));
-                setExibirModal(null); // Fecha o modal após salvar
-            } else {
-                console.error('Erro ao atualizar lista:', resultado.mensagens_erro);
-            }
-        } catch (error) {
-            console.error('Erro ao atualizar lista:', error);
         }
     };
 
@@ -311,7 +284,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://192.168.137.1:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.30:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -412,7 +385,6 @@ function Kanban({ onListaSalva }) {
                                         <form
                                             onSubmit={(e) => {
                                                 e.preventDefault();
-                                                const novoNome = nomeEditando;
                                                 handleEditList(exibirModal); // Passar o ID da lista
                                             }}
                                         >
