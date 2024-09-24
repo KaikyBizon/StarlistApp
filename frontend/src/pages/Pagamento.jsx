@@ -68,6 +68,9 @@ export default function Pagamento() {
                     <div className="imagemQr">
                         <img src="/public/images/qr-code.png" alt="qrcode" />
                     </div>
+                    <button className='btnPagar' onClick={handledPayment}>
+                    Concluir
+                     </button>
                 </div>
             ) : (
                 <button className="btnPagar" onClick={generatePixCode}>
