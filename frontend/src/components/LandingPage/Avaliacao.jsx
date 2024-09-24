@@ -2,60 +2,80 @@ import './Avaliacao.css'
 function Avaliacao() {
     return (
         <>
-            <section id="avl">
-                <div className="av">
-                    <h1 className="titulo">AVALIAÇÕES</h1>
-                    <div className="avl-geral">
+            <div className="avl">
+                <div className="header">
+                    <h1>Depoimentos</h1>
+                </div>
 
+                <div className="main-content">
+                    <div className="general-rating">
+                        <div className="rating-box">
+                            <h2>NOTA GERAL</h2>
 
-                        <div className="avaliações">
-                            <div className="nome">
-                                <img src="/public/images/user.png" className="usuário" alt="" />
-                                <h3 className='nome-usuario'>Júnior Santos</h3>
-                                <img id="estrela" src="/public/images/5estrelas.png" alt="5estrela" />
+                            <div className="score">
+                                <span className="rating-number">4.9</span>
+                                <span className="stars">★★★★★</span>
                             </div>
-
-                            <p className="mensagem-avl">O site é muito fácil de usar, e muito prático, minha rotina ficou muito mais
-                                organizada</p>
                         </div>
 
-                        <div className="avaliações">
-                            <div className="nome">
-                                <img src="/public/images/user.png" className="usuário" alt="" />
-                                <h3 className='nome-usuario'>Flávio Castro</h3>
-                                <img id="estrela" src="/public/images/5estrelas.png" alt="5estrela" />
+
+                        <div className='rating-details'>
+                            <h3>NOTAS</h3>
+                            <div className='notas'>
+                                <div className='valor'>5.0</div>
+                                <img className='nota-estrelas' src="/public/images/5estrelas.png" alt="" />
+                                <p className='porcentagem'>91%</p>
                             </div>
-
-                            <p className="mensagem-avl">A aba de usuário é totalmente reinventada e facilita na hora de ver os
-                                afazeres, depois de começar a usar aumentei minha produtividade</p>
-                        </div>
-
-                        <div className="avaliações">
-                            <div className="nome">
-                                <img src="/public/images/user.png" className="usuário" alt="" />
-                                <h3 className='nome-usuario'>Arthur Souza</h3>
-                                <img id="estrela" src="/public/images/4estrelas.png" alt="4estrela" />
+                            <div className='notas'>
+                                <div className='valor'>4.0</div>
+                                <img className='nota-estrelas' src="/public/images/4estrelas.png" alt="" />
+                                <p className='porcentagem'>8%</p>
                             </div>
-
-                            <p className="mensagem-avl">Consegui me organizar melhor usando essa lista de tarefas, meu dia fica mais
-                                organizado</p>
+                            <div className='notas'>
+                                <div className='valor'>3.0</div>
+                                <img className='nota-estrelas' src="/public/images/3estrelas.png" alt="" />
+                                <p className='porcentagem'>1%</p>
+                            </div>
+                            <div className='notas'>
+                                <div className='valor'>2.0</div>
+                                <img className='nota-estrelas' src="/public/images/2estrelas.png" alt="" />
+                                <p className='porcentagem'>0%</p>
+                            </div>
+                            <div className='notas'>
+                                <div className='valor'>1.0</div>
+                                <img className='nota-estrelas' src="/public/images/1estrela.png" alt="" />
+                                <p className='porcentagem'>0%</p>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="avaliações">
-                            <div className="nome">
-                                <img src="/public/images/user.png" className="usuário" alt="" />
+                    <div className="linha-separadora"></div>
+
+                    <div className="testimonials">
+                        <div className="testimonial-box">
+                            <div className="header-box">
                                 <h3 className='nome-usuario'>Gabriel Macedo</h3>
-                                <img id="estrela" src="/public/images/5estrelas.png" alt="5estrela" />
+                                <img className='estrelas' src="/public/images/5estrelas.png" alt="" />
                             </div>
-
                             <p className="mensagem-avl">Superou nossas expectativas, e cumpriu o que prometeu</p>
                         </div>
-
-
-
+                        <div className="testimonial-box">
+                            <div className="header-box">
+                                <h3 className='nome-usuario'>Arthur Souza</h3>
+                                <img className='estrelas' src="/public/images/5estrelas.png" alt="" />
+                            </div>
+                            <p className="mensagem-avl">Consegui me organizar melhor usando essa lista de tarefas, meu dia fica mais organizado</p>
+                        </div>
+                        <div className="testimonial-box">
+                            <div className="header-box">
+                                <h3 className='nome-usuario'>Flávio Castro</h3>
+                                <img className='quatro_estrelas' src="/public/images/4estrelas.png" alt="" />
+                            </div>
+                            <p className="mensagem-avl">A aba de usuário é totalmente reinventada e facilita na hora de ver os afazeres, depois de começar a usar aumentei minha produtividade</p>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </>
     )
 }
