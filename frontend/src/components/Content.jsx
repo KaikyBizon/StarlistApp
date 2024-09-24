@@ -13,6 +13,7 @@ import Pagamento from "../pages/Pagamento";
 import { CadastroEmpresarial } from "../pages/CadastroEmpresarial";
 import EscolherPlano from "./EscolherPlano";
 import Forma_pg from './Forma_pg'; 
+import { VerificarEmail } from "../pages/VerificarEmail";
 
 const Content = props => (
     <main className="Content">
@@ -27,7 +28,7 @@ const Content = props => (
             <Route path="/todo" element={<ToDo />}></Route> 
             <Route path="/gerenciar-equipe" element={<GerenciarEquipe />}></Route> 
             <Route path="/alterar_dados_cadastro" element={<AlterarDadosCadastro />}></Route>
-
+            <Route path="/verificarEmail" element={<VerificarEmail />}></Route>
         </Routes>
     </main>
 );
