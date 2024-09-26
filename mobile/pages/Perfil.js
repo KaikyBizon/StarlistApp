@@ -71,6 +71,37 @@ function Perfil({ navigation }) {
     id: ''
   });
 
+  {/*
+        Nome da função: handleChange;
+        Autor: Davi;
+        Data de criação: 05/24;
+        Parametros de entrada: name (string), value (qualquer);
+        Retorno: void;
+        Finalidade: Atualizar o estado de um formulário com os novos valores dos campos;
+        Descrição/observações: 
+            Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método setFormValues para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
+  */}
+  // Função para lidar com a mudança de nome
+  const handleNameChange = (text) => {
+    setName(text);
+    setFormAlter((prev) => ({ ...prev, nome: text })); // Atualiza o formAlter
+  };
+
+  // Função para lidar com a mudança de e-mail
+  const handleEmailChange = (text) => {
+    setEmail(text);
+    setFormAlter((prev) => ({ ...prev, email: text })); // Atualiza o formAlter
+  };
+
+  // Função para lidar com a mudança de data de nascimento
+  const handleDobChange = (text) => {
+    const formattedText = formatDate(text);
+    setDob(formattedText);
+    setFormAlter((prev) => ({ ...prev, dataNascimento: formatToISODate(formattedText) })); // Atualiza o formAlter com a data formatada
+  };
+
+
+
   useEffect(() => {
     const showDados = async () => {
       try {
@@ -80,7 +111,7 @@ function Perfil({ navigation }) {
 
         // Só faz a requisição se o userId estiver presente
         if (id) {
-          const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+          const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -130,12 +161,6 @@ function Perfil({ navigation }) {
     return formatted;
   };
 
-  // Função para lidar com a mudança de data de nascimento
-  const handleDobChange = (text) => {
-    const formattedText = formatDate(text);
-    setDob(formattedText);
-  };
-
   // Função para formatar a data de nascimento para o formato ISO (aaaa-mm-dd)
   const formatToISODate = (text) => {
     const [day, month, year] = text.split('/');
@@ -148,11 +173,12 @@ function Perfil({ navigation }) {
       await AsyncStorage.setItem('nome_usuario', name);
       await AsyncStorage.setItem('email', email);
       await AsyncStorage.setItem('dataNascimento', dob);
+      console.log(formAlter)
 
       const id = userId;
       const formattedDob = formatToISODate(dob); // Formatar para aaaa-mm-dd
 
-      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +205,7 @@ function Perfil({ navigation }) {
     try {
       const idUsuario = formAlter.id; // Obtém o ID do usuário armazenado no estado
 
-      const resposta = await fetch('http://192.168.137.1:8085/delete-usuario', {
+      const resposta = await fetch('http://10.135.60.30:8085/delete-usuario', {
         method: 'POST', // ou 'DELETE', dependendo da configuração do seu backend
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +258,7 @@ function Perfil({ navigation }) {
           style={styles.textinputPerfil}
           placeholder="Thaina Eduarda Alexandre"
           value={name}
-          onChangeText={setName}
+          onChangeText={handleNameChange} // Altera aqui
         />
       </View>
 
@@ -242,7 +268,7 @@ function Perfil({ navigation }) {
           style={styles.textinputPerfil}
           placeholder="thainaeduarda123@gmail.com"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={handleEmailChange} // Altera aqui
         />
       </View>
 
@@ -252,7 +278,7 @@ function Perfil({ navigation }) {
           style={styles.textinputPerfil}
           placeholder="18/05/2007"
           value={dob}
-          onChangeText={handleDobChange}
+          onChangeText={handleDobChange} // Mantém aqui
           keyboardType="numeric"
         />
       </View>
