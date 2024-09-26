@@ -2,16 +2,21 @@
 
 .geral {
     display: flex;
-    justify-content: center;
+    justify-content: end;
     height: 100vh;
     align-items: center;
-    background-color: #faed27
+    background-color: #faed27;
+    background-image: url(../../../public/images/fundoLogin.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .fundo-secundario {
     display: flex;
-    width: 80%;
+    width: 35%;
     height: 500px;
+    margin-right: 120px;
     align-items: center;
     justify-content: space-around;
     background-color: #696969;

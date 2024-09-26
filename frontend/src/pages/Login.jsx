@@ -53,9 +53,7 @@ function LoginForm() {
   return (
     <div className="geral">
       <div className="fundo-secundario">
-        <div className="img-login">
-          <img src="/public/images/img-login.png" alt="" />
-        </div>
+        
         <form id="register-login" name="formulario_login" onSubmit={handleSubmit} autoComplete='off'>
           <div className="bem_vindo">
             <h1>BEM-VINDO!</h1>
@@ -78,7 +76,6 @@ function LoginForm() {
 
           {/*Link para ir para o Cadastro */}
           <a href="#">Ainda não tem conta? <Link to="/cadastro" className='crieUma'>Crie uma</Link></a>
-
 
           <div className="botoes_Login">
             <div className="btn-login">
