@@ -12,6 +12,7 @@ from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
 from actionsBD.insertCargoUser import inserirCargo
+from validarEmail import send_email_confirm
 
 from validacoes import (
     validar_nome,
@@ -30,6 +31,7 @@ from validacoes import (
 
 
 def processar_dados(dados):
+
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
@@ -89,8 +91,7 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        mensagens_erro.append(validar_email(
-            dados_processados.get('email', '')))
+        # mensagens_erro.append(validar_email(dados_processados.get('email', '')))
         mensagens_erro.append(validar_data_nascimento(
             dados_processados.get('dataNascimento', '')))
         mensagens_erro.append(validar_senha(
@@ -127,22 +128,31 @@ def processar_dados(dados):
             nome_plano = dados_processados.get('plano')
             id_plano = selecionarPlanos(nome_plano)
 
-               # Verifique se id_plano não está vazio antes de tentar acessar o índice
+            # Verifique se id_plano não está vazio antes de tentar acessar o índice
             if id_plano and len(id_plano) > 0 and len(id_plano[0]) > 0:
-                    id_plano = id_plano[0][0]
+                id_plano = id_plano[0][0]
             else:
-                    # Trate o caso onde id_plano está vazio ou não contém o índice esperado
-                    id_plano = None
-                    mensagens_erro.append({'erro': True, 'mensagem_plano': 'Plano não encontrado.'})
+                # Trate o caso onde id_plano está vazio ou não contém o índice esperado
+                id_plano = None
+                mensagens_erro.append(
+                    {'erro': True, 'mensagem_plano': 'Plano não encontrado.'})
 
             for i in range(len(cadastro)):
-                    if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
-                        cadastro[i] = id_plano
+                if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
+                    cadastro[i] = id_plano
 
             if not mensagens_erro:
                 inserir_usuario(cadastro)
+                # Enviar e-mail de validação
+                recipient = dados_processados.get('email')
+                subject = "Código de verificação"
+                # Armazene o retorno da função em uma variável
+                result = send_email_confirm(recipient, subject)
+                global codigo_confirmacao
+                codigo_confirmacao = result[1]
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro}
 
         # Efetuar cadastro empresarial
         # Gabriel
@@ -301,6 +311,13 @@ def processar_dados(dados):
     if acao == 'carregar_tarefas':
         id_usuario = dados_processados
         dados_tarefa = selecionar_dados_tarefa(id_usuario)
+
+    if acao == 'verificar_email':
+        print(dados_processados, codigo_confirmacao)
+        if str(dados_processados) == str(codigo_confirmacao):
+            dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
+        else:
+            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
 
     # Excluir tarefa
     # Kaiky

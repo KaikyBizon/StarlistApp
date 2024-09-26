@@ -45,7 +45,7 @@ const data = [
     },
     {
         titleHeader: "Empresarial",
-        title: "R$500 Anual",
+        title: "R$300 Anual",
         textPlanos: "Áreas de Trabalho ilimitadas; Permissões para toda empresa; Quadros visíveis da empresa; Gerenciamento de quadro público; Convidados de mais de um quadro; Administração de power-ups;",
     },
 ];
