@@ -30,7 +30,7 @@ function Cadastro() {
         console.log(formValues);
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,30 +47,30 @@ function Cadastro() {
                 console.log("mensagens", mensagensErro)
             }
             else {
-                console.log('Dados processados com sucesso!', resultado);
+                navigate("/verificarEmail")
 
 
 
                 // Só navegar se não houver mensagens de erro
-                if (Object.keys(mensagensErro).length === 0) {
-                    if (formValues.plano === 'empresarial') {
-                        navigate("/cadastroempresarial");
-                    } else if (formValues.plano === 'gratuito') {
-                        navigate("/login");
-                    } else {
-                        navigate("/pagamento");
-                    }
+                // if (!resultado.mensagens_erro) {
+                //   if (formValues.plano === 'empresarial') {
+                //       navigate("/cadastroempresarial");
+                //   } else if (formValues.plano === 'gratuito') {
+                //       navigate("/login");
+                //  } else {
+                //      navigate("/pagamento");
+                // }
 
-                    // Resetar valores do formulário
-                    setFormValues({
-                        nome: '',
-                        email: '',
-                        senha: '',
-                        confirme: '',
-                        dataNascimento: '',
-                        plano: ''
-                    });
-                }
+                // Resetar valores do formulário
+                //  setFormValues({
+                //      nome: '',
+                //     email: '',
+                //     senha: '',
+                //     confirme: '',
+                //      dataNascimento: '',
+                //      plano: ''
+                //  });
+                //}
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);

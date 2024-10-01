@@ -11,8 +11,6 @@ import GerenciarEquipe from './GerenciarEquipe';
 import AlterarDadosCadastro from "../pages/AlterarDadosCadastro";
 import Pagamento from "../pages/Pagamento";
 import { CadastroEmpresarial } from "../pages/CadastroEmpresarial";
-import EscolherPlano from "./EscolherPlano";
-import Forma_pg from './Forma_pg'; 
 import { VerificarEmail } from "../pages/VerificarEmail";
 
 const Content = props => (
