@@ -86,6 +86,12 @@ export default function ToDo({ navigation, route }) {
   };
 
   useEffect(() => {
+    if (dataToCatchTarefas) {
+      fetchTarefas();
+    }
+  }, [dataToCatchTarefas]);
+
+  useEffect(() => {
 
     if (isFocused) {
       if (route.params?.selectedDate) {
@@ -102,6 +108,7 @@ export default function ToDo({ navigation, route }) {
         const tarefaExistente = tarefas.find(
           (tarefa) => tarefa.titulo === novaTarefa.titulo && tarefa.data === novaTarefa.data && tarefa.horario === novaTarefa.horario
         );
+        fetchTarefas()
       }
     }
   }, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
@@ -121,14 +128,6 @@ export default function ToDo({ navigation, route }) {
       }
     }
   }, [isFocused, route.params?.selectedDate, tarefas]);
-
-  useEffect(() => {
-    if (dataToCatchTarefas) {
-      fetchTarefas();
-    }
-  }, [dataToCatchTarefas]);
-
-
 
   // Função para mostrar o DateTimePicker
   const showDatePickerHandler = () => setShowDatePicker(true);
