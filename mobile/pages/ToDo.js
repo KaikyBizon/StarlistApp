@@ -156,9 +156,8 @@ export default function ToDo({ navigation, route }) {
                 const resposta = await fetch('http://10.135.60.20:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
+                  body: JSON.stringify({ dados: id, acao: 'excluirTarefa' }),
                 });
-
                 if (resposta.ok) {
                   Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
 
