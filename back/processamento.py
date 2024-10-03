@@ -31,7 +31,6 @@ from validacoes import (
 
 
 def processar_dados(dados):
-
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
@@ -91,13 +90,10 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        # mensagens_erro.append(validar_email(dados_processados.get('email', '')))
-        mensagens_erro.append(validar_data_nascimento(
-            dados_processados.get('dataNascimento', '')))
-        mensagens_erro.append(validar_senha(
-            dados_processados.get('senha', '')))
-        mensagens_erro.append(confirmar_senha(dados_processados.get(
-            'senha', ''), dados_processados.get('confirme', '')))
+        mensagens_erro.append(validar_email(dados_processados.get('email', '')))
+        mensagens_erro.append(validar_data_nascimento(dados_processados.get('dataNascimento', '')))
+        mensagens_erro.append(validar_senha(dados_processados.get('senha', '')))
+        mensagens_erro.append(confirmar_senha(dados_processados.get('senha', ''), dados_processados.get('confirme', '')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
@@ -309,8 +305,10 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição verifica se a acao indica uma renderização de tarefas, e caso seja, ele executa a função para buscar as os dados no banco e retorna todas as tarefas do usuário
     if acao == 'carregar_tarefas':
-        id_usuario = dados_processados
-        dados_tarefa = selecionar_dados_tarefa(id_usuario)
+        print(dados_processados)
+        id_usuario = dados_processados.get('usuarioId')
+        dataTarefas = dados_processados.get('dataToCatchTarefas')
+        dados_tarefa = selecionar_dados_tarefa(id_usuario, dataTarefas)
 
     if acao == 'verificar_email':
         print(dados_processados, codigo_confirmacao)
