@@ -55,7 +55,7 @@ export default function Cadastro({ navigation }) {
     senha: '',
     confirme: '',
     dataNascimento: '',
-    plano: '',
+    plano: 'gratuito',
   });
 
   {/*
@@ -103,7 +103,7 @@ export default function Cadastro({ navigation }) {
     };
 
     try {
-      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.45:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

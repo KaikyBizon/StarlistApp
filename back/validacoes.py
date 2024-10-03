@@ -9,6 +9,8 @@ from datetime import datetime
 # validaremail
 # davi
 # 01/12/2023
+# Alterações:19/09/24
+# Autor da alteração: Nathan
 # parametros de entrada
 # email-string-validar email
 # retorno
@@ -18,15 +20,58 @@ from datetime import datetime
 
 
 def validar_email(email):
-    # Utilizando uma expressão regular simples para validar o formato do e-mail
-    padrao_email = r'^\S+@\S+\.\S+$'
+    # Verifica se o campo de e-mail está vazio
+    if not email.strip():
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. Formato incorreto.'}
+
+    # Verifica se há múltiplos @
+    if email.count('@') != 1:
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. Apenas um "@" é permitido.'}
+
+    # Divide o e-mail em partes
+    parte_local, dominio = email.split('@', 1)
+
+    # Verifica se a parte local tem apenas caracteres especiais
+    if not re.search(r'[a-zA-Z0-9]', parte_local):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. A parte local não pode conter apenas caracteres especiais.'}
+
+    # Validação da parte local para pontos
+    if parte_local.startswith('.') or parte_local.endswith('.'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. A parte local não pode começar ou terminar com um ponto.'}
+    if '..' in parte_local:
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. A parte local não pode conter pontos consecutivos.'}
+
+    # Validação da parte local para hífen
+    if parte_local.startswith('-') or parte_local.endswith('-'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. A parte local não pode começar ou terminar com hífen.'}
+
+    # Valida o domínio
+    if dominio.startswith('-'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode começar com hífen.'}
+    if dominio.endswith('-'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode terminar com hífen.'}
+    if dominio.startswith('.'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode começar com um ponto.'}
+    if dominio.endswith('.'):
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode terminar com um ponto.'}
+
+    # Verifica se não há hífens ou pontos duplicados no domínio
+    if '--' in dominio:
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode ter hífens duplos.'}
+    if '..' in dominio:
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. O domínio não pode ter pontos duplos.'}
+
+    # Utilizando uma expressão regular para validar o formato básico do e-mail
+    padrao_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(padrao_email, email):
-        return {'erro': True, 'mensagem_email': 'E-mail inválido.'}
+        return {'erro': True, 'mensagem_email': 'E-mail inválido. Formato incorreto.'}
+
     return {'erro': False, 'mensagem_email': ''}
 
 # validar_nome
 # Nathan de Oliveira Costa
 # 01/12/23
+# Alteração: 19/09/24
 # parametros de entrada: nome - string - recebe nome do usuário e faz a validção (mais de 3 caracteres e sobrenome)
 # Retorna "erro : True" quando, nome inserido no campo "Nome" não atende os requisitos (mais de 3 caracteres e sobrenome), aparece menssagem de erro
 # Retorna "erro : False" quando, nome inserido no campo "Nome" atende os requisitos (mais de 3 caracteres e sobrenome), não aparece menssagem  de erro
@@ -34,8 +79,26 @@ def validar_email(email):
 
 
 def validar_nome(nome):
+    # Verificar se o nome tem ao menos 3 caracteres e contém espaço (nome e sobrenome)
     if len(nome) < 3 or ' ' not in nome:
         return {'erro': True, 'mensagem_nome': 'O nome deve conter ao menos 3 caracteres e sobrenome.'}
+
+    # Dividir o nome completo em partes (nome e sobrenomes)
+    partes_nome = nome.split()
+
+    # Verificar cada parte do nome (nome e sobrenome)
+    for parte in partes_nome:
+        if len(parte) > 1 and parte[0].lower() == parte[1].lower():
+            return {'erro': True, 'mensagem_nome': 'Nome ou sobrenome não podem iniciar com letras iguais.'}
+
+        # Verificar se há caracteres especiais ou acentos
+        if not re.match(r'^[a-zA-ZÀ-ÿ\s]+$', parte):
+            return {'erro': True, 'mensagem_nome': 'O nome pode conter apenas letras.'}
+
+    # Verificar se há três ou mais letras repetidas consecutivamente, ignorando maiúsculas/minúsculas
+    if re.search(r'(.)\1{2,}', nome, re.IGNORECASE):
+        return {'erro': True, 'mensagem_nome': 'O nome não pode conter 3 letras repetidas em sequência.'}
+
     return {'erro': False, 'mensagem_nome': ''}
 
 # validar_senha
@@ -78,24 +141,31 @@ def confirmar_senha(senha, confirme):
 
 def validar_data_nascimento(dataNascimento):
     try:
+        # Converter a string para o formato de data
         data_nasc = datetime.strptime(dataNascimento, '%Y-%m-%d')
-        # verifica a idade apenas pelo ano
+
+        # Definir a data mínima permitida (01/01/1900)
+        data_minima = datetime.strptime('1900-01-01', '%Y-%m-%d')
+
+        # Verificar se a data é anterior a 01/01/1900
+        if data_nasc < data_minima:
+            return {'erro': True, 'mensagem_idade': 'A data de nascimento não pode ser anterior a 01/01/1900.'}
+
+        # Calcular a idade apenas pelo ano
         idade = datetime.now().year - data_nasc.year
 
-        # se a pessoa ainda nao fez aniversario neste ano, retira 1 da idade
-        if datetime.now().month < data_nasc.month:
+        # Verificar se a pessoa ainda não fez aniversário neste ano, subtrair 1 da idade
+        if (datetime.now().month < data_nasc.month) or (datetime.now().month == data_nasc.month and datetime.now().day < data_nasc.day):
             idade -= 1
-        elif datetime.now().month == data_nasc.month:
-            if datetime.now().day < data_nasc.day:
-                idade -= 1
 
-        # se a pessoa tiver menos de 15 anos, retorna um erro
+        # Verificar se a pessoa tem menos de 15 anos
         if idade < 15:
             return {'erro': True, 'mensagem_idade': 'Você deve ter pelo menos 15 anos.'}
+
         return {'erro': False, 'mensagem_idade': ''}
+
     except ValueError:
         return {'erro': True, 'mensagem_idade': 'Data de nascimento inválida.'}
-    
 
 # validar_plano
 # Gabriel
@@ -121,8 +191,10 @@ def validar_plano(plano):
 # cnpj - string - recebe o CNPJ no formato "XX.XXX.XXX/XXXX-XX" ou sem pontuação, apenas números
 # Retorno:
 # erro retorna True se o CNPJ for inválido, e uma mensagem explicando o erro ou confirmando a validade.
-# Esta função remove os caracteres não numéricos do CNPJ, valida o número de dígitos, 
+# Esta função remove os caracteres não numéricos do CNPJ, valida o número de dígitos,
 # e realiza os cálculos dos dígitos verificadores. Caso o CNPJ não seja válido, retorna um erro.
+
+
 def validar_cnpj(cnpj):
     # Remove qualquer caractere não numérico
     cnpj = re.sub(r'\D', '', cnpj)
@@ -130,7 +202,7 @@ def validar_cnpj(cnpj):
     # Verifica se o CNPJ tem 14 dígitos
     if len(cnpj) != 14:
         return {'erro': True, 'mensagem_cnpj': 'CNPJ deve conter 14 dígitos.'}
-    
+
     # Cálculo dos dois dígitos verificadores do CNPJ
     def calcular_digito(cnpj, peso):
         soma = 0
@@ -138,7 +210,7 @@ def validar_cnpj(cnpj):
             soma += int(cnpj[i]) * peso[i]
         resto = soma % 11
         return 0 if resto < 2 else 11 - resto
-    
+
     # Pesos para cálculo do primeiro e segundo dígitos verificadores
     peso1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
     peso2 = [6] + peso1
@@ -147,7 +219,7 @@ def validar_cnpj(cnpj):
     digito1 = calcular_digito(cnpj[:12], peso1)
     if digito1 != int(cnpj[12]):
         return {'erro': True, 'mensagem_cnpj': 'CNPJ inválido.'}
-    
+
     # Verifica o segundo dígito verificador
     digito2 = calcular_digito(cnpj[:13], peso2)
     if digito2 != int(cnpj[13]):
@@ -163,6 +235,8 @@ def validar_cnpj(cnpj):
 # Retorno:
 # erro retorna True se o nome for inválido, e uma mensagem explicando o erro ou confirmando a validade.
 # Esta função verifica se o nome da equipe contém pelo menos 2 caracteres. Caso não atenda a esse critério, retorna um erro.
+
+
 def validar_nome_equipe(nome_equipe):
     # Verifica se o nome da equipe tem pelo menos 2 caracteres
     if len(nome_equipe) < 2:
@@ -183,11 +257,11 @@ def validar_numero_participantes(numero_participantes):
     # Verifica se o campo está vazio
     if not numero_participantes:
         return {'erro': True, 'mensagem_numero_participantes': 'Você deve definir o número de participantes.'}
-    
+
     # Verifica se o número de participantes é igual a 0
     if int(numero_participantes) <= 0:
         return {'erro': True, 'mensagem_numero_participantes': 'O número de participantes deve ser no mínimo 1.'}
-    
+
     return {'erro': False, 'mensagem_numero_participantes': ''}
 
 
@@ -203,7 +277,7 @@ def validar_numero_participantes(numero_participantes):
 # Caso contrário, retorna um erro.
 def validar_cargo(cargo):
     cargos_validos = ['Líder', 'Colaborador']
-    
+
     if cargo not in cargos_validos:
         return {'erro': True, 'mensagem_cargo': 'Você precisa escolher um cargo.'}
     return {'erro': False, 'mensagem_cargo': ''}

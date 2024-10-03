@@ -21,7 +21,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ function ToDo() {
                     descricao: tarefa[2],
                     data: tarefa[3],
                     horario: tarefa[4],
-                    id: tarefa[5],
+                    tarefaId: tarefa[5],
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
@@ -55,14 +55,14 @@ function ToDo() {
         }
     };
 
-    const excluirTarefa = async (id) => {
+    const excluirTarefa = async (tarefaId) => {
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ dados: id, acao: 'excluirTarefa' })
+                body: JSON.stringify({ dados: {tarefaId}, acao: 'excluirTarefa' })
             });
             const resultado = await resposta.json();
 
@@ -174,20 +174,20 @@ function ToDo() {
                     )}
                     {filteredTasks && filteredTasks.length > 0 ? (
                         filteredTasks.map((tarefa) => {
-                            const { id, titulo, etiqueta, descricao, data, horario } = tarefa;
+                            const { tarefaId, titulo, etiqueta, descricao, data, horario } = tarefa;
                             const corEtiqueta = etiqueta === 'Importante' ? 'red' :
                                 etiqueta === 'Pendência' ? 'orange' :
                                     etiqueta === 'Reunião' ? 'blue' : 'transparent';
 
                             return (
-                                <Card className='cards-tarefa' key={id}>
+                                <Card className='cards-tarefa' key={tarefaId}>
                                     <Card.Header>
                                         <div className='data_etiqueta'>
                                             {data || 'Data não informada'}
                                             <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}></div>
                                         </div>
                                         <div className='card_icons'>
-                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(id)} />
+                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(tarefaId)} />
                                             <img src="../../public/images/editar_lista.png" alt="Editar" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                     </Card.Header>

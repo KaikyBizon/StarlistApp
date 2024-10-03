@@ -233,9 +233,7 @@ button.botoesConfirmarExclusao:hover {
     color: #faed26;
 }
 
-
-
-.editar-tarefa {
+.editar-tarefa{
     position: absolute;
     top: 10px;
     right: 10px;
@@ -243,13 +241,18 @@ button.botoesConfirmarExclusao:hover {
     cursor: pointer;
 }
 
+.excluir-tarefa {
+    position: absolute;
+    top: 40px; /* Ajuste a posição vertical se necessário */
+    right: 10px;
+    width: 22px;
+    cursor: pointer;
+}
 
 .titulo-editar {
     display: flex;
     align-items: center;
     /* Alinha verticalmente o título e a imagem */
-
-
 }
 
 button {

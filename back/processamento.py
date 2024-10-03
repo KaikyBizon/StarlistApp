@@ -27,6 +27,14 @@ from validacoes import (
     validar_cargo
 )
 
+from validacoesTarefa import (
+    validar_titulo,
+    validar_descricao,
+    validar_etiqueta,
+    validar_data,
+    validar_horario
+)
+
 # Função para processar os dados recebidos
 
 
@@ -90,25 +98,45 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        mensagens_erro.append(validar_email(dados_processados.get('email', '')))
-        mensagens_erro.append(validar_data_nascimento(dados_processados.get('dataNascimento', '')))
-        mensagens_erro.append(validar_senha(dados_processados.get('senha', '')))
-        mensagens_erro.append(confirmar_senha(dados_processados.get('senha', ''), dados_processados.get('confirme', '')))
+        mensagens_erro.append(validar_email(
+            dados_processados.get('email', '')))
+        mensagens_erro.append(validar_data_nascimento(
+            dados_processados.get('dataNascimento', '')))
+        mensagens_erro.append(validar_senha(
+            dados_processados.get('senha', '')))
+        mensagens_erro.append(confirmar_senha(dados_processados.get(
+            'senha', ''), dados_processados.get('confirme', '')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro = [msg for msg in mensagens_erro if msg['erro']]
 
         # Lista para armazenar erros do cadastro empresarial
         mensagens_erro_empresarial = []
-
         mensagens_erro_empresarial.append(
             validar_cnpj(dados_processados.get('cnpj', '')))
         mensagens_erro_empresarial.append(validar_nome_equipe(
             dados_processados.get('nomeEquipe', '')))
         mensagens_erro_empresarial.append(validar_numero_participantes(
             dados_processados.get('pessoasEquipe', '')))
+
         # Filtra apenas os erros que foram encontradas
         mensagens_erro_empresarial = [
             msg for msg in mensagens_erro_empresarial if msg['erro']]
+
+        # Lista de mensagens de erro
+        mensagens_erro_tarefa = []
+        mensagens_erro_tarefa.append(validar_titulo(
+            dados_processados.get('titulo', '')))
+        mensagens_erro_tarefa.append(validar_descricao(
+            dados_processados.get('descricao', '')))
+        mensagens_erro_tarefa.append(validar_etiqueta(
+            dados_processados.get('etiqueta', '')))
+        mensagens_erro_tarefa.append(
+            validar_data(dados_processados.get('data', '')))
+        mensagens_erro_tarefa.append(validar_horario(
+            dados_processados.get('horario', '')))
+        # Filtra apenas os erros que foram encontrados
+        mensagens_erro_tarefa = [
+            msg for msg in mensagens_erro_tarefa if msg['erro']]
 
         # Inserir usuário
         # Kaiky
@@ -274,8 +302,13 @@ def processar_dados(dados):
     # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
     # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
     if acao == 'criar_tarefa':
-        criarTarefa(tarefa)
-        dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
+        if not mensagens_erro_tarefa:
+            criarTarefa(tarefa)
+            dados_tarefa = {'error': False,
+                            'Tarefa criada': 'Tarefa criada com sucesso!'}
+        else:
+            dados_tarefa = {'error': True,
+                            'mensagens_erro': mensagens_erro_tarefa}
 
     # Editar tarefa
     # Kaiky
@@ -313,9 +346,11 @@ def processar_dados(dados):
     if acao == 'verificar_email':
         print(dados_processados, codigo_confirmacao)
         if str(dados_processados) == str(codigo_confirmacao):
-            dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
+            dados_cadastro = {'error': False,
+                              'mensagem': 'Código validado com sucesso!'}
         else:
-            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
+            dados_cadastro = {'error': True,
+                              'mensagem': 'Código inválido. Tente novamente!'}
 
     # Excluir tarefa
     # Kaiky
@@ -327,10 +362,13 @@ def processar_dados(dados):
     # dados_tarefa - retorna que a tarefa foi excluída com sucesso
     # Esta condição verifica se a acao indica uma exclusão de tarefa, e caso seja, ele executa a função para excluir a tarefa no banco
     if acao == 'excluirTarefa':
-        id_tarefa = dados_processados
-        excluir_tarefa(id_tarefa)
-        dados_tarefa = {"Status_acao": "Tarefa excluída!"}
-
+        print(dados_processados)
+        id_tarefa = dados_processados.get('tarefaId')
+        lista_id = dados_processados.get('categoriaId')
+        print("Id tarefa:", id_tarefa)
+        print(id_tarefa, lista_id)
+        excluir_tarefa(id_tarefa, lista_id)
+        dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
     return listaCriada, dados_tarefa, dados_cadastro
 
 

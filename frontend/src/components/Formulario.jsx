@@ -38,9 +38,19 @@ function Formulario({ tarefa, onClose, listaId }) {
     }
   }, [tarefa, listaId]);
 
-
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    // Limita o título a 20 caracteres
+    if (name === 'titulo' && value.length > 50) {
+      return;
+    }
+
+    // Limita a descrição a 100 caracteres
+    if (name === 'descricao' && value.length > 100) {
+      return;
+    }
+
     setDadosTask((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -49,8 +59,9 @@ function Formulario({ tarefa, onClose, listaId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,13 +69,14 @@ function Formulario({ tarefa, onClose, listaId }) {
         body: JSON.stringify({ acao: acao, dados: dadosTask }),
       });
 
-      const resultado = await resposta.json();
+      const resultado = (await resposta.json()).dados_tarefa;
+      console.log(resultado)
 
-      if (resposta.ok && !resultado.mensagens_erro) {
+      if (resultado.error) {
+        setMensagensErro(resultado.mensagens_erro)
+      } else {
         onClose(); // Fecha o modal após a edição
         window.location.reload(); // Recarrega a página após o fechamento do modal
-      } else {
-        setMensagensErro(resultado.mensagens_erro);
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
@@ -88,6 +100,12 @@ function Formulario({ tarefa, onClose, listaId }) {
               onChange={handleChange}
             />
           </Form.Group>
+          {/* Exibição de mensagens de erro */}
+          <ul className='erro_novatarefa'>
+            {mensagensErro.map((mensagem, index) => (
+              <li key={index}>{mensagem.mensagem_titulo}</li>
+            ))}
+          </ul>
           <Form.Group className="mb-3 descricao" controlId="formDescricao">
             <Form.Label>Descrição</Form.Label>
             <Form.Control
@@ -98,6 +116,12 @@ function Formulario({ tarefa, onClose, listaId }) {
               onChange={handleChange}
             />
           </Form.Group>
+          {/* Exibição de mensagens de erro */}
+          <ul className='erro_novatarefa'>
+            {mensagensErro.map((mensagem, index) => (
+              <li key={index}>{mensagem.mensagem_descricao}</li>
+            ))}
+          </ul>
           <Form.Group className="mb-3 etiqueta-evento" controlId="formEtiqueta">
             <Form.Select
               name='etiqueta'
@@ -110,6 +134,12 @@ function Formulario({ tarefa, onClose, listaId }) {
               <option value="Reunião">Reunião</option>
             </Form.Select>
           </Form.Group>
+          {/* Exibição de mensagens de erro */}
+          <ul className='erro_novatarefa'>
+            {mensagensErro.map((mensagem, index) => (
+              <li key={index}>{mensagem.mensagem_etiqueta}</li>
+            ))}
+          </ul>
           <Form.Group className="mb-3 data-evento" controlId="formData">
             <Form.Control
               type="date"
@@ -124,13 +154,18 @@ function Formulario({ tarefa, onClose, listaId }) {
               onChange={handleChange}
             />
           </Form.Group>
-          {mensagensErro.length > 0 && (
-            <div className="alert alert-danger">
-              {mensagensErro.map((erro, index) => (
-                <p key={index}>{erro}</p>
-              ))}
-            </div>
-          )}
+          {/* Exibição de mensagens de erro */}
+          <ul className='erro_novatarefa'>
+            {mensagensErro.map((mensagem, index) => (
+              <li key={index}>{mensagem.mensagem_data}</li>
+            ))}
+          </ul>
+          {/* Exibição de mensagens de erro */}
+          <ul className='erro_novatarefa'>
+            {mensagensErro.map((mensagem, index) => (
+              <li key={index}>{mensagem.mensagem_hora}</li>
+            ))}
+          </ul>
           <Modal.Footer>
             <Button variant="secondary" onClick={onClose}>
               Fechar
