@@ -8,6 +8,7 @@ from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
 from actionsBD.editTask import editar_tarefa
 from actionsBD.createList_bd import criarLista
+from actionsBD.selectPlanoId import selecionarPlanoId
 from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
@@ -369,6 +370,11 @@ def processar_dados(dados):
         print(id_tarefa, lista_id)
         excluir_tarefa(id_tarefa, lista_id)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
+
+
+    if acao == 'selecionar_plano_id' :
+        id_usuario = dados_processados.get('id')
+        dados_cadastro = selecionarPlanoId(id_usuario)
     return listaCriada, dados_tarefa, dados_cadastro
 
 

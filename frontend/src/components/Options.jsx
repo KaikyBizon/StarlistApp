@@ -8,6 +8,24 @@ import { Link, useLocation } from 'react-router-dom'; // Importar useLocation
 function Options() {
     const [showFormulario, setShowFormulario] = useState(false);
     const location = useLocation(); // Usar useLocation para obter o caminho atual
+    const [planoUsuario, setPlanoUsuario] = useState(null);
+
+    const showPlanoId = async () => {
+        const id = localStorage.getItem("ID");
+        try {
+            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: 'selecionar_plano_id', dados: { id } }),
+            });
+            const dados = (await resposta.json()).dadosCadastro;
+            setPlanoUsuario(Number(dados)); // Converte para número
+        } catch (error) {
+            console.error('Erro ao carregar dados!', error);
+        }
+    };
 
     const handleShowFormulario = () => {
         setShowFormulario(true);
@@ -16,6 +34,10 @@ function Options() {
     const handleCloseFormulario = () => {
         setShowFormulario(false);
     };
+
+    useEffect(() => {
+        showPlanoId();
+    }, []);
 
     return (
         <>
@@ -27,8 +49,13 @@ function Options() {
                             <Nav className="me-auto">
                                 <Link to="/kanban">Kanban</Link>
                                 <Link to="/todo">ToDo</Link>
-                                <Link to="/gerenciarpart">Participantes</Link>
-                                <Link to="/gerenciar-equipe">Equipe</Link>
+                                {/* Condicional para exibir "Participantes" e "Equipe" apenas se planoUsuario for 4 */}
+                                {planoUsuario === 4 && (
+                                    <>
+                                        <Link to="/gerenciarpart">Participantes</Link>
+                                        <Link to="/gerenciar-equipe">Equipe</Link>
+                                    </>
+                                )}
                             </Nav>
                         </Navbar.Collapse>
                     </div>
