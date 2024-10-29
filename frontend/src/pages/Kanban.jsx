@@ -385,13 +385,13 @@ function Kanban({ onListaSalva }) {
                                 </div>
                                 {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                                     <div key={index} className="tarefa-item">
-                                        <div className='titulo-editar'>
-                                            <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
-                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
-                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
-                                        </div>
+                                        <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
+                                        <div className='acoes-tarefa'>
+                                        <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
+                                        <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
+                                        </div>
                                     </div>
                                 ))}
                                 <div className="formulario-fixo">
