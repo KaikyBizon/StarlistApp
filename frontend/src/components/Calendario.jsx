@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../StylesPages/Calendario.css';
 
 const months = [
@@ -8,12 +8,35 @@ const months = [
 
 const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
-const Calendario = ({ events }) => {
+const Calendario = ({ events, onSelectDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [selectedDay, setSelectedDay] = useState(null); // Estado para o dia selecionado
 
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const fetchTarefas = async () => {
+    const usuarioId = localStorage.getItem('ID');
+
+    try {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ acao: "carregar_todas_tarefas", dados: {usuarioId} })
+      });
+      const resultado = await resposta.json();
+
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTarefas();
+  }, []);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -22,6 +45,7 @@ const Calendario = ({ events }) => {
     } else {
       setCurrentMonth(currentMonth - 1);
     }
+    setSelectedDay(null); // Limpa a seleção ao mudar de mês
   };
 
   const handleNextMonth = () => {
@@ -31,35 +55,23 @@ const Calendario = ({ events }) => {
     } else {
       setCurrentMonth(currentMonth + 1);
     }
+    setSelectedDay(null); // Limpa a seleção ao mudar de mês
   };
 
-  // Função para normalizar as datas no formato dd,mm,yyyy
   const formatDate = (dateString) => {
-    // Divida a string da data em partes usando '/' como delimitador
     const [day, month, year] = dateString.split('/').map(Number);
-  
-    // Verifica se a data tem três partes e todas são números
     if (day && month && year) {
-      // Ajusta o mês para ser zero-indexed e cria a data
       return new Date(year, month - 1, day);
     }
-  
-    // Se a data não for válida, retorna um objeto de data inválido
     return new Date(NaN);
   };
-  
-  
 
   const hasEvent = (day) => {
-  
     return events.some(event => {
-      const eventDate = formatDate(event.data);  // Converte a data do evento
-  
-      // Verifica se a data formatada é válida
+      const eventDate = formatDate(event.data);
       if (isNaN(eventDate.getTime())) {
         return false;
       }
-  
       return (
         eventDate.getDate() === day + 1 &&
         eventDate.getMonth() === currentMonth &&
@@ -67,7 +79,14 @@ const Calendario = ({ events }) => {
       );
     });
   };
-  
+
+  const handleDayClick = (day) => {
+    if (selectedDay === day) return; // Ignora cliques no mesmo dia
+
+    setSelectedDay(day); // Define o novo dia selecionado
+    const selectedDate = `${currentYear}-${currentMonth + 1}-${day + 1}`;
+    onSelectDate(selectedDate);
+  };
 
   return (
     <div className="calendar">
@@ -86,7 +105,11 @@ const Calendario = ({ events }) => {
           <div key={`empty-${index}`} className="empty-day"></div>
         ))}
         {[...Array(daysInMonth).keys()].map((day) => (
-          <div key={day} className="day">
+          <div
+            key={day}
+            className={`day ${selectedDay === day ? 'selected-day' : ''}`}
+            onClick={() => handleDayClick(day)}
+          >
             <span className="day-number">{day + 1}</span>
             {hasEvent(day) && <span className="event-dot"></span>}
           </div>

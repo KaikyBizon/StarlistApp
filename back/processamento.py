@@ -85,7 +85,7 @@ def processar_dados(dados):
             dados_processados.get('data'),
             dados_processados.get('horario'),
             dados_processados.get('etiqueta'),
-            dados_processados.get('lista_id'),
+            dados_processados.get('listaId'),
             dados_processados.get('usuario_id')
         ]
 
@@ -305,7 +305,8 @@ def processar_dados(dados):
     if acao == 'criar_tarefa':
         if not mensagens_erro_tarefa:
             criarTarefa(tarefa)
-            dados_tarefa = {'error': False, 'Tarefa criada': 'Tarefa criada com sucesso!'}
+            dados_tarefa = {'error': False,
+                'Tarefa criada': 'Tarefa criada com sucesso!'}
         else:
             dados_tarefa = {'error': True,
                             'mensagens_erro': mensagens_erro_tarefa}
@@ -365,10 +366,15 @@ def processar_dados(dados):
         print(dados_processados)
         id_tarefa = dados_processados.get('tarefaId')
         lista_id = dados_processados.get('categoriaId')
+        # Verifica se `lista_id` é None e o converte para SQL NULL
+        if lista_id is None:
+            lista_id = 'NULL'
+
         print("Id tarefa:", id_tarefa)
         print(id_tarefa, lista_id)
         excluir_tarefa(id_tarefa, lista_id)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
+
 
 
     if acao == 'selecionar_plano_id' :

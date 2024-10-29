@@ -50,7 +50,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.11:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.11:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ function Kanban({ onListaSalva }) {
 
     const handleEditList = async (listaId) => {
         try {
-            const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.11:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -348,7 +348,7 @@ function Kanban({ onListaSalva }) {
     // Função para excluir uma tarefa específica
     const handleDeleteTarefa = async (tarefaId, categoriaId) => {
         try {
-            const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -389,8 +389,8 @@ function Kanban({ onListaSalva }) {
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
                                         <div className='acoes-tarefa'>
-                                        <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
-                                        <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
+                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick({ ...tarefa, listaId: categoria.id })} />
+                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
                                         </div>
                                     </div>
                                 ))}
