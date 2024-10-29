@@ -10,7 +10,6 @@ import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import useOnRender from '../hooks/useOnRender.js';
 
 moment.locale('pt-br');// Configura moment para usar português
 
@@ -48,7 +47,7 @@ export default function ToDo({ navigation, route }) {
   const [dataToCatchTarefas, setDataToCatchTarefas] = useState(route.params?.selectedDate);
 
 
-  useOnRender(() => {
+  useEffect(() => {
     setDataToCatchTarefas(route.params?.selectedDate);
   });
 
@@ -56,7 +55,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.20:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: { usuarioId, dataToCatchTarefas } }),
@@ -152,7 +151,7 @@ export default function ToDo({ navigation, route }) {
             text: 'Excluir',
             onPress: async () => {
               try {
-                const resposta = await fetch('http://10.135.60.20:8085/receber-dados', {
+                const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ dados: id, acao: 'excluirTarefa' }),

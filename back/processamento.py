@@ -301,12 +301,11 @@ def processar_dados(dados):
     # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
     # Retorno:
     # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
-    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
+    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banc
     if acao == 'criar_tarefa':
         if not mensagens_erro_tarefa:
             criarTarefa(tarefa)
-            dados_tarefa = {'error': False,
-                            'Tarefa criada': 'Tarefa criada com sucesso!'}
+            dados_tarefa = {'error': False, 'Tarefa criada': 'Tarefa criada com sucesso!'}
         else:
             dados_tarefa = {'error': True,
                             'mensagens_erro': mensagens_erro_tarefa}
