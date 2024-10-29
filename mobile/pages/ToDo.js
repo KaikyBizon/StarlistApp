@@ -9,12 +9,12 @@ import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 moment.locale('pt-br');// Configura moment para usar português
 
 /**
- * Nome do Componente: ToDo
+ * Nome do Componente: ToD
  *
  * Descrição Detalhada:
  *   Componente principal para a lista de tarefas. Permite a filtragem das tarefas por texto de busca
