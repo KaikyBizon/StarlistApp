@@ -1,101 +1,216 @@
 import { StyleSheet } from "react-native";
 
-export default styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: '#9d9d9d',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-  },
-  menu: {
-    width: 30,
-    height: 30,
-  },
-  containerMenu: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
-    height: '17%',
-  },
-  txtData: {
-    color: '#faed27',
-    fontSize: 25,
-    marginLeft: 15,
-    fontFamily: 'Kanit_500Medium',
-  },
-  tarefa: {
-    backgroundColor: '#8f8e8e',
-    borderWidth: 2,
-    borderColor: '#726c6f',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 20,
-    width: '100%',
-    
-  },
-  tarefaData: {
-    marginBottom: 8,
-  },
-  txtTarefa: {
-    color: '#FAED27',
-    fontSize: 20,
-    marginBottom: 5,
-    fontFamily: 'Kanit_500Medium',
-  },
-  infoTarefa: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-    borderColor:'#726c6f',
-    borderWidth: 1,
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: '#8f8e8e',
-  },
-  detalheTarefa: {
-    flex: 1,
-  },
-  txtInfo: {
-    fontSize: 15,
-    color: '#FAED27',
-    marginBottom: 10,
-    fontFamily: 'Kanit_500Medium',
-  },
-  barraVert: {
-    backgroundColor: '#726c6f',
-    width: 2,
-    borderRadius: 10,
-    marginHorizontal: 8,
-  },
-  dataTarefa: {
-    alignItems: 'flex-end',
-  },
-  txtHora: {
-    fontSize: 15,
-    color: '#FAED27',
-    fontFamily: 'Kanit_500Medium',
-  },
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '90%',
+    backgroundColor: '#222',
+    padding: 16,
   },
-  footer: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '90%',
+    marginBottom: 12,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    backgroundColor: '#555',
+    color: '#FFF',
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+  },
+  btnAdcList: {
+    backgroundColor: '#faed27',
+    padding: 10,
+    borderRadius: 5,
+  },
+  btnText: {
+    fontSize: 15,
+    color: '#222',
+  },
+  categoriaContainer: {
+    marginRight: 16,
+    padding: 16,
+    backgroundColor: '#333',
+    borderRadius: 8,
+    width: 245,
+  },
+  tarefasContainer: {
+    flexDirection: 'column',
+  },
+  tituloLista: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#faed27',
+  },
+  tarefaItem: {
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#222',
+    borderRadius: 4,
+  },
+  tituloTarefa: {
+    fontSize: 16,
+    color: '#FDF9B4',
+  },
+  dataHora: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  btnAdicionarTarefa: {
+    backgroundColor: '#faed27',
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10, // Espaço entre os botões
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',  // Adicione esta linha para centralizar horizontalmente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#222',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    width: 300, // Defina uma largura fixa
+    height: 300, // Defina uma altura fixa
+  },
+  inputModal: {
+    width: '100%',
+    backgroundColor: '#555',
+    color: '#FFF',
+    borderRadius: 5,
+    padding: 10,
     marginBottom: 10,
   },
-  txtRodape: {
-    color: '#FAED27',
-    fontSize: 25,
-    fontWeight: 'bold',
-    fontFamily: 'Kanit_500Medium',
+  dataTarefa: {
+    width: '100%',
+    flexDirection: 'column',
+    marginBottom: 10,
   },
-  add: {
-    width: 60,
+  dateTimeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  buttonDateAndTime: {
+    flex: 1,
+    height: 40,
+    borderColor: '#FFF88E',
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2E2E2E',
+    marginRight: 8,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', // Alinha os botões à esquerda
+    width: '100%',
+  },
+  btnSalvar: {
+    backgroundColor: '#FAED27',
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+    width: 70,
+  },
+  btnCancelar: {
+    backgroundColor: '#dc3545',
+    borderRadius: 5,
+    padding: 10,
+  },
+  // Container para o picker (seletor)
+  pickerContainer: {
+    borderWidth: 1,
+    backgroundColor: '#555',
+    borderColor: '#555',
+    borderRadius: 5,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    width: 260,
+    height: 45,
+    marginBottom: 11, // Adiciona a distância entre o picker e o próximo campo
+  },
+  inputPicker: {
+    width: '100%',
+  },
+  etiqueta: {
+    color: '#FFF88E',
+  },
+  buttonText: {
+    color: '#FFF88E',
+  },
+  btnNovaTarefa: {
+    backgroundColor: '#333',
     height: 60,
   },
+  excluirLista: {
+    width: 30, // Largura da imagem da lixeira
+    height: 30, // Altura da imagem da lixeira
+  },
+  modalExcluirLista: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente
+  },
+  modalDeleteList: {
+    backgroundColor: '#222', // Define a cor de fundo do modal
+    padding: 20,
+    borderRadius: 8,
+    width: '80%', // Torna o modal responsivo na largura
+    maxWidth: 400, // Define uma largura máxima
+    alignItems: 'center',
+  },
+  buttonDeleteList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Espaço entre os botões
+    width: '100%', // Garante que os botões ocupem a largura total do modal
+    paddingHorizontal: 10,
+  },
+  btnDelete: {
+    backgroundColor: '#faed27',
+    padding: 12,
+    borderRadius: 5,
+    width: '45%', // Ajusta para garantir espaço uniforme
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  btnFechar: {
+    backgroundColor: '#FF6B6B',
+    padding: 12,
+    borderRadius: 5,
+    width: '45%',
+    alignItems: 'center',
+    marginLeft: 5,
+  },
+  modalTextList: {
+    fontSize: 16,
+    color: '#FFF88E',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  btnTextExcluirList: {
+    color: '#222',
+    fontSize: 14,
+  },
+  modalText: {
+    fontSize: 18,
+    color: '#FFF88E',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center', // Alinha verticalmente os botões
+    justifyContent: 'space-between', // Espaço entre os botões
+    marginTop: 10, // Adiciona um espaço acima se necessário
+  },
 });
+export default styles;
