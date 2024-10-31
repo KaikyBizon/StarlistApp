@@ -1,169 +1,392 @@
-/**
- * Nome do Componente: KanBan
- *
- * Descrição Detalhada:
- *   Componente funcional React Native que implementa uma interface Kanban para gerenciamento de tarefas baseadas em datas. Utiliza o 'react-native-calendars' para permitir a navegação e seleção de datas, e um seletor de data para escolha do dia. As tarefas são listadas e filtradas com base na data selecionada e no texto de busca.
- *
- * Observações Pertinentes:
- *   1. Utiliza o hook 'useState' para gerenciar a data selecionada, exibição do seletor de data, e texto de busca.
- *   2. Carrega a fonte 'Kanit_500Medium' para o estilo do texto.
- *   3. Usa o 'moment' para manipulação de datas e formatação.
- *   4. O componente 'DateTimePicker' permite que o usuário selecione uma data.
- *   5. O estado 'filteredTarefas' é calculado com base na data selecionada e no texto de busca para exibir as tarefas relevantes.
- *
- * Estado:
- *   - date: Armazena a data selecionada pelo usuário.
- *   - showDatePicker: Controla a visibilidade do seletor de data.
- *   - searchText: Texto digitado pelo usuário para buscar tarefas.
- *
- * Funções:
- *   - showDatePickerHandler: Exibe o seletor de data.
- *   - onDateChange: Atualiza a data selecionada quando o usuário escolhe uma data no 'DateTimePicker'.
- *
- * Estrutura JSX:
- *   - Exibe um calendário e permite selecionar uma data.
- *   - Lista as tarefas do dia selecionado, com filtragem baseada no texto de busca.
- *   - Integra um componente de menu para navegação adicional na aplicação.
- *   - Mostra um seletor de data quando necessário.
- *
- * @returns {JSX.Element}
- */
-
-import React, { useState } from 'react';
-import { StatusBar, Animated, View, ScrollView, TouchableOpacity, Text } from 'react-native';
-import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
+import React, { useState, useEffect } from 'react';
+import styles from '../styles/StylesKanBan.js';
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Text, Modal, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Menu from '../components/Menu';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Feather } from '@expo/vector-icons';
-import moment from 'moment';
-import 'moment/locale/pt-br'; // Importa a localização em português
-import styles from '../styles/StylesKanBan';
-import MenuScreen from '../components/Menu';
 
-moment.locale('pt-br'); // Configura moment para usar português
-
-export default function KanBan() {
-  // Carregamento da fonte Kanit_500Medium
-  const [fontLoaded] = useFonts({
-    Kanit_500Medium,
-  });
-
-  // Estado para a data selecionada
+function Kanban() {
+  const [inputValue, setInputValue] = useState('');
+  const [categorias, setCategorias] = useState([]);
+  const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
+  const [userId, setUserId] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [tarefaNome, setTarefaNome] = useState('');
+  const [tarefaData, setTarefaData] = useState('');
+  const [tarefaHorario, setTarefaHorario] = useState('');
+  const [tarefaEtiqueta, setTarefaEtiqueta] = useState('');
+  const [tarefaDescricao, setTarefaDescricao] = useState('');
   const [date, setDate] = useState(new Date());
-  // Estado para controle da exibição do seletor de data
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  // Estado para armazenar o texto de busca
-  const [searchText, setSearchText] = useState('');
+  const [show, setShow] = useState(false);
+  const [mode, setMode] = useState('date');
+  const [listaId, setListaId] = useState(null);
+  const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] = useState(false);
+  const [listaParaExcluir, setListaParaExcluir] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
-
-  // Lista de tarefas para diferentes datas
-  const tarefas = [
-    {
-      date: '28/03/2024',
-      items: [
-        { id: '1', info: 'ESTUDAR QUÍMICA', hora: '14:00' },
-        { id: '2', info: 'MAPA MENTAL', hora: '15:00' }
-      ],
-    },
-    {
-      date: '29/03/2024',
-      items: [
-        { id: '3', info: 'MÉDICO', hora: '18:00' },
-        { id: '4', info: 'PASSEAR', hora: '20:00' }
-      ],
-    },
-    {
-      date: '01/04/2024',
-      items: [
-        { id: '5', info: 'REUNIÃO', hora: '09:00' }
-      ],
-    },
-  ];
-
-  // Condicional para evitar rendering enquanto a fonte não estiver carregada
-  if (!fontLoaded) {
-    return null;
-  }
-
-  {/*
-        Nome da função: filteredTarefas;
-        Autor: Kaiky;
-        Data de criação: 05/24;
-        Parametros de entrada: tarefas (array de objetos), searchText (string), date (data);
-        Retorno: array de objetos filtrados;
-        Finalidade: Filtrar tarefas baseadas em texto de busca e data;
-        Descrição/observações:
-            Esta função realiza duas etapas de filtragem sobre uma lista de tarefas:
-            1. **Filtragem de Itens**: Para cada tarefa, ela cria um novo objeto onde apenas os itens cujo texto associado (`item.info`) contenha o texto de busca (`searchText`) são incluídos. A busca é feita de forma case-insensitive, garantindo que maiúsculas e minúsculas não afetem a correspondência.
-            2. **Filtragem de Tarefas**: Em seguida, o array resultante de tarefas é filtrado para incluir apenas aquelas cujo array `items` não esteja vazio e cuja data seja igual à data formatada no formato 'DD/MM/YYYY'.
-            Esse processo permite que apenas as tarefas relevantes sejam retornadas, considerando tanto o conteúdo dos itens quanto a data da tarefa, conforme especificado.
-    */}
-  const filteredTarefas = tarefas.map(tarefa => ({
-    ...tarefa,
-    items: tarefa.items.filter(item =>
-      item.info.toLowerCase().includes(searchText.toLowerCase())
-    )
-  })).filter(tarefa => tarefa.items.length > 0 && tarefa.date === moment(date).format('DD/MM/YYYY'));
-
-  // Função para mostrar o seletor de data
-  const showDatePickerHandler = () => {
-    setShowDatePicker(true);
+  const formatDate = (date) => {
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
 
-  // Callback para quando a data é alterada no DateTimePicker
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const onChange = (event, selectedDate) => {
+    setShow(false);
+    if (selectedDate) {
+      if (mode === 'date') {
+        setTarefaData(formatDate(selectedDate));
+      } else {
+        setTarefaHorario(formatTime(selectedDate));
+      }
+      setDate(selectedDate);
+    }
+  };
+  
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  // Mover a função fetchCategoriasETarefas para fora do useEffect
+  const fetchCategoriasETarefas = async () => {
+    const usuario_id = await AsyncStorage.getItem('ID');
+    console.log(usuario_id)
+    setUserId(usuario_id);
+
+    try {
+      const resposta = await fetch(`http://10.135.60.23:8085/lista/${usuario_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const categoriasResultado = await resposta.json();
+      console.log("Resultado:", categoriasResultado);
+
+      if (resposta.ok) {
+        setCategorias(categoriasResultado);
+
+        const tarefasPromises = categoriasResultado.map(async (categoria) => {
+          const tarefas = await fetchTarefasParaCategoria(categoria.id);
+          return { [categoria.id]: tarefas };
+        });
+
+        const tarefasArray = await Promise.all(tarefasPromises);
+        const tarefasMap = tarefasArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+        setTarefasPorCategoria(tarefasMap);
+      } else {
+        console.error('Erro ao buscar categorias:', categoriasResultado.mensagens_erro);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar categorias:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategoriasETarefas();
+  }, [refresh]);
+
+  const fetchTarefasParaCategoria = async (categoriaId) => {
+    try {
+      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const resultado = await resposta.json();
+
+      if (resposta.ok) {
+        return resultado;
+      } else {
+        console.error('Erro ao buscar tarefas:', resultado.mensagens_erro);
+        return [];
+      }
+    } catch (error) {
+      console.error('Erro ao buscar tarefas:', error);
+      return [];
+    }
+  };
+
+  const handleSubmit = async () => {
+    console.log('usuario1:',userId)
+    if (!inputValue.trim()) {
+      Alert.alert('Erro', 'O nome da lista não pode estar vazio');
+      return;
+    }
+
+    try {
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'criar_lista',
+          dados:{
+            usuario_id: userId,
+            nome: inputValue}
+        }),
+      });
+
+      const resultado = (await resposta.json()).listaCriada;
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        Alert.alert('Erro', resultado.mensagens_erro);
+      } else {
+        setInputValue('');
+        fetchCategoriasETarefas(); // Agora isso funciona
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
+
+  const handleAddTask = async () => {
+    if (!tarefaNome.trim() || !tarefaData || !tarefaHorario || !tarefaEtiqueta) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    try {
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'criar_tarefa',
+          dados: {
+            titulo: tarefaNome,
+            descricao: tarefaDescricao,
+            data: tarefaData,
+            horario: tarefaHorario,
+            etiqueta: tarefaEtiqueta,
+            lista_id: listaId,
+            usuario_id: userId,
+          }
+        }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        Alert.alert('Erro', resultado.mensagens_erro);
+      } else {
+        Alert.alert('Sucesso', 'Tarefa criada com sucesso!');
+        // Limpar os campos após adicionar a tarefa
+        setTarefaNome('');
+        setTarefaData('');
+        setTarefaHorario('');
+        setTarefaEtiqueta('');
+        setTarefaDescricao('');
+        setModalVisible(false);
+        setRefresh(!refresh); // Atualiza a lista de tarefas
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
+
+  const confirmarExclusao = async () => {
+    try {
+      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (resposta.ok) {
+        // Filtra as categorias removendo a lista excluída
+        setCategorias(categorias.filter(categoria => categoria.id !== listaParaExcluir));
+
+        // Atualiza o estado das tarefas por categoria
+        const novoTarefasPorCategoria = { ...tarefasPorCategoria };
+        delete novoTarefasPorCategoria[listaParaExcluir];
+        setTarefasPorCategoria(novoTarefasPorCategoria);
+
+        Alert.alert('Sucesso', 'Lista excluída com sucesso!');
+      } else {
+        console.error('Erro ao excluir lista');
+        Alert.alert('Erro', 'Não foi possível excluir a lista. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir lista:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao excluir a lista.');
+    } finally {
+      // Fecha o modal e redefine o estado de exclusão
+      setConfirmDeleteModalVisible(false);
+      setListaParaExcluir(null);
+    }
   };
 
   return (
-    <View style={styles.background}>
-      {/* Componente MenuScreen para o menu da aplicação */}
-      <MenuScreen searchText={searchText} setSearchText={setSearchText} />
-      <View style={styles.containerMenu}>
-        {/* Botão para abrir o seletor de data */}
-        <TouchableOpacity onPress={showDatePickerHandler}>
-          <Feather size={32} name="calendar" />
+    <View style={styles.container}>
+      <Menu />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o nome da lista"
+          value={inputValue}
+          onChangeText={setInputValue}
+        />
+        <TouchableOpacity onPress={handleSubmit} style={styles.btnAdcList}>
+          <Text style={styles.btnText}>Adicionar lista</Text>
         </TouchableOpacity>
-        {/* Exibe a data formatada */}
-        <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
-      {/* ScrollView para exibir as tarefas */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-      >
-        {/* Renderiza as tarefas filtradas */}
-        {filteredTarefas.map(tarefa => (
-          <View key={tarefa.date} style={styles.tarefa}>
-            <View style={styles.tarefaData}>
-              <Text style={styles.txtTarefa}>TAREFA</Text>
+      <ScrollView horizontal>
+        {categorias.map((categoria) => (
+          <View key={categoria.id} style={styles.categoriaContainer}>
+            <Text style={styles.tituloLista}>{categoria.nome}</Text>
+            <ScrollView style={styles.tarefasContainer}>
+              {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
+                <View key={index} style={styles.tarefaItem}>
+                  <Text style={styles.tituloTarefa}>{tarefa.titulo}</Text>
+                  <Text style={styles.dataHora}>Data: {tarefa.data}</Text>
+                  <Text style={styles.dataHora}>Hora: {tarefa.horario}</Text>
+                </View>
+              ))}
+            </ScrollView>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.btnAdicionarTarefa}
+                onPress={() => {
+                  setListaId(categoria.id); // Resgata o ID da lista
+                  setModalVisible(true);
+                }}
+              >
+                <Text style={styles.btnText}>Nova tarefa</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setListaParaExcluir(categoria.id); // Define a lista a ser excluída
+                  setConfirmDeleteModalVisible(true); // Abre o modal de confirmação
+                }}
+              >
+                <Image source={require('../assets/images/lixeira.png')} style={styles.excluirLista} />
+              </TouchableOpacity>
             </View>
-            {tarefa.items.map(item => (
-              <View key={item.id} style={styles.infoTarefa}>
-                <View style={styles.detalheTarefa}>
-                  <Text style={styles.txtInfo}>{item.info}</Text>
-                </View>
-                <View style={styles.barraVert} />
-                <View style={styles.dataTarefa}>
-                  <Text style={styles.txtInfo}>Hora</Text>
-                  <Text style={styles.txtHora}>{item.hora}</Text>
-                </View>
-              </View>
-            ))}
           </View>
+
         ))}
       </ScrollView>
-      {/* Exibe o seletor de data se estiver ativo */}
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={onDateChange}
-        />
-      )}
-      <StatusBar style="auto" />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TextInput
+              style={styles.inputModal}
+              placeholder="Nome da Tarefa"
+              placeholderTextColor="#FFF88E"
+              value={tarefaNome}
+              onChangeText={setTarefaNome}
+            />
+            <View style={styles.dataTarefa}>
+              <View style={styles.dateTimeContainer}>
+                <TouchableOpacity
+                  onPress={() => showMode("date")}
+                  style={styles.buttonDateAndTime}
+                >
+                  <Text style={styles.buttonText}>Data: {tarefaData || 'Selecionar'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => showMode("time")}
+                  style={styles.buttonDateAndTime}
+                >
+                  <Text style={styles.buttonText}>Hora: {tarefaHorario || 'Selecionar'}</Text>
+                </TouchableOpacity>
+              </View>
+              {show && (
+                <DateTimePicker
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+            </View>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={tarefaEtiqueta}
+                style={styles.inputPicker}
+                onValueChange={(itemValue) => setTarefaEtiqueta(itemValue)}
+              >
+                <Picker.Item label="Selecione uma etiqueta" value="" style={styles.etiqueta} />
+                <Picker.Item label="Trabalho" value="Trabalho" />
+                <Picker.Item label="Pessoal" value="Pessoal" />
+                <Picker.Item label="Estudo" value="Estudo" />
+              </Picker>
+            </View>
+            <TextInput
+              style={styles.inputModal}
+              placeholder="Descrição da Tarefa"
+              placeholderTextColor="#FFF88E"
+              value={tarefaDescricao}
+              onChangeText={setTarefaDescricao}
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={handleAddTask}
+                style={styles.btnSalvar}
+              >
+                <Text style={styles.btnText}>Salvar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.btnCancelar}
+              >
+                <Text style={styles.btnText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={confirmDeleteModalVisible}
+        onRequestClose={() => setConfirmDeleteModalVisible(false)}
+      >
+        <View style={styles.modalExcluirLista}>
+          <View style={styles.modalDeleteList}>
+            <Text style={styles.modalTextList}>Deseja mesmo excluir a lista e suas tarefas?</Text>
+            <View style={styles.buttonDeleteList}>
+              <TouchableOpacity onPress={confirmarExclusao} style={styles.btnDelete}>
+                <Text style={styles.btnTextExcluirList}>Excluir</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setConfirmDeleteModalVisible(false)} style={styles.btnFechar}>
+                <Text style={styles.btnTextExcluirList}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 }
+
+export default Kanban;
