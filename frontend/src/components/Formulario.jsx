@@ -88,7 +88,7 @@ function Formulario({ tarefa, onClose, listaId }) {
         setMensagensErro(resultado.mensagens_erro)
       } else {
         onClose(); // Fecha o modal após a edição
-        //window.location.reload(); // Recarrega a página após o fechamento do modal
+        window.location.reload(); // Recarrega a página após o fechamento do modal
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
