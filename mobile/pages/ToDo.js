@@ -14,7 +14,7 @@ import { useIsFocused } from '@react-navigation/native';
 moment.locale('pt-br');// Configura moment para usar português
 
 /**
- * Nome do Componente: ToD
+ * Nome do Componente: ToDo
  *
  * Descrição Detalhada:
  *   Componente principal para a lista de tarefas. Permite a filtragem das tarefas por texto de busca

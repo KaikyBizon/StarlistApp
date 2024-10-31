@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 function Formulario({ tarefa, onClose, listaId }) {
   const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
   const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
+  //console.log("Lista ID: ", tarefa.listaId)
 
   const [dadosTask, setDadosTask] = useState({
     titulo: '',
@@ -58,10 +59,11 @@ function Formulario({ tarefa, onClose, listaId }) {
   };
 
   const handleSubmit = async (e) => {
+    console.log(dadosTask, acao)
     e.preventDefault();
 
     try {
-      const resposta = await fetch('http://10.135.60.11:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
