@@ -6,7 +6,6 @@ import Modal from 'react-bootstrap/Modal';
 function Formulario({ tarefa, onClose, listaId }) {
   const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
   const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
-  //console.log("Lista ID: ", tarefa.listaId)
 
   const [dadosTask, setDadosTask] = useState({
     titulo: '',
@@ -18,11 +17,22 @@ function Formulario({ tarefa, onClose, listaId }) {
     lista_id: listaId || null  // Armazena null se listaId não existir
   });
 
+  // Função para converter a data para o formato "yyyy-MM-dd" se necessário
+  function formatarData(data) {
+    const regexDataErrada = /^\d{2}\/\d{2}\/\d{4}$/;
+
+    if (regexDataErrada.test(data)) {
+      const [dia, mes, ano] = data.split('/');
+      return `${ano}-${mes}-${dia}`;
+    }
+    return data;
+  }
+
   useEffect(() => {
     if (tarefa) {
       setDadosTask({
         ...tarefa,
-        lista_id: tarefa.lista_id || listaId || null, // Armazena null se listaId não existir
+        data: formatarData(tarefa.data), // Converte e salva em dadosTask.data
       });
       setAcao('editar_tarefa');
     } else {
@@ -78,7 +88,7 @@ function Formulario({ tarefa, onClose, listaId }) {
         setMensagensErro(resultado.mensagens_erro)
       } else {
         onClose(); // Fecha o modal após a edição
-        window.location.reload(); // Recarrega a página após o fechamento do modal
+        //window.location.reload(); // Recarrega a página após o fechamento do modal
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);

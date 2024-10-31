@@ -14,11 +14,10 @@ function Kanban({ onListaSalva }) {
     const [listaParaExcluir, setListaParaExcluir] = useState(null);// Define um estado 'listaParaExcluir' como 'null', utilizado para armazenar o ID da lista que está sendo selecionada para exclusão.
     const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
-    const [editandoListaId, setEditandoListaId] = useState(null); // Estado para controlar qual lista está sendo editada
     const [exibirModal, setExibirModal] = useState(null);
     const [nomeEditando, setNomeEditando] = useState('');
-    const [modalExclusaoTarefaVisivel, setModalExclusaoTarefaVisivel] = useState(false);
-    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null);
+    const [modalExclusaoTarefaVisivel, setModalExclusaoTarefaVisivel] = useState(false)
+    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null)
 
     // Define um estado 'dadosList' como um objeto inicial com campos 'nome', 'tarefa_id', e 'usuario_id'.
     // 'nome' é uma string vazia, enquanto 'tarefa_id' e 'usuario_id' são obtidos do 'localStorage'.
@@ -52,7 +51,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.17:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +99,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.17:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,7 +170,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,7 +209,7 @@ function Kanban({ onListaSalva }) {
 
     const handleEditList = async (listaId) => {
         try {
-            const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,7 +283,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.17:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -348,38 +347,38 @@ function Kanban({ onListaSalva }) {
     };
 
     /**
- * Nome da função: handleDeleteTarefa
- * Autor: 
- * Data de criação: 
- * Parâmetros de entrada:
- *   - `tarefaId`: ID da tarefa a ser excluída.
- *   - `categoriaId`: ID da categoria à qual a tarefa pertence.
- * Retorno:
- *   - Nenhum retorno direto. A função faz uma requisição para deletar a tarefa no backend e atualiza o estado das categorias e tarefas após a exclusão.
- * Descrição/observações:
- *   - Esta função é assíncrona e é chamada ao confirmar a exclusão de uma tarefa.
- *   - Envia uma requisição `POST` para o endpoint `http://10.135.60.17:8085/receber-dados` com `acao: 'excluirTarefa'` e o `tarefaId` e `categoriaId` como dados.
- *   - Caso a resposta indique erro, um erro é logado no console.
- *   - Caso a exclusão seja bem-sucedida, chama `fetchCategoriasETarefas()` para atualizar a lista de tarefas e categorias visível ao usuário.
- *   - Em caso de erro de conexão ou outro problema com a requisição, o erro é capturado e exibido no console.
- */
+* Nome da função: handleDeleteTarefa
+* Autor: 
+* Data de criação: 
+* Parâmetros de entrada:
+*   - `tarefaId`: ID da tarefa a ser excluída.
+*   - `categoriaId`: ID da categoria à qual a tarefa pertence.
+* Retorno:
+*   - Nenhum retorno direto. A função faz uma requisição para deletar a tarefa no backend e atualiza o estado das categorias e tarefas após a exclusão.
+* Descrição/observações:
+*   - Esta função é assíncrona e é chamada ao confirmar a exclusão de uma tarefa.
+*   - Envia uma requisição `POST` para o endpoint `http://10.135.60.17:8085/receber-dados` com `acao: 'excluirTarefa'` e o `tarefaId` e `categoriaId` como dados.
+*   - Caso a resposta indique erro, um erro é logado no console.
+*   - Caso a exclusão seja bem-sucedida, chama `fetchCategoriasETarefas()` para atualizar a lista de tarefas e categorias visível ao usuário.
+*   - Em caso de erro de conexão ou outro problema com a requisição, o erro é capturado e exibido no console.
+*/
     const handleDeleteTarefa = async (tarefaId) => {
         console.log('ID da tarefa:', tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST', // Mantenha ou altere conforme necessário
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ acao: 'excluirTarefa', dados: { tarefaId } })
             });
-    
+
             if (!resposta.ok) {
                 const erroDetalhado = await resposta.json();
                 console.error('Erro ao excluir tarefa:', erroDetalhado);
                 return; // Para o processamento se houver erro
             }
-    
+
             const resultado = await resposta.json();
             console.log('Resultado da exclusão:', resultado);
             fetchCategoriasETarefas();
@@ -387,7 +386,6 @@ function Kanban({ onListaSalva }) {
             console.error('Erro ao excluir tarefa:', error);
         }
     };
-    
 
     /**
 * Nome da função: handleAbrirModalExclusaoTarefa
@@ -426,27 +424,26 @@ function Kanban({ onListaSalva }) {
     };
 
     /**
- * Nome da função: confirmarExclusaoTarefa
- * Autor: Gabriel
- * Data de criação: 31/10/2024
- * Parâmetros de entrada:
- *   - Nenhum parâmetro de entrada direto.
- * Retorno:
- *   - Nenhum retorno direto. A função invoca `handleDeleteTarefa` passando `id` e `categoriaId` da tarefa a ser excluída.
- * Descrição/observações:
- *   - Esta função é chamada para confirmar a exclusão de uma tarefa específica.
- *   - Se `tarefaParaExcluir` estiver definida, a função chama `handleDeleteTarefa` com o ID da tarefa e da categoria para proceder com a exclusão.
- *   - Após a exclusão, o modal é fechado e `tarefaParaExcluir` é redefinido para `null`.
- *   - Permite ao usuário remover permanentemente a tarefa selecionada da lista.
- */
+    * Nome da função: confirmarExclusaoTarefa
+    * Autor: Gabriel
+    * Data de criação: 31/10/2024
+    * Parâmetros de entrada:
+    *   - Nenhum parâmetro de entrada direto.
+    * Retorno:
+    *   - Nenhum retorno direto. A função invoca `handleDeleteTarefa` passando `id` e `categoriaId` da tarefa a ser excluída.
+    * Descrição/observações:
+    *   - Esta função é chamada para confirmar a exclusão de uma tarefa específica.
+    *   - Se `tarefaParaExcluir` estiver definida, a função chama `handleDeleteTarefa` com o ID da tarefa e da categoria para proceder com a exclusão.
+    *   - Após a exclusão, o modal é fechado e `tarefaParaExcluir` é redefinido para `null`.
+    *   - Permite ao usuário remover permanentemente a tarefa selecionada da lista.
+    */
     const confirmarExclusaoTarefa = () => {
-       
+
         if (tarefaParaExcluir) {
             handleDeleteTarefa(tarefaParaExcluir.id); // Ajuste conforme necessário
             handleFecharModalExclusaoTarefa();
         }
     };
-
 
     return (
         <>
@@ -469,9 +466,9 @@ function Kanban({ onListaSalva }) {
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
                                         <div className='acoes-tarefa'>
-                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick({ ...tarefa, listaId: categoria.id })} />
+                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
                                             <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleAbrirModalExclusaoTarefa(tarefa)} />
-                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                                 <div className="formulario-fixo">
