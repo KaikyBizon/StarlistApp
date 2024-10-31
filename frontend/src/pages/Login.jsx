@@ -1,3 +1,23 @@
+/**
+ * Nome do Componente: LoginForm
+ *
+ * Descrição Detalhada:
+ *   Componente funcional que representa o formulário de login da aplicação. 
+ *   Permite que os usuários insiram seu e-mail e senha para autenticar-se no sistema.
+ *
+ * Estrutura e Funcionamento:
+ *   - Utiliza hooks do React (`useState` e `useEffect`) para gerenciar o estado do formulário e os erros.
+ *   - Contém um manipulador de eventos para mudanças de entrada que atualiza o estado do formulário.
+ *   - Ao submeter o formulário, faz uma requisição assíncrona ao servidor para autenticação.
+ *   - Se a autenticação falhar, as mensagens de erro são exibidas. Se for bem-sucedida, os dados do usuário são armazenados no `localStorage` e o usuário é redirecionado para a página do Kanban.
+ *   - Inclui um botão de cancelamento que limpa os campos do formulário.
+ *
+ * Observações Pertinentes:
+ *   1. O formulário inclui validações nos campos de entrada para garantir que os dados inseridos estejam no formato correto.
+ *   2. Links para recuperação de senha e cadastro são incluídos para facilitar a navegação do usuário.
+ *   3. Utiliza o `useNavigate` do `react-router-dom` para redirecionar após o login bem-sucedido.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -9,6 +29,7 @@ function LoginForm() {
     senha: ''
   })
 
+  // Função que atualiza o estado do formulário com o valor do input correspondente ao evento de mudança.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -19,15 +40,27 @@ function LoginForm() {
 
   const [mensagensErro, setMensagensErro] = useState([]);
   const navigate = useNavigate();
+
+  // Função handleSubmit para efetuar o login do usuário
+  //
+  // Alterado em 
+  // Parâmetros de entrada:
+  // - e: evento de submissão do formulário
+  // Retorno:
+  // - Faz uma requisição ao servidor para autenticar o usuário com base nos dados do formulário de login
+  // - Se houver erros no login, exibe as mensagens de erro
+  // - Se o login for bem-sucedido, armazena o ID, email e nome do usuário no localStorage e redireciona para a página de Kanban
+  // Esta função envia os dados de login ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.17:8085/receber-dados'.
+  // Se o servidor retornar um erro, as mensagens de erro são exibidas no formulário. Se o login for bem-sucedido, as informações do usuário são armazenadas no localStorage e o usuário é redirecionado para a página Kanban.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({acao: 'efetuar_login', dados: formValues}),
+        body: JSON.stringify({ acao: 'efetuar_login', dados: formValues }),
       });
       const resultado = (await resposta.json()).dadosCadastro;
 
@@ -47,13 +80,14 @@ function LoginForm() {
     }
   };
 
+  // Função que redefine os valores do formulário, limpando os campos de email e senha.
   const handleCancel = () => {
     setFormValues({ email: '', senha: '' });
   }
   return (
     <div className="geral">
       <div className="fundo-secundario">
-        
+
         <form id="register-login" name="formulario_login" onSubmit={handleSubmit} autoComplete='off'>
           <div className="bem_vindo">
             <h1>BEM-VINDO!</h1>

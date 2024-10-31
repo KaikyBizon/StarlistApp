@@ -1,3 +1,36 @@
+/**
+ * Nome do Componente: Cadastro
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que representa um formulário de cadastro para novos usuários. 
+ *   Utiliza hooks do React para gerenciar o estado dos valores do formulário e mensagens de erro. 
+ *   Permite que os usuários insiram suas informações, que são enviadas para o backend, 
+ *   e navega para a tela de verificação de e-mail ou exibe mensagens de erro conforme necessário.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar os valores dos campos do formulário e as mensagens de erro.
+ *   2. Utiliza o hook 'useNavigate' do React Router para navegar entre as telas após o envio do formulário.
+ *   3. Implementa a função 'handleChange' para atualizar os valores dos campos conforme o usuário os edita.
+ *   4. Implementa a função 'handleSubmit' que envia os dados do formulário em formato JSON para o backend,
+ *      lida com a resposta e atualiza o estado com mensagens de erro ou navega para a próxima tela.
+ *
+ * Estado:
+ *   - formValues: Objeto contendo os valores dos campos do formulário (nome, email, senha, etc.).
+ *   - mensagensErro: Array que contém as mensagens de erro a serem exibidas para o usuário.
+ *
+ * Funções:
+ *   - handleChange: Atualiza o estado 'formValues' conforme os campos do formulário são alterados.
+ *   - handleSubmit: Processa o envio do formulário, realiza a requisição ao backend e gerencia a navegação 
+ *     ou exibição de mensagens de erro com base na resposta.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um formulário com campos para nome, email, senha, confirmação de senha, data de nascimento 
+ *     e plano de assinatura.
+ *   - Exibe mensagens de erro associadas a cada campo do formulário.
+ *   - Inclui botões para enviar o formulário ou cancelar a operação.
+ *   - Apresenta um link para a tela de login caso o usuário já tenha uma conta.
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -16,6 +49,14 @@ function Cadastro() {
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
 
+    // Função handleChange para atualizar os valores dos campos do formulário de cadastro
+    // 
+    // Alterado em 
+    // Parâmetros de entrada:
+    // e - objeto - evento disparado ao alterar um campo de input no formulário
+    // Retorno:
+    // Atualiza o estado `formValues` com os novos valores dos campos
+    // Esta função captura o nome e valor do campo alterado e atualiza o estado `formValues` de acordo com as mudanças feitas no formulário de cadastro
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues((prevValues) => ({
@@ -24,6 +65,14 @@ function Cadastro() {
         }));
     };
 
+    // Função handleSubmit para processar o envio do formulário de cadastro
+    // 
+    // Alterado em 
+    // Parâmetros de entrada:
+    // e - objeto - evento disparado ao submeter o formulário
+    // Retorno:
+    // Realiza uma requisição POST para cadastrar o usuário e navega para a página de verificação de e-mail ou exibe mensagens de erro
+    // Esta função previne o comportamento padrão do formulário, armazena o email no localStorage, envia os dados do formulário em formato JSON para o backend, e com base na resposta, exibe mensagens de erro ou redireciona o usuário para a página de verificação de e-mail
     const handleSubmit = async (e) => {
         e.preventDefault();
         localStorage.setItem('email', formValues.email);
@@ -40,7 +89,7 @@ function Cadastro() {
 
             const resultado = (await resposta.json()).dadosCadastro;
 
-
+            
 
             if (resultado.error) {
                 setMensagensErro(resultado.mensagens_erro)

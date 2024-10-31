@@ -1,8 +1,22 @@
+/**
+ * Nome do Componente: Avaliacao
+ *
+ * Descrição Detalhada:
+ *   O componente funcional `Avaliacao` exibe uma seção de depoimentos e avaliações
+ *   de usuários sobre um serviço ou produto. Ele apresenta uma nota geral, uma
+ *   distribuição de notas detalhada e uma lista de depoimentos de usuários.
+ *
+ * Estrutura JSX:
+ *   - O componente é organizado em uma estrutura HTML que inclui um título, uma
+ *     caixa de nota geral e uma seção de depoimentos.
+ *
+ */
+
 import './Avaliacao.css'
 function Avaliacao() {
     return (
         <>
-            <div className="avl">
+            <section id="avl">
                 <div className="header">
                     <h1>Depoimentos</h1>
                 </div>
@@ -75,7 +89,7 @@ function Avaliacao() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </>
     )
 }

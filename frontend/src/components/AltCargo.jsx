@@ -1,3 +1,30 @@
+/**
+ * Nome do Componente: AltCargo
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que permite ao usuário alterar o cargo de um participante.
+ *   Utiliza hooks do React para gerenciar a exibição do modal e a seleção do cargo.
+ *   O modal exibe o perfil do usuário e permite selecionar um novo cargo a partir de um dropdown.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para controlar a visibilidade do modal de alteração de cargo.
+ *   2. O modal contém um formulário que exibe o nome do usuário e um dropdown para seleção do novo cargo.
+ *   3. Utiliza `react-bootstrap` para a estrutura visual e o estilo dos componentes.
+ *
+ * Estado:
+ *   - show: Controla a visibilidade do modal para alterar o cargo.
+ *
+ * Funções:
+ *   - handleClose: Função que define o estado 'show' como falso, fechando o modal.
+ *   - handleShow: Função que define o estado 'show' como verdadeiro, abrindo o modal.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um botão que, ao ser clicado, abre o modal para alterar o cargo do participante.
+ *   - O modal inclui um título, um formulário com o perfil do usuário e um dropdown para selecionar o novo cargo,
+ *     além de botões para cancelar ou salvar as alterações.
+ *
+ */
+
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -6,7 +33,6 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function AltCargo() {
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 

@@ -1,3 +1,41 @@
+/**
+ * Nome do Componente: Pagamento
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que gerencia a tela de pagamento. Permite ao usuário escolher entre métodos de pagamento via cartão de crédito ou Pix.
+ *   Utiliza hooks do React para gerenciar o estado dos campos de entrada e a navegação para a tela de login após a conclusão do pagamento.
+ *   Inclui funções para formatação e validação de entradas, como número do cartão, data de validade, CVV, CPF e código Pix.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar o estado de diversos campos relacionados ao pagamento.
+ *   2. O hook 'useNavigate' do React Router é utilizado para redirecionar o usuário para a página de login após a conclusão do pagamento.
+ *   3. A formatação dos campos de entrada (cartão de crédito, data de validade e CPF) é feita em funções dedicadas para melhorar a legibilidade e a experiência do usuário.
+ *   4. O componente renderiza diferentes interfaces de pagamento (Pix ou cartão de crédito) com base na opção selecionada pelo usuário.
+ *
+ * Estado:
+ *   - selectedMethod: Método de pagamento selecionado ('Pix' ou 'Card').
+ *   - cardNumber: Número do cartão de crédito.
+ *   - cardHolderName: Nome do titular do cartão.
+ *   - expiryDate: Data de validade do cartão de crédito.
+ *   - cvv: Código de verificação do cartão de crédito.
+ *   - cpf: CPF do usuário.
+ *   - pixCode: Código Pix gerado, que pode ser exibido na interface.
+ *
+ * Funções:
+ *   - handledPayment: Exibe um alerta de sucesso e redireciona o usuário para a página de login.
+ *   - validateNumericInput: Remove caracteres não numéricos da string fornecida.
+ *   - formataNumeroCartao: Formata o número do cartão de crédito em grupos de 4 dígitos.
+ *   - formatExpiryDate: Formata a data de validade do cartão no formato MM/AA.
+ *   - formataCPF: Formata o CPF no padrão brasileiro (XXX.XXX.XXX-XX).
+ *   - generatePixCode: Gera um código Pix para pagamento.
+ *   - renderPixPayment: Renderiza a interface de pagamento via Pix.
+ *   - renderCardPayment: Renderiza a interface de pagamento via cartão de crédito.
+ *
+ * Estrutura JSX:
+ *   - Renderiza uma seção para escolher o método de pagamento (cartão de crédito ou Pix).
+ *   - Dependendo do método selecionado, renderiza a interface correspondente para inserção de dados e finalização do pagamento.
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Adicione o hook para navegação
 import '../StylesPages/Pagamento.css'; // Importa o CSS para estilização
@@ -13,13 +51,23 @@ export default function Pagamento() {
 
     const navigate = useNavigate(); // Use o hook de navegação
 
+    // Função que exibe um alerta de sucesso ao concluir o pagamento e redireciona o usuário para a página de login.
     const handledPayment = () => {
         window.alert('Pagamento Concluído: Seu pagamento foi realizado com sucesso!'); // Use window.alert para notificações simples
         navigate('/login');
     };
 
+    // Função que remove todos os caracteres não numéricos da string fornecida, mantendo apenas dígitos.
     const validateNumericInput = (text) => text.replace(/[^0-9]/g, '');
 
+    // Função formataNumeroCartao para formatar o número do cartão de crédito
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - text: string contendo o número do cartão de crédito (possivelmente com caracteres não numéricos)
+    // Retorno:
+    // - formattedText: string contendo o número do cartão formatado em blocos de 4 dígitos, separados por espaços
+    // Esta função remove todos os caracteres não numéricos do input, e formata o número do cartão em grupos de 4 dígitos separados por espaços, para melhor legibilidade.
     const formataNumeroCartao = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         let formattedText = '';
@@ -32,6 +80,15 @@ export default function Pagamento() {
         return formattedText;
     };
 
+    // Função formatExpiryDate para formatar a data de expiração do cartão de crédito
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - text: string contendo a data de expiração do cartão de crédito (possivelmente com caracteres não numéricos)
+    // Retorno:
+    // - String formatada no formato MM/AA para a data de expiração do cartão
+    // Esta função remove todos os caracteres não numéricos do input e formata a data de expiração no formato MM/AA. Se o input tiver até 2 caracteres, retorna os dígitos. 
+    // Caso contrário, insere uma barra após os dois primeiros dígitos para representar o mês e o ano.
     const formatExpiryDate = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         if (cleanedText.length <= 2) {
@@ -41,6 +98,15 @@ export default function Pagamento() {
         }
     };
 
+    // Função formataCPF para formatar o CPF do usuário
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - text: string contendo o CPF (possivelmente com caracteres não numéricos)
+    // Retorno:
+    // - String formatada no formato XXX.XXX.XXX-XX
+    // Esta função remove todos os caracteres não numéricos do input e formata o CPF no padrão brasileiro (XXX.XXX.XXX-XX). Dependendo da quantidade de dígitos inseridos, 
+    // a função adiciona os pontos e traço no lugar correto para melhorar a legibilidade.
     const formataCPF = (text) => {
         const cleanedText = text.replace(/[^0-9]/g, '');
         if (cleanedText.length <= 3) {
@@ -58,6 +124,16 @@ export default function Pagamento() {
         setPixCode('05101520StarList');
     };
 
+    // Função renderPixPayment para renderizar a interface de pagamento via Pix
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - Nenhum parâmetro direto
+    // Retorno:
+    // - Renderiza a interface de pagamento Pix, exibindo o código Pix e o QR code se o código já tiver sido gerado, ou um botão para gerar o código Pix
+    // Esta função verifica se o código Pix já foi gerado (variável `pixCode`). Se sim, renderiza o código de pagamento e a imagem QR code. 
+    // Caso contrário, exibe um botão para gerar o código Pix. Quando o pagamento é concluído, o botão "Concluir" aciona a função `handledPayment`.
+
     const renderPixPayment = () => (
         <div>
             {pixCode ? (
@@ -69,8 +145,8 @@ export default function Pagamento() {
                         <img src="/public/images/qr-code.png" alt="qrcode" />
                     </div>
                     <button className='btnPagar' onClick={handledPayment}>
-                    Concluir
-                     </button>
+                        Concluir
+                    </button>
                 </div>
             ) : (
                 <button className="btnPagar" onClick={generatePixCode}>
@@ -80,6 +156,16 @@ export default function Pagamento() {
         </div>
     );
 
+    // Função renderCardPayment para renderizar a interface de pagamento via cartão de crédito
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - Nenhum parâmetro direto
+    // Retorno:
+    // - Renderiza a interface de pagamento por cartão de crédito, permitindo a inserção e formatação dos dados do cartão
+    // Esta função renderiza um formulário para o pagamento via cartão de crédito, incluindo campos para o número do cartão, nome do titular, data de validade, CVV e CPF. 
+    // O número do cartão é formatado automaticamente com espaços a cada 4 dígitos, a data de validade no formato MM/AA e o CPF no formato XXX.XXX.XXX-XX. 
+    // Ao clicar no botão "Pagar e concluir", a função `handledPayment` é acionada para processar o pagamento.
     const renderCardPayment = () => (
         <div className='dadosCartao'>
             <p className='txtInfo'>Número do cartão</p>

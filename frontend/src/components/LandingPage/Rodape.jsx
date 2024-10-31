@@ -1,3 +1,19 @@
+/**
+ * Nome do Componente: Rodape
+ *
+ * Descrição Detalhada:
+ *   O componente funcional `Rodape` representa o rodapé da aplicação,
+ *   fornecendo informações relevantes, links e ícones de contato para
+ *   os usuários. Este componente é ideal para melhorar a navegação
+ *   e a acessibilidade, conectando os usuários a recursos importantes
+ *   e a comunidade.
+ *
+ * Estrutura JSX:
+ *   - O componente é encapsulado em um `<footer>` com a classe `rodape-3`,
+ *     indicando que é uma seção de rodapé.
+ *
+ */
+
 import './Rodape.css'
 
 function Rodape() {

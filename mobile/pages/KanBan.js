@@ -1,3 +1,35 @@
+/**
+ * Nome do Componente: Kanban
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que implementa um sistema de Kanban para gerenciamento de tarefas.
+ *   Permite aos usuários adicionar, visualizar e excluir tarefas organizadas em listas. 
+ *   Utiliza hooks do React para gerenciar o estado das listas e tarefas, bem como a interação com a API para 
+ *   persistência dos dados.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar o estado das listas de tarefas e as informações das tarefas.
+ *   2. As listas e tarefas são armazenadas localmente utilizando AsyncStorage para garantir persistência.
+ *   3. Inclui modais para adição de novas tarefas e confirmação de exclusões, melhorando a experiência do usuário.
+ *   4. A interface é organizada em uma estrutura de rolagem horizontal para fácil visualização das listas.
+ *
+ * Estado:
+ *   - lists: Um array que armazena as listas de tarefas, onde cada lista contém um nome e um array de tarefas.
+ *   - selectedListId: Um ID que identifica a lista atualmente selecionada.
+ *   - newTask: Um objeto que armazena as informações da nova tarefa a ser adicionada.
+ *
+ * Funções:
+ *   - handleAddTask: Função chamada ao adicionar uma nova tarefa à lista selecionada.
+ *   - handleDeleteTask: Função chamada para excluir uma tarefa específica da lista.
+ *   - handleSelectList: Função para selecionar uma lista específica para visualizar suas tarefas.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um componente de cabeçalho e um botão para adicionar novas listas.
+ *   - Renderiza as listas de tarefas, permitindo a interação do usuário para adicionar e excluir tarefas.
+ *
+ * @returns {JSX.Element}
+ */
+
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/StylesKanBan.js';
 import { View, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Text, Modal, Image } from 'react-native';
