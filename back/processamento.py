@@ -365,14 +365,11 @@ def processar_dados(dados):
     if acao == 'excluirTarefa':
         print(dados_processados)
         id_tarefa = dados_processados.get('tarefaId')
-        lista_id = dados_processados.get('categoriaId')
         # Verifica se `lista_id` é None e o converte para SQL NULL
-        if lista_id is None:
-            lista_id = 'NULL'
 
         print("Id tarefa:", id_tarefa)
-        print(id_tarefa, lista_id)
-        excluir_tarefa(id_tarefa, lista_id)
+        print(id_tarefa)
+        excluir_tarefa(id_tarefa)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
 
 
