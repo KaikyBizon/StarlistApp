@@ -26,7 +26,7 @@ export default function Menu({ onSearch }) {
                     type="search"
                     name="Pesquisa"
                     id="pesquisar"
-                    placeholder="Buscar"
+                    placeholder="Buscar tarefas"
                     value={searchTerm}
                     onChange={handleSearchChange}
                 />
@@ -48,7 +48,7 @@ export default function Menu({ onSearch }) {
                             <Dropdown.Item className='alterar_dados' href="#/action-1">Alterar dados</Dropdown.Item>
                         </Link>
                         <Link to='/login'>
-                            <Dropdown.Item className='alterar_dados' href="#/action-1">Sair</Dropdown.Item>
+                            <Dropdown.Item className='alterar_dados' href="#/action-1">Sair da conta</Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
                         <p className='alterar_dados' href="#/action-1">{localStorage.getItem("nome_usuario")}</p>

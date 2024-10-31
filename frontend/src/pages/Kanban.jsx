@@ -29,7 +29,7 @@ function Kanban({ onListaSalva }) {
     /**
  * Nome da função: fetchTarefasParaCategoria
  * 
- * Autor: Leticia e Thaina
+ * Autor: Leticia
  * 
  * Data de criação: 03 de setembro de 2024
  * 
@@ -50,7 +50,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function Kanban({ onListaSalva }) {
     /**
  * Nome da função: fetchCategoriasETarefas
  * 
- * Autor: Leticia e Thaina
+ * Autor: Leticia
  * 
  * Data de criação: 03 de setembro de 2024
  * 
@@ -98,7 +98,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +106,6 @@ function Kanban({ onListaSalva }) {
             });
 
             const categoriasResultado = await resposta.json();
-            console.log("Resultado:", categoriasResultado)
 
             if (resposta.ok) {
                 setCategorias(categoriasResultado);
@@ -140,7 +139,7 @@ function Kanban({ onListaSalva }) {
     /**
  * Nome da função: handleSubmit
  * 
- * Autor: Thaina e Leticia
+ * Autor: Leticia
  * 
  * Data de criação: 03 de setembro de 2024
  * 
@@ -170,7 +169,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,9 +207,8 @@ function Kanban({ onListaSalva }) {
     };
 
     const handleEditList = async (listaId) => {
-        console.log(listaId)
         try {
-            const resposta = await fetch('http://10.135.60.30:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -263,7 +261,7 @@ function Kanban({ onListaSalva }) {
     /**
  * Nome da função: confirmarExclusao
  * 
- * Autor: Thaina e Leticia
+ * Autor: Leticia
  * 
  * Data de criação: 03 de setembro de 2024
  * 
@@ -284,7 +282,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.30:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -347,6 +345,29 @@ function Kanban({ onListaSalva }) {
         setTarefaSelecionada(null); // Limpa a tarefa selecionada
     };
 
+    // Função para excluir uma tarefa específica
+    const handleDeleteTarefa = async (tarefaId, categoriaId) => {
+        try {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: 'excluirTarefa', dados: { tarefaId, categoriaId } })
+            });
+
+            const resultado = await resposta.json()
+
+            if (resposta.error) {
+                console.error('Erro ao excluir tarefa');
+            } else {
+                fetchCategoriasETarefas();
+            }
+        } catch (error) {
+            console.error('Erro ao excluir tarefa:', error);
+        }
+    };
+
     return (
         <>
             <Cabecalho />
@@ -364,12 +385,13 @@ function Kanban({ onListaSalva }) {
                                 </div>
                                 {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                                     <div key={index} className="tarefa-item">
-                                        <div className='titulo-editar'>
-                                            <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
-                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
-                                        </div>
+                                        <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
+                                        <div className='acoes-tarefa'>
+                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick({ ...tarefa, listaId: categoria.id })} />
+                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
+                                        </div>
                                     </div>
                                 ))}
                                 <div className="formulario-fixo">

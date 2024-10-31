@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #9d9d9d;
+    background: linear-gradient(45deg, #333 20%, #000 70% );
     min-height: 100vh; /* Altura mínima para preencher a tela */
 }
 
@@ -198,4 +198,59 @@
     width: 100%; /* Garante que ambos ocupem a mesma largura dentro do container */
     /* Adicione uma altura mínima se necessário */
     min-height: 200px;
+}
+
+/* Estilo base para os botões de método de pagamento */
+.btnMetodo {
+    padding: 15px;
+    background-color: #ddd;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden; /* Para esconder a parte do efeito de animação */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transição suave */
+}
+
+/* Efeito de foco e hover */
+.btnMetodo:hover {
+    background-color: #faed27; /* Cor quando hover */
+    transform: translateY(-5px); /* Move o botão levemente para cima */
+}
+
+/* Efeito de animação de clique */
+.btnMetodo:active {
+    transform: translateY(0); /* Retorna para a posição original ao clicar */
+}
+
+/* Adiciona um efeito de sombra ao clicar */
+.btnMetodo:active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(250, 237, 39, 0.5); /* Cor do efeito */
+    border-radius: 50%; /* Forma circular */
+    transform: translate(-50%, -50%) scale(0); /* Inicia em escala 0 */
+    animation: ripple 0.6s linear forwards; /* Animação de ripple */
+}
+
+/* Animação de ripple */
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(1); /* Expande o efeito */
+        opacity: 0; /* Torna invisível ao final */
+    }
+}
+
+/* Estilo do botão selecionado */
+.btnMetodoSelected {
+    background-color: #faed27; /* Cor para o botão selecionado */
 }

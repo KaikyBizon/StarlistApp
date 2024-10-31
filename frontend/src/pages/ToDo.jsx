@@ -15,18 +15,27 @@ function ToDo() {
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
     const [modalVisivel, setModalVisivel] = useState(false); // Controle de exibição do modal de exclusão
     const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null); // Armazena a tarefa a ser excluída
+    const [dataToCatchTarefas, setDataToCatchTarefas] = useState(null); // Estado para a data selecionada
+
+    const handleDataSelecionada = (data) => {
+        console.log(data)
+        setDataToCatchTarefas(data); // Define a data selecionada
+        const tarefasDoDia = tarefas.filter(tarefa => tarefa.data === data); // Filtra as tarefas pela data
+        setFilteredTasks(tarefasDoDia); // Atualiza as tarefas filtradas
+    };
+
 
 
     const fetchTarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({acao: "carregar_tarefas", dados: usuarioId })
+                body: JSON.stringify({ acao: "carregar_tarefas", dados: { usuarioId, dataToCatchTarefas } })
             });
             const resultado = await resposta.json();
 
@@ -39,7 +48,7 @@ function ToDo() {
                     descricao: tarefa[2],
                     data: tarefa[3],
                     horario: tarefa[4],
-                    id: tarefa[5],
+                    tarefaId: tarefa[5],
                 }));
 
                 const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
@@ -55,19 +64,20 @@ function ToDo() {
         }
     };
 
-    const excluirTarefa = async (id) => {
+    const excluirTarefa = async (tarefaId) => {
+        console.log(tarefaId);
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ dados: id, acao: 'excluirTarefa' })
+                body: JSON.stringify({ dados: { tarefaId }, acao: 'excluirTarefa' })
             });
             const resultado = await resposta.json();
 
             if (resposta.ok) {
-                const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== id);
+                const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.tarefaId !== tarefaId);
                 setTarefas(tarefasAtualizadas);
                 setFilteredTasks(tarefasAtualizadas);
             } else {
@@ -104,34 +114,36 @@ function ToDo() {
                 const [dia, mes, ano] = dataString.split('/').map(Number);
                 return new Date(ano, mes - 1, dia); // Cria uma data no formato correto
             };
-    
+
             const dataDateA = converterParaData(a.data);
             const dataDateB = converterParaData(b.data);
-    
+
             // Ordenar primeiro pelas datas mais próximas
             if (dataDateA.getTime() !== dataDateB.getTime()) {
                 return dataDateA - dataDateB;
             }
-    
+
             // Se as datas forem iguais, ordenar pelos horários
             if (a.horario && b.horario) {
                 const [horaA, minutoA] = a.horario.split(':').map(Number);
                 const [horaB, minutoB] = b.horario.split(':').map(Number);
                 const tempoA = horaA * 60 + minutoA;
                 const tempoB = horaB * 60 + minutoB;
-    
+
                 return tempoA - tempoB;
             }
-    
+
             // Caso não tenha horário, manter a tarefa com horário preenchido antes
             return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
         });
     };
-    
+
 
     useEffect(() => {
-        fetchTarefas();
-    }, []);
+        if (dataToCatchTarefas) {
+            fetchTarefas();
+        }
+    }, [dataToCatchTarefas]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
@@ -162,7 +174,8 @@ function ToDo() {
             <section className='interacao'>
                 <section className='calendario-left'>
                     <Geral />
-                    <Calendario events={tarefas} />
+                    <Calendario events={tarefas} onSelectDate={handleDataSelecionada} />
+
                 </section>
                 <div className="back-cards">
                     {mensagensErro.length > 0 && (
@@ -172,22 +185,23 @@ function ToDo() {
                             ))}
                         </div>
                     )}
+                    {!dataToCatchTarefas && <p>Selecione uma data para ver as tarefas.</p>} {/* Mensagem inicial */}
                     {filteredTasks && filteredTasks.length > 0 ? (
                         filteredTasks.map((tarefa) => {
-                            const { id, titulo, etiqueta, descricao, data, horario } = tarefa;
+                            const { tarefaId, titulo, etiqueta, descricao, data, horario } = tarefa;
                             const corEtiqueta = etiqueta === 'Importante' ? 'red' :
                                 etiqueta === 'Pendência' ? 'orange' :
                                     etiqueta === 'Reunião' ? 'blue' : 'transparent';
 
                             return (
-                                <Card className='cards-tarefa' key={id}>
+                                <Card className='cards-tarefa' key={tarefaId}>
                                     <Card.Header>
                                         <div className='data_etiqueta'>
                                             {data || 'Data não informada'}
                                             <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}></div>
                                         </div>
                                         <div className='card_icons'>
-                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(id)} />
+                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(tarefaId)} />
                                             <img src="../../public/images/editar_lista.png" alt="Editar" onClick={() => handleEditarClick(tarefa)} />
                                         </div>
                                     </Card.Header>

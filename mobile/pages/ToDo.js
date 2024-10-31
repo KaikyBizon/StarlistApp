@@ -44,21 +44,26 @@ export default function ToDo({ navigation, route }) {
   const [tarefas, setTarefas] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [mensagensErro, setMensagensErro] = useState([]);
+  const [dataToCatchTarefas, setDataToCatchTarefas] = useState(route.params?.selectedDate);
+
+
+  useEffect(() => {
+    setDataToCatchTarefas(route.params?.selectedDate);
+  });
 
   // Função para buscar tarefas do servidor
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.6:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ acao: "carregar_tarefas", dados: usuarioId }),
+        body: JSON.stringify({ acao: "carregar_tarefas", dados: { usuarioId, dataToCatchTarefas } }),
       });
-      const resultado = await resposta.json();
+      const resultado = (await resposta.json()).dados_tarefa;
       if (resposta.ok) {
-
         // Atualiza a estrutura para incluir o ID
-        const tarefasRecebidas = resultado.dados_tarefa;
+        const tarefasRecebidas = resultado;
         const tarefasAtualizadas = tarefasRecebidas.map(tarefa => ({
           titulo: tarefa[0],
           etiqueta: tarefa[1],
@@ -67,9 +72,8 @@ export default function ToDo({ navigation, route }) {
           horario: tarefa[4],
           id: tarefa[5],
         }));
-        const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
-        setTarefas(tarefasOrdenadas);
-        setFilteredTasks(tarefasOrdenadas);
+        setTarefas(tarefasAtualizadas);
+        setFilteredTasks(tarefasAtualizadas);
       } else {
         console.error('Erro no servidor:', resultado.mensagens_erro);
         setMensagensErro(resultado.mensagens_erro || ['Erro ao obter mensagens de erro.']);
@@ -80,30 +84,14 @@ export default function ToDo({ navigation, route }) {
     }
   };
 
-  //Função para ordenar tarefas de acordo com a data mais próxima
-  const ordenarTarefas = (tarefas) => {
-    return tarefas.sort((a, b) => {
-      const dataDateA = new Date(a.data);
-      const dataDateB = new Date(b.data);
-      if (dataDateA.getTime() !== dataDateB.getTime()) return dataDateA - dataDateB;
-
-      if (a.horario && b.horario) {
-        const [horaA, minutoA] = a.horario.split(':').map(Number);
-        const [horaB, minutoB] = b.horario.split(':').map(Number);
-        const tempoA = horaA * 60 + minutoA;
-        const tempoB = horaB * 60 + minutoB;
-        return tempoA - tempoB;
-      }
-      return (a.horario ? 0 : 1) - (b.horario ? 0 : 1);
-    });
-  };
-
-  //Renderiza as tarefas do backend
   useEffect(() => {
-    fetchTarefas();
-  }, []);
+    if (dataToCatchTarefas) {
+      fetchTarefas();
+    }
+  }, [dataToCatchTarefas]);
 
   useEffect(() => {
+
     if (isFocused) {
       if (route.params?.selectedDate) {
         const selectedDate = new Date(route.params.selectedDate);
@@ -119,29 +107,26 @@ export default function ToDo({ navigation, route }) {
         const tarefaExistente = tarefas.find(
           (tarefa) => tarefa.titulo === novaTarefa.titulo && tarefa.data === novaTarefa.data && tarefa.horario === novaTarefa.horario
         );
-
-        if (!tarefaExistente) {
-          const tarefasAtualizadas = [...tarefas, novaTarefa];
-          const tarefasOrdenadas = ordenarTarefas(tarefasAtualizadas);
-
-          setTarefas(tarefasOrdenadas);
-          setFilteredTasks(tarefasOrdenadas.filter(tarefa => moment(tarefa.data).isSame(date, 'day')));
-        }
-      } else {
-        // Apenas carrega as tarefas se não houver nova tarefa
-        fetchTarefas();
+        fetchTarefas()
       }
-
     }
   }, [isFocused, route.params?.selectedDate, route.params?.novaTarefa]);
 
 
-
-
   useEffect(() => {
-    const tarefasFiltradas = tarefas.filter(tarefa => moment(tarefa.data).isSame(date, 'day'));
-    setFilteredTasks(tarefasFiltradas);
-  }, [date, tarefas]);
+
+    if (isFocused) {
+      if (route.params?.selectedDate) {
+        const selectedDate = new Date(route.params.selectedDate);
+        selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset());
+        setDate(selectedDate);
+
+        // Filtra as tarefas já salvas com base na data selecionada
+        const tarefasFiltradas = tarefas.filter(tarefa => moment(tarefa.data).isSame(selectedDate, 'day'));
+        setFilteredTasks(tarefasFiltradas);
+      }
+    }
+  }, [isFocused, route.params?.selectedDate, tarefas]);
 
   // Função para mostrar o DateTimePicker
   const showDatePickerHandler = () => setShowDatePicker(true);
@@ -166,12 +151,11 @@ export default function ToDo({ navigation, route }) {
             text: 'Excluir',
             onPress: async () => {
               try {
-                const resposta = await fetch('http://10.135.60.6:8085/receber-dados', {
+                const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ id: id, acao: 'excluirTarefa' }),
+                  body: JSON.stringify({ dados: id, acao: 'excluirTarefa' }),
                 });
-
                 if (resposta.ok) {
                   Alert.alert('Sucesso', 'Tarefa excluída com sucesso');
 
@@ -222,16 +206,20 @@ export default function ToDo({ navigation, route }) {
       )}
 
       {/* Lista de tarefas */}
-      {filteredTasks && filteredTasks.length > 0 ? (
+      {tarefas && tarefas.length > 0 ? (
         <FlatList
-          data={filteredTasks}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
+          data={tarefas}
+          keyExtractor={(item) => `${item.id}`}  // Usando apenas o ID como chave
           renderItem={({ item }) => {
-            const { id, titulo, data, horario, etiqueta = 'Nenhuma' } = item;
+            // Garantindo que todas as propriedades estejam acessíveis
+            const { id, titulo = 'Título não informado', descricao = '', data = '', horario = '', etiqueta = 'Nenhuma' } = item;
+
+            // Exibindo valores padrão caso estejam faltando
             const tituloExibido = titulo || 'Título não informado';
             const dataExibida = data && data !== '0000-00-00' ? data : 'Data não informada';
             const horarioExibido = horario && horario !== '00:00' ? horario : 'Horário não informado';
 
+            // Definindo a cor da etiqueta com base no valor
             const corEtiqueta = etiqueta === 'Importante' ? 'red' :
               etiqueta === 'Pendência' ? 'orange' :
                 etiqueta === 'Reunião' ? 'blue' :
@@ -248,8 +236,8 @@ export default function ToDo({ navigation, route }) {
                 {/* Corpo do card - descrição */}
                 <View style={styles.cardBody}>
                   <Text style={styles.cardDescription}>
-                    {item.descricao && item.descricao.trim().length > 0
-                      ? item.descricao
+                    {descricao && descricao.trim().length > 0
+                      ? descricao
                       : 'Aqui vai a descrição da tarefa, se houver.'}
                   </Text>
                 </View>
@@ -276,6 +264,7 @@ export default function ToDo({ navigation, route }) {
       ) : (
         <Text>Nenhuma tarefa encontrada</Text>
       )}
+
 
       <StatusBar style="auto" />
     </View>

@@ -94,7 +94,10 @@
     margin-bottom: 10px;
     background-color: #514d4d;
     color: #c9c9c9;
+    display: flex;
+    flex-direction: column;
 }
+
 
 
 
@@ -206,7 +209,7 @@
 }
 
 .modalContent {
-    background-color: white;
+    background-color:#535050;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -233,23 +236,27 @@ button.botoesConfirmarExclusao:hover {
     color: #faed26;
 }
 
+.acoes-tarefa{
+    display: flex; 
+    gap: 10px; 
+    align-items: center; 
+    flex-direction: row-reverse;
+}
 
-
-.editar-tarefa {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.editar-tarefa{
     width: 22px;
     cursor: pointer;
 }
 
+.excluir-tarefa { 
+    width: 22px;
+    cursor: pointer;
+}
 
-.titulo-editar {
-    display: flex;
-    align-items: center;
-    /* Alinha verticalmente o título e a imagem */
-
-
+.acoes-tarefa {
+    display: flex; /* Usar Flexbox para alinhar os itens horizontalmente */
+    gap: 10px; /* Espaço entre as imagens */
+    align-items: center; /* Alinhar verticalmente ao centro */
 }
 
 button {
@@ -272,13 +279,6 @@ button {
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.5);
-}
-
-.modalContent {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
 }
 
 .botoesConfirmarEdicao {

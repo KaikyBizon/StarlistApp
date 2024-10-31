@@ -1,6 +1,6 @@
-#validações das tarefas
-#Gabriel
-#Criado em 22/08/24
+# validações das tarefas
+# Gabriel
+# Criado em 22/08/24
 
 from datetime import datetime
 
@@ -11,6 +11,7 @@ from datetime import datetime
 # Retorna "erro : True" quando, titulo inserido no campo "Titulo" não atende os requisitos (mais de 3 caracteres), aparece menssagem de erro
 # Retorna "erro : False" quando, titulo inserido no campo "Titulo" atende os requisitos (mais de 3 caracteres), não aparece menssagem  de erro
 # Função que irá validar o titulo da tarefa, se correto, não aparecerá mensagem, se incorreto, aparecerá a mensagem de erro.
+
 
 def validar_titulo(titulo):
     if len(titulo) < 3:
@@ -28,7 +29,7 @@ def validar_titulo(titulo):
 
 def validar_descricao(descricao):
     if len(descricao) < 3:
-        return {'erro': True, 'mensagem_descricao': 'a descrição deve conter ao menos 3 caracteres.'}
+        return {'erro': True, 'mensagem_descricao': 'A descrição deve conter ao menos 3 caracteres.'}
     return {'erro': False, 'mensagem_descricao': ''}
 
 # validar_etiqueta
@@ -39,9 +40,10 @@ def validar_descricao(descricao):
 # Retorna "erro : False" quando, etiqueta é selecionado no campo "Etiqueta", não aparece menssagem  de erro
 # Função que irá validar a etiqueta da tarefa, se selecionado, não aparecerá mensagem, se não, aparecerá a mensagem de erro.
 
+
 def validar_etiqueta(etiqueta):
     if not etiqueta or etiqueta == 'Selecione uma etiqueta':
-        return {'erro': True, 'mensagem_etiqueta': 'Precisa colocar uma etiqueta'}
+        return {'erro': True, 'mensagem_etiqueta': 'É preciso selecionar uma etiqueta'}
     return {'erro': False, 'mensagem_etiqueta': ''}
 
 
@@ -55,15 +57,25 @@ def validar_etiqueta(etiqueta):
 
 def validar_data(data):
 
-    data_selecionada = datetime.strptime(data, '%d/%m/%y').date()
+    # Verifica se a data está vazia
+    if not data:  # Se data for uma string vazia
+        return {'erro': True, 'mensagem_data': 'Selecione uma data.'}
 
-    # Obtém a data atual
-    data_atual = datetime.now().date()
-    
-    # Verifica se a data selecionada é anterior à data atual
-    if data_selecionada < data_atual:
-        return {'erro': True, 'mensagem_data': 'A data não pode ser anterior ao dia de hoje.'}
-    return {'erro': False, 'mensagem_data': ''}
+    try:
+        # Converte a string de data para um objeto de data
+        data_selecionada = datetime.strptime(data, '%Y-%m-%d').date()
+
+        # Obtém a data atual
+        data_atual = datetime.now().date()
+
+        # Verifica se a data selecionada é anterior à data atual
+        if data_selecionada < data_atual:
+            return {'erro': True, 'mensagem_data': 'A data não pode ser anterior ao dia de hoje.'}
+
+        return {'erro': False, 'mensagem_data': ''}
+
+    except ValueError:
+        return {'erro': True, 'mensagem_data': 'Formato de data inválido. Use o formato DD/MM/AA.'}
 
 
 # validar_horario
@@ -79,21 +91,19 @@ def validar_horario(horario):
     try:
         # Converte o horário selecionado para um objeto datetime com a data atual
         hora_selecionada = datetime.strptime(horario, '%H:%M').replace(
-            year=datetime.now().year, 
-            month=datetime.now().month, 
+            year=datetime.now().year,
+            month=datetime.now().month,
             day=datetime.now().day
         )
-        
+
         # Obtém o horário atual
         hora_atual = datetime.now().replace(microsecond=0, second=0, minute=0)
-        
+
         # Verifica se a hora selecionada é anterior ao momento atual
         if hora_selecionada < hora_atual:
             return {'erro': True, 'mensagem_horario': 'O horário não pode ser anterior ao horário atual.'}
-        
+
         return {'erro': False, 'mensagem_horario': ''}
-    
+
     except ValueError:
         return {'erro': True, 'mensagem_horario': 'Formato de hora inválido.'}
-
-

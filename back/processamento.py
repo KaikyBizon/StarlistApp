@@ -8,6 +8,7 @@ from actionsBD.selectTask import selecionar_dados_tarefa
 from actionsBD.deleteTask import excluir_tarefa
 from actionsBD.editTask import editar_tarefa
 from actionsBD.createList_bd import criarLista
+from actionsBD.selectPlanoId import selecionarPlanoId
 from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
@@ -27,11 +28,18 @@ from validacoes import (
     validar_cargo
 )
 
+from validacoesTarefa import (
+    validar_titulo,
+    validar_descricao,
+    validar_etiqueta,
+    validar_data,
+    validar_horario
+)
+
 # Função para processar os dados recebidos
 
 
 def processar_dados(dados):
-
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
@@ -77,7 +85,7 @@ def processar_dados(dados):
             dados_processados.get('data'),
             dados_processados.get('horario'),
             dados_processados.get('etiqueta'),
-            dados_processados.get('lista_id'),
+            dados_processados.get('listaId'),
             dados_processados.get('usuario_id')
         ]
 
@@ -91,7 +99,8 @@ def processar_dados(dados):
         mensagens_erro = []
         # Adiciona validações para os dados de nome, email, data de nascimento, senha e confirmação de senha
         mensagens_erro.append(validar_nome(dados_processados.get('nome', '')))
-        # mensagens_erro.append(validar_email(dados_processados.get('email', '')))
+        mensagens_erro.append(validar_email(
+            dados_processados.get('email', '')))
         mensagens_erro.append(validar_data_nascimento(
             dados_processados.get('dataNascimento', '')))
         mensagens_erro.append(validar_senha(
@@ -103,16 +112,32 @@ def processar_dados(dados):
 
         # Lista para armazenar erros do cadastro empresarial
         mensagens_erro_empresarial = []
-
         mensagens_erro_empresarial.append(
             validar_cnpj(dados_processados.get('cnpj', '')))
         mensagens_erro_empresarial.append(validar_nome_equipe(
             dados_processados.get('nomeEquipe', '')))
         mensagens_erro_empresarial.append(validar_numero_participantes(
             dados_processados.get('pessoasEquipe', '')))
+
         # Filtra apenas os erros que foram encontradas
         mensagens_erro_empresarial = [
             msg for msg in mensagens_erro_empresarial if msg['erro']]
+
+        # Lista de mensagens de erro
+        mensagens_erro_tarefa = []
+        mensagens_erro_tarefa.append(validar_titulo(
+            dados_processados.get('titulo', '')))
+        mensagens_erro_tarefa.append(validar_descricao(
+            dados_processados.get('descricao', '')))
+        mensagens_erro_tarefa.append(validar_etiqueta(
+            dados_processados.get('etiqueta', '')))
+        mensagens_erro_tarefa.append(
+            validar_data(dados_processados.get('data', '')))
+        mensagens_erro_tarefa.append(validar_horario(
+            dados_processados.get('horario', '')))
+        # Filtra apenas os erros que foram encontrados
+        mensagens_erro_tarefa = [
+            msg for msg in mensagens_erro_tarefa if msg['erro']]
 
         # Inserir usuário
         # Kaiky
@@ -276,10 +301,15 @@ def processar_dados(dados):
     # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
     # Retorno:
     # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
-    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
+    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banc
     if acao == 'criar_tarefa':
-        criarTarefa(tarefa)
-        dados_tarefa = {'Tarefa criada': 'Tarefa criada com sucesso!'}
+        if not mensagens_erro_tarefa:
+            criarTarefa(tarefa)
+            dados_tarefa = {'error': False,
+                'Tarefa criada': 'Tarefa criada com sucesso!'}
+        else:
+            dados_tarefa = {'error': True,
+                            'mensagens_erro': mensagens_erro_tarefa}
 
     # Editar tarefa
     # Kaiky
@@ -309,15 +339,19 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição verifica se a acao indica uma renderização de tarefas, e caso seja, ele executa a função para buscar as os dados no banco e retorna todas as tarefas do usuário
     if acao == 'carregar_tarefas':
-        id_usuario = dados_processados
-        dados_tarefa = selecionar_dados_tarefa(id_usuario)
+        print(dados_processados)
+        id_usuario = dados_processados.get('usuarioId')
+        dataTarefas = dados_processados.get('dataToCatchTarefas')
+        dados_tarefa = selecionar_dados_tarefa(id_usuario, dataTarefas)
 
     if acao == 'verificar_email':
         print(dados_processados, codigo_confirmacao)
         if str(dados_processados) == str(codigo_confirmacao):
-            dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
+            dados_cadastro = {'error': False,
+                              'mensagem': 'Código validado com sucesso!'}
         else:
-            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
+            dados_cadastro = {'error': True,
+                              'mensagem': 'Código inválido. Tente novamente!'}
 
     # Excluir tarefa
     # Kaiky
@@ -329,10 +363,23 @@ def processar_dados(dados):
     # dados_tarefa - retorna que a tarefa foi excluída com sucesso
     # Esta condição verifica se a acao indica uma exclusão de tarefa, e caso seja, ele executa a função para excluir a tarefa no banco
     if acao == 'excluirTarefa':
-        id_tarefa = dados_processados
-        excluir_tarefa(id_tarefa)
-        dados_tarefa = {"Status_acao": "Tarefa excluída!"}
+        print(dados_processados)
+        id_tarefa = dados_processados.get('tarefaId')
+        lista_id = dados_processados.get('categoriaId')
+        # Verifica se `lista_id` é None e o converte para SQL NULL
+        if lista_id is None:
+            lista_id = 'NULL'
 
+        print("Id tarefa:", id_tarefa)
+        print(id_tarefa, lista_id)
+        excluir_tarefa(id_tarefa, lista_id)
+        dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
+
+
+
+    if acao == 'selecionar_plano_id' :
+        id_usuario = dados_processados.get('id')
+        dados_cadastro = selecionarPlanoId(id_usuario)
     return listaCriada, dados_tarefa, dados_cadastro
 
 

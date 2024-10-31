@@ -199,4 +199,18 @@ button.btn.btn-secondary:hover {
 .descricao {
     margin: 0 20px;
 }
+.mb-3{
+    margin-bottom: 0px !important;
+    margin-top: 15px !important;
+}
+/*Mensagens de erro*/
+.erro_novatarefa li {
+    color: red;
+    font-size: 14px;
+    margin: 0px;
+    padding: 0;
+}
 
+.erro_novatarefa{
+    margin-bottom: 0px;
+}

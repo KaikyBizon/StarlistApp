@@ -102,6 +102,7 @@ function Cadastro() {
                                 data-required
                                 value={formValues.nome}
                                 onChange={handleChange}
+                                maxLength={30}
                             />
                         </div>
 
@@ -144,6 +145,7 @@ function Cadastro() {
                                 required
                                 value={formValues.senha}
                                 onChange={handleChange}
+                                maxLength={64}
                             />
                             <ul className='erro'>
                                 {mensagensErro.map((mensagem, index) => (
@@ -162,6 +164,7 @@ function Cadastro() {
                                 data-equal="Senha"
                                 value={formValues.confirme}
                                 onChange={handleChange}
+                                maxLength={64}
                             />
                             <ul className='erro'>
                                 {mensagensErro.map((mensagem, index) => (
