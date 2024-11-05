@@ -65,7 +65,8 @@ const Calendario = ({ events, onSelectDate }) => {
         },
         body: JSON.stringify({ acao: "carregar_todas_tarefas", dados: { usuarioId } })
       });
-      const resultado = await resposta.json();
+      const resultado = (await resposta.json()).dados_tarefa;
+      console.log(resultado)
 
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
