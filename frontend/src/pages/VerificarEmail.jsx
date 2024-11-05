@@ -59,7 +59,7 @@ function VerificarEmail() {
         console.log(codigo);
 
         try {
-            const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

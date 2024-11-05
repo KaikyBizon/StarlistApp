@@ -51,7 +51,7 @@ function Cadastro() {
 
     // Função handleChange para atualizar os valores dos campos do formulário de cadastro
     // 
-    // Alterado em 
+    // Alterado em 03/09/2024
     // Parâmetros de entrada:
     // e - objeto - evento disparado ao alterar um campo de input no formulário
     // Retorno:
@@ -79,7 +79,7 @@ function Cadastro() {
         console.log(formValues);
 
         try {
-            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
