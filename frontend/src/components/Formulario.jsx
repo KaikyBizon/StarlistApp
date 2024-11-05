@@ -141,7 +141,7 @@ function Formulario({ tarefa, onClose, listaId }) {
     e.preventDefault();
 
     try {
-      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -247,10 +247,38 @@ function Formulario({ tarefa, onClose, listaId }) {
             ))}
           </ul>
           <Modal.Footer>
-            <Button variant="secondary" onClick={onClose}>
+            <Button
+              variant="secondary"
+              onClick={onClose}
+              style={{
+                padding: '7px 20px',
+                border: 'none',
+                outline: 'none',
+                transition: 'none'
+              }}
+            >
               Fechar
             </Button>
-            <Button variant="primary save-task" type="submit">
+            <Button
+              variant="primary save-task"
+              type="submit"
+              style={{
+                backgroundColor: '#faed27',
+                color: '#000', 
+                border: 'none',
+                padding: '7px 15px',
+                outline: 'none',
+                transition: 'background-color 0.3s, color 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#000'; 
+                e.target.style.color = '#faed27'; 
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#faed27'; 
+                e.target.style.color = '#000'; 
+              }}
+            >
               Salvar tarefa
             </Button>
           </Modal.Footer>
