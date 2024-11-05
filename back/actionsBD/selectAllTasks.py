@@ -5,10 +5,10 @@ def select_all_tasks(id_usuario):
     print("ID usuario: ", id_usuario)
     conex = conexao.conectar()
     cursor = conex.cursor()
-    sql = "SELECT * tarefas WHERE ID_USUARIO = %s"
+    sql = "SELECT DATA_TASK FROM tarefa WHERE ID_USUARIO = %s"
     val = (id_usuario, )
     cursor.execute(sql, val)
-    dados_usuario = cursor.fetchall()
+    dados_tarefa = cursor.fetchall()
     conex.close()
-    print(dados_usuario)
-    return dados_usuario
+    #print(dados_tarefa)
+    return dados_tarefa
