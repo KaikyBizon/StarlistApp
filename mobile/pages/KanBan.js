@@ -97,7 +97,7 @@ function Kanban() {
     setUserId(usuario_id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${usuario_id}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${usuario_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ function Kanban() {
 
   const fetchTarefasParaCategoria = async (categoriaId) => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/tarefas/${categoriaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ function Kanban() {
 
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
