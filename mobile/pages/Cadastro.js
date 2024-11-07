@@ -103,7 +103,7 @@ export default function Cadastro({ navigation }) {
     };
 
     try {
-      const resposta = await fetch('http://10.135.60.45:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

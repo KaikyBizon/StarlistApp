@@ -117,9 +117,9 @@ export default styles = StyleSheet.create({
     // Estilo para o cabeçalho do card (título)
     cardHeader: {
         marginBottom: 10,
-        flexDirection:'row', 
-        alignItems:'center',
-        justifyContent:'space-between'
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     cardTitle: {
         fontSize: 18,
@@ -136,7 +136,6 @@ export default styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 5, // Pode ser ajustado para um retângulo sem bordas arredondadas
         marginLeft: 10, // Espaço entre a etiqueta e o título
-
     },
     // Estilo para o corpo do card (descrição)
     cardBody: {
@@ -166,4 +165,105 @@ export default styles = StyleSheet.create({
     icon: {
         marginBottom: 8,
     },
+
+    // Estilos para o Modal de Status de Tarefa
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo escuro semi-transparente
+        justifyContent: 'center', // Centraliza verticalmente
+        alignItems: 'center', // Centraliza horizontalmente
+        position: 'absolute', // Garante que ocupe toda a tela
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
+    modalContent: {
+        height: '40%', // Ajusta a altura do modal
+        width: '50%', // Ajusta a largura do modal
+        left:'23%',
+        backgroundColor: '#696969',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center', // Centraliza o conteúdo do modal
+        justifyContent: 'flex-start', // Garante que os itens fiquem alinhados no topo
+        marginTop: '50%', // Ajuste para mover o modal para baixo
+    },
+
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold', // Título em negrito
+        marginBottom: 20,
+        color: 'black', // Cor escura para o título
+    },
+
+    statusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center', // Alinha os itens verticalmente
+        justifyContent: 'space-between', // Espaça os itens
+        width: '100%', // Largura total do modal
+        marginBottom: 20, // Espaço abaixo do status
+        width: 280,
+    },
+
+    statusText: {
+        fontSize: 18,
+        color: '#69696', // Cor mais suave para o texto do status
+    },
+
+    statusIndicator: {
+        width: 15, // Indicador de status
+        height: 15,
+        borderRadius: 50, // Deixa o círculo arredondado
+        backgroundColor: '#FFD700', // Cor amarela para o status
+    },
+
+    statusButton: {
+        width: 160,
+        marginBottom: 10, // Espaço entre os botões
+        borderRadius: 10, // Bordas arredondadas
+        backgroundColor: '#a0a0a0', // Cor de fundo padrão
+        textAlign: 'center', // Centraliza o texto
+    },
+    
+    input: {
+        borderColor: '#A9A9A9', // Cinza escuro para o input
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 20,
+        width: '100%', // Largura total do campo de input
+    },
+
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        
+    },
+
+    button: {
+        backgroundColor: '#000000', // Cor de fundo preta para o botão
+        padding: 6,
+        borderRadius: 5,
+        width: '56%', // Largura dos botões
+        marginTop: 10,
+    },
+
+    buttonText: {
+        color: '#FFD700', // Texto amarelo para o botão
+        textAlign: 'center', // Centraliza o texto no botão
+    },
+    
+
+    iconContainer: {
+        flexDirection: 'row',    // Alinha os itens horizontalmente
+        alignItems: 'center',    // Alinha os ícones verticalmente no centro
+        justifyContent: 'space-between', // Espaça igualmente os ícones
+    },
+
+    icon: {
+        marginHorizontal: 8,     // Adiciona espaçamento entre os ícones
+    },
+
 });
