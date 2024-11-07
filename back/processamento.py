@@ -13,6 +13,7 @@ from actionsBD.selectPlanos import selecionarPlanos
 from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
 from actionsBD.insertCargoUser import inserirCargo
+from actionsBD.selectAllTasks import select_all_tasks
 from validarEmail import send_email_confirm
 
 from validacoes import (
@@ -85,7 +86,7 @@ def processar_dados(dados):
             dados_processados.get('data'),
             dados_processados.get('horario'),
             dados_processados.get('etiqueta'),
-            dados_processados.get('listaId'),
+            dados_processados.get('lista_id'),
             dados_processados.get('usuario_id')
         ]
 
@@ -134,7 +135,7 @@ def processar_dados(dados):
         mensagens_erro_tarefa.append(
             validar_data(dados_processados.get('data', '')))
         mensagens_erro_tarefa.append(validar_horario(
-            dados_processados.get('horario', '')))
+            dados_processados.get('data'), dados_processados.get('horario')))
         # Filtra apenas os erros que foram encontrados
         mensagens_erro_tarefa = [
             msg for msg in mensagens_erro_tarefa if msg['erro']]
@@ -306,7 +307,7 @@ def processar_dados(dados):
         if not mensagens_erro_tarefa:
             criarTarefa(tarefa)
             dados_tarefa = {'error': False,
-                'Tarefa criada': 'Tarefa criada com sucesso!'}
+                            'Tarefa criada': 'Tarefa criada com sucesso!'}
         else:
             dados_tarefa = {'error': True,
                             'mensagens_erro': mensagens_erro_tarefa}
@@ -321,12 +322,16 @@ def processar_dados(dados):
     # dados_tarefa - retorna quando a tarefa for editada
     # Esta condição verifica se a acao indica um tarefa a ser editada, e caso seja, ele executa a função para inserir os dados no banco e atualizar a tarefa
     if acao == 'editar_tarefa':
-        # Adiciona o ID ao final da lista de dados da tarefa
         tarefa.append(dados_processados.get('id'))
         tarefa.remove(dados_processados.get('usuario_id'))
+        tarefa.remove(dados_processados.get('lista_id'))
         # Chama a função de edição com os dados da tarefa, incluindo o ID
-        editar_tarefa(tarefa)
-        dados_tarefa = {'Tarefa editada': 'Tarefa editada com sucesso!'}
+        if not mensagens_erro_tarefa:
+            print(tarefa)
+            editar_tarefa(tarefa)
+            dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
+        else:
+            dados_tarefa = {'error': True, 'mensagens_erro': mensagens_erro_tarefa}
 
     # Carregar tarefas
     # Kaiky
@@ -344,14 +349,29 @@ def processar_dados(dados):
         dataTarefas = dados_processados.get('dataToCatchTarefas')
         dados_tarefa = selecionar_dados_tarefa(id_usuario, dataTarefas)
 
+    # Carregar todas as tarefas
+    # Kaiky
+    # Criado em 31/10/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # id_usuario - int - usa o id do usuario para buscar as tarefas dele
+    # dados_tarefa - armazena as tarefas do usuario para retornar ao frontend
+    # Retorno:
+    # erro - string - retornar algum erro caso tenha
+    # Esta condição retorna todas as tarefas do banco
+    if acao == 'carregar_todas_tarefas':
+        id_usuario = dados_processados.get('usuarioId')
+        allTasks = select_all_tasks(id_usuario)
+        # Filtra para remover itens `None` e formata a data manualmente como 'aa-mm-dd'
+        formatted_tasks = [f"{date.year % 100:02}-{date.month:02}-{date.day:02}" for (date,) in allTasks if date is not None and date.year >= 1900]
+        dados_tarefa = formatted_tasks
+
+
     if acao == 'verificar_email':
-        print(dados_processados, codigo_confirmacao)
         if str(dados_processados) == str(codigo_confirmacao):
-            dados_cadastro = {'error': False,
-                              'mensagem': 'Código validado com sucesso!'}
+            dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
         else:
-            dados_cadastro = {'error': True,
-                              'mensagem': 'Código inválido. Tente novamente!'}
+            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
 
     # Excluir tarefa
     # Kaiky
@@ -365,19 +385,14 @@ def processar_dados(dados):
     if acao == 'excluirTarefa':
         print(dados_processados)
         id_tarefa = dados_processados.get('tarefaId')
-        lista_id = dados_processados.get('categoriaId')
         # Verifica se `lista_id` é None e o converte para SQL NULL
-        if lista_id is None:
-            lista_id = 'NULL'
 
         print("Id tarefa:", id_tarefa)
-        print(id_tarefa, lista_id)
-        excluir_tarefa(id_tarefa, lista_id)
+        print(id_tarefa)
+        excluir_tarefa(id_tarefa)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
 
-
-
-    if acao == 'selecionar_plano_id' :
+    if acao == 'selecionar_plano_id':
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
     return listaCriada, dados_tarefa, dados_cadastro

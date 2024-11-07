@@ -1,3 +1,33 @@
+/**
+ * Nome do Componente: Informacao
+ *
+ * Descrição Detalhada:
+ *   Componente funcional que exibe informações relacionadas a tarefas e permite ao usuário criar uma nova tarefa através de um modal.
+ *   Utiliza o estado local para gerenciar a visibilidade do modal e o Bootstrap para a estrutura visual.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para controlar a exibição do modal (variável 'show').
+ *   2. As funções 'handleClose' e 'handleShow' são utilizadas para abrir e fechar o modal, respectivamente.
+ *   3. O modal contém campos para inserir o nome do evento, horário, descrição, data do evento e um campo para requisitar participantes.
+ *   4. Os componentes de formulário são estilizados com Bootstrap, incluindo botões e grupos de entrada.
+ *   5. O botão para abrir o modal é estilizado com a classe 'btn-novatarefa' e é representado por um símbolo de adição (+).
+ *
+ * Estrutura JSX:
+ *   - Renderiza um div com a classe 'informacoes', contendo:
+ *     - Um cabeçalho indicando o "1º Trimestre".
+ *     - Uma seção para criar nova tarefa, incluindo um botão que aciona a abertura do modal.
+ *     - Um modal que exibe um formulário para entrada de dados da nova tarefa.
+ *     - O modal contém:
+ *       - Um campo para o nome do evento.
+ *       - Um campo para o horário do evento.
+ *       - Um campo para a descrição do evento.
+ *       - Um campo para a data do evento.
+ *       - Um campo para lembrete.
+ *       - Um campo para requisitar participantes.
+ *       - Botões para fechar o modal e salvar a tarefa.
+ *
+ */
+
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -9,8 +39,8 @@ function Informacao() {
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false); // Função handleClose que oculta o modal ao definir show como false.
+    const handleShow = () => setShow(true); // Função handleShow que exibe o modal ao definir show como true.
 
     return (
         <div className="informacoes">

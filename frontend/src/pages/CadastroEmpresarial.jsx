@@ -1,3 +1,35 @@
+/**
+ * Nome do Componente: CadastroEmpresarial
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que permite o cadastro de informações empresariais, incluindo CNPJ, 
+ *   nome da equipe, número de pessoas na equipe e cargo. Utiliza hooks do React para gerenciar o estado 
+ *   dos campos do formulário e as mensagens de erro, além de realizar uma requisição ao servidor para 
+ *   processar os dados do cadastro.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar os valores do formulário e as mensagens de erro.
+ *   2. Inclui uma função para formatar o CNPJ conforme o usuário digita.
+ *   3. A validação do número de pessoas na equipe é feita para impedir valores negativos.
+ *   4. Utiliza o hook 'useNavigate' do React Router para redirecionar o usuário após o cadastro.
+ *   5. As mensagens de erro são exibidas abaixo dos respectivos campos quando há um erro na validação.
+ *
+ * Estado:
+ *   - formValues: Objeto que armazena os valores do formulário (cnpj, nomeEquipe, pessoasEquipe, cargo, emailUser).
+ *   - mensagensErro: Array que contém mensagens de erro retornadas pelo servidor.
+ *
+ * Funções:
+ *   - handleChange: Atualiza os valores dos campos do formulário, aplicando formatação ao CNPJ e
+ *                   validando o número de pessoas na equipe.
+ *   - handleSubmit: Envia os dados do formulário para o servidor, lida com a resposta e
+ *                   redireciona o usuário se o cadastro for bem-sucedido.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um formulário com campos para entrada de CNPJ, nome da equipe, número de pessoas
+ *     na equipe e cargo, além de botões para enviar ou cancelar o cadastro.
+ *   - Mensagens de erro são exibidas em listas abaixo de cada campo que apresenta problemas.
+ */
+ 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -24,6 +56,14 @@ function CadastroEmpresarial() {
         emailUser: localStorage.getItem('email')
     });
 
+    // Função handleChange para atualizar os valores dos campos do formulário de cadastro empresarial
+    // 
+    // Alterado em 
+    // Parâmetros de entrada:
+    // e - objeto - evento disparado ao alterar um campo de input no formulário
+    // Retorno:
+    // Atualiza o estado `formValues` com os novos valores dos campos, aplicando formatação ao CNPJ e validando o número de pessoas na equipe
+    // Esta função verifica qual campo está sendo alterado, formata o valor do CNPJ, impede que o número de pessoas da equipe seja negativo e atualiza o estado `formValues` de acordo com as mudanças feitas no formulário de cadastro empresarial
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -51,6 +91,17 @@ function CadastroEmpresarial() {
     const [mensagensErro, setMensagensErro] = useState([]);
     const navigate = useNavigate();
 
+    // Função handleSubmit para submeter o cadastro empresarial
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // - e: evento de submissão do formulário
+    // Retorno:
+    // - Faz uma requisição ao servidor com os dados do formulário de cadastro empresarial
+    // - Se houver erros no servidor, as mensagens de erro são exibidas
+    // - Se bem-sucedido, redireciona para a página de pagamento e limpa os campos do formulário
+    // Esta função envia os dados do formulário para o servidor, utilizando o método POST para o endpoint 'http://10.135.60.7:8085/receber-dados'. 
+    // Caso o resultado indique um erro, as mensagens de erro são exibidas. Caso contrário, os dados são processados com sucesso e o usuário é redirecionado para a página de pagamento.
     const handleSubmit = async (e) => {
         console.log(formValues)
         e.preventDefault();

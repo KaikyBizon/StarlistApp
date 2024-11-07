@@ -1,3 +1,30 @@
+/**
+ * Nome do Componente: AddParticipantes
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que exibe um modal para adicionar participantes a uma equipe.
+ *   Utiliza hooks do React para gerenciar a exibição do modal e o estado dos inputs.
+ *   Permite que o usuário insira o e-mail do participante e selecione o cargo desejado em um dropdown.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para controlar a visibilidade do modal.
+ *   2. O modal contém um formulário onde o usuário pode inserir o e-mail do participante e selecionar um cargo.
+ *   3. O componente usa `react-bootstrap` para a estrutura visual e o estilo dos componentes.
+ *
+ * Estado:
+ *   - show: Controla a visibilidade do modal para adicionar participantes.
+ *
+ * Funções:
+ *   - handleClose: Função que define o estado 'show' como falso, fechando o modal.
+ *   - handleShow: Função que define o estado 'show' como verdadeiro, abrindo o modal.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um item de dropdown que, ao ser clicado, abre o modal para adicionar participantes.
+ *   - O modal inclui um título, um formulário com campos para e-mail e seleção de cargo, 
+ *     e botões para fechar o modal ou enviar o convite.
+ *
+ */
+
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -7,7 +34,6 @@ import '../StylesPages/AddParticipantes.css'
 
 function AddParticipantes() {
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 

@@ -1,3 +1,55 @@
+/**
+ * Nome do Componente: Kanban
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React que implementa um sistema de Kanban para gerenciar 
+ *   tarefas em diferentes categorias. O componente permite adicionar, editar e excluir 
+ *   listas e tarefas, além de exibir as informações relacionadas a cada tarefa, como 
+ *   data e horário. Utiliza hooks do React para gerenciar estados e renderizar a interface 
+ *   de forma dinâmica.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o hook 'useState' para gerenciar estados como tarefas, categorias, 
+ *      modais de exclusão e formulários.
+ *   2. As tarefas são organizadas em categorias e cada categoria é renderizada separadamente.
+ *   3. O componente implementa modais para confirmar exclusões de listas e tarefas, 
+ *      garantindo que o usuário não exclua acidentalmente informações.
+ *   4. O formulário para adicionar novas tarefas é exibido condicionalmente, dependendo do 
+ *      estado atual.
+ *
+ * Estado:
+ *   - tarefasPorCategoria: Objeto que mapeia categorias para suas respectivas tarefas.
+ *   - exibirFormulario: Controla qual formulário de tarefa está visível.
+ *   - novaLista: Armazena o nome da nova lista que o usuário deseja adicionar.
+ *   - modalVisivel: Controla a visibilidade do modal de confirmação de exclusão de listas.
+ *   - modalExclusaoTarefaVisivel: Controla a visibilidade do modal de confirmação de exclusão de tarefas.
+ *   - tarefaParaExcluir: Armazena a tarefa que está prestes a ser excluída.
+ *   - exibirModal: Controla a exibição do modal de edição de nomes de listas.
+ *   - nomeEditando: Armazena o novo nome que está sendo editado para uma lista.
+ *   - tarefaSelecionada: Armazena a tarefa selecionada para edição.
+ *   - showFormulario: Controla a exibição do formulário de edição de tarefas.
+ *
+ * Funções:
+ *   - handleEditarTitle: Abre o modal para editar o título da lista.
+ *   - handleEditarClick: Abre o formulário para editar a tarefa selecionada.
+ *   - handleAbrirModalExclusaoTarefa: Abre o modal de confirmação para excluir uma tarefa.
+ *   - handleExibirFormulario: Alterna a exibição do formulário para adicionar uma nova tarefa.
+ *   - handleDeleteLista: Exclui a lista correspondente ao ID fornecido.
+ *   - confirmarExclusao: Confirma a exclusão da lista e atualiza o estado.
+ *   - cancelarExclusao: Fecha o modal de confirmação sem excluir.
+ *   - confirmarExclusaoTarefa: Confirma a exclusão da tarefa e atualiza o estado.
+ *   - handleFecharModalExclusaoTarefa: Fecha o modal de exclusão de tarefas.
+ *   - handleChange: Atualiza o valor do campo de nova lista conforme o usuário digita.
+ *   - handleSubmit: Envia a nova lista para ser adicionada e limpa o campo de entrada.
+ *   - handleFecharModal: Fecha o modal de edição de listas.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um cabeçalho, um calendário, as categorias de tarefas em colunas, 
+ *     e uma seção para adicionar novas listas. Cada categoria exibe suas tarefas 
+ *     associadas, botões para adicionar tarefas e opções para editar ou excluir listas.
+ *   - Inclui modais de confirmação para ações críticas, como exclusões de listas e tarefas.
+ */
+
 import Geral from '../components/Geral';
 import Cabecalho from '../components/Cabecalho';
 import Formulario from '../components/Formulario';
@@ -14,9 +66,10 @@ function Kanban({ onListaSalva }) {
     const [listaParaExcluir, setListaParaExcluir] = useState(null);// Define um estado 'listaParaExcluir' como 'null', utilizado para armazenar o ID da lista que está sendo selecionada para exclusão.
     const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
-    const [editandoListaId, setEditandoListaId] = useState(null); // Estado para controlar qual lista está sendo editada
     const [exibirModal, setExibirModal] = useState(null);
     const [nomeEditando, setNomeEditando] = useState('');
+    const [modalExclusaoTarefaVisivel, setModalExclusaoTarefaVisivel] = useState(false)
+    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null)
 
     // Define um estado 'dadosList' como um objeto inicial com campos 'nome', 'tarefa_id', e 'usuario_id'.
     // 'nome' é uma string vazia, enquanto 'tarefa_id' e 'usuario_id' são obtidos do 'localStorage'.
@@ -345,26 +398,102 @@ function Kanban({ onListaSalva }) {
         setTarefaSelecionada(null); // Limpa a tarefa selecionada
     };
 
-    // Função para excluir uma tarefa específica
-    const handleDeleteTarefa = async (tarefaId, categoriaId) => {
+    /**
+* Nome da função: handleDeleteTarefa
+* Autor: 
+* Data de criação: 
+* Parâmetros de entrada:
+*   - `tarefaId`: ID da tarefa a ser excluída.
+*   - `categoriaId`: ID da categoria à qual a tarefa pertence.
+* Retorno:
+*   - Nenhum retorno direto. A função faz uma requisição para deletar a tarefa no backend e atualiza o estado das categorias e tarefas após a exclusão.
+* Descrição/observações:
+*   - Esta função é assíncrona e é chamada ao confirmar a exclusão de uma tarefa.
+*   - Envia uma requisição `POST` para o endpoint `http://10.135.60.17:8085/receber-dados` com `acao: 'excluirTarefa'` e o `tarefaId` e `categoriaId` como dados.
+*   - Caso a resposta indique erro, um erro é logado no console.
+*   - Caso a exclusão seja bem-sucedida, chama `fetchCategoriasETarefas()` para atualizar a lista de tarefas e categorias visível ao usuário.
+*   - Em caso de erro de conexão ou outro problema com a requisição, o erro é capturado e exibido no console.
+*/
+    const handleDeleteTarefa = async (tarefaId) => {
+        console.log('ID da tarefa:', tarefaId);
         try {
             const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
-                method: 'POST',
+                method: 'POST', // Mantenha ou altere conforme necessário
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'excluirTarefa', dados: { tarefaId, categoriaId } })
+                body: JSON.stringify({ acao: 'excluirTarefa', dados: { tarefaId } })
             });
 
-            const resultado = await resposta.json()
-
-            if (resposta.error) {
-                console.error('Erro ao excluir tarefa');
-            } else {
-                fetchCategoriasETarefas();
+            if (!resposta.ok) {
+                const erroDetalhado = await resposta.json();
+                console.error('Erro ao excluir tarefa:', erroDetalhado);
+                return; // Para o processamento se houver erro
             }
+
+            const resultado = await resposta.json();
+            console.log('Resultado da exclusão:', resultado);
+            fetchCategoriasETarefas();
         } catch (error) {
             console.error('Erro ao excluir tarefa:', error);
+        }
+    };
+
+    /**
+* Nome da função: handleAbrirModalExclusaoTarefa
+* Autor: Gabriel
+* Data de criação: 31/10/2024
+* Parâmetros de entrada:
+*   - `tarefa`: objeto da tarefa que o usuário deseja excluir. Contém informações como `id` e `categoriaId`.
+* Retorno:
+*   - Nenhum retorno direto. A função atualiza o estado `modalExclusaoTarefaVisivel` para `true` e `tarefaParaExcluir` para a tarefa selecionada.
+* Descrição/observações:
+*   - Esta função é chamada ao clicar no ícone de exclusão de uma tarefa.
+*   - Ela define a tarefa que será excluída (`tarefaParaExcluir`) e torna o modal de confirmação visível.
+*   - O modal aparece para que o usuário possa confirmar ou cancelar a exclusão da tarefa selecionada.
+*/
+    const handleAbrirModalExclusaoTarefa = (tarefa) => {
+        setTarefaParaExcluir(tarefa);
+        setModalExclusaoTarefaVisivel(true);
+    };
+
+    /**
+     * Nome da função: handleFecharModalExclusaoTarefa
+     * Autor: Gabriel
+     * Data de criação: 31/10/2024
+     * Parâmetros de entrada:
+     *   - Nenhum parâmetro de entrada direto.
+     * Retorno:
+     *   - Nenhum retorno direto. A função atualiza os estados `modalExclusaoTarefaVisivel` para `false` e `tarefaParaExcluir` para `null`.
+     * Descrição/observações:
+     *   - Esta função é chamada para fechar o modal de confirmação de exclusão de tarefa.
+     *   - Define `modalExclusaoTarefaVisivel` como `false` para ocultar o modal e redefine `tarefaParaExcluir` para `null`.
+     *   - Utilizada para cancelar a exclusão da tarefa, retornando ao estado normal da interface.
+     */
+    const handleFecharModalExclusaoTarefa = () => {
+        setModalExclusaoTarefaVisivel(false);
+        setTarefaParaExcluir(null);
+    };
+
+    /**
+    * Nome da função: confirmarExclusaoTarefa
+    * Autor: Gabriel
+    * Data de criação: 31/10/2024
+    * Parâmetros de entrada:
+    *   - Nenhum parâmetro de entrada direto.
+    * Retorno:
+    *   - Nenhum retorno direto. A função invoca `handleDeleteTarefa` passando `id` e `categoriaId` da tarefa a ser excluída.
+    * Descrição/observações:
+    *   - Esta função é chamada para confirmar a exclusão de uma tarefa específica.
+    *   - Se `tarefaParaExcluir` estiver definida, a função chama `handleDeleteTarefa` com o ID da tarefa e da categoria para proceder com a exclusão.
+    *   - Após a exclusão, o modal é fechado e `tarefaParaExcluir` é redefinido para `null`.
+    *   - Permite ao usuário remover permanentemente a tarefa selecionada da lista.
+    */
+    const confirmarExclusaoTarefa = () => {
+
+        if (tarefaParaExcluir) {
+            handleDeleteTarefa(tarefaParaExcluir.id); // Ajuste conforme necessário
+            handleFecharModalExclusaoTarefa();
         }
     };
 
@@ -389,8 +518,8 @@ function Kanban({ onListaSalva }) {
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
                                         <div className='acoes-tarefa'>
-                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick({ ...tarefa, listaId: categoria.id })} />
-                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleDeleteTarefa(tarefa.id, categoria.id)} />
+                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
+                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleAbrirModalExclusaoTarefa(tarefa)} />
                                         </div>
                                     </div>
                                 ))}
@@ -444,6 +573,18 @@ function Kanban({ onListaSalva }) {
                             <div>
                                 <button className="botoesConfirmarExclusao" onClick={confirmarExclusao}>Confirmar</button>
                                 <button className="botoesConfirmarExclusao" onClick={cancelarExclusao}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {modalExclusaoTarefaVisivel && (
+                    <div className="modal-confirmacao">
+                        <div className="modalContent">
+                            <p>Deseja mesmo excluir a tarefa "{tarefaParaExcluir?.titulo}"?</p>
+                            <div>
+                                <button className="botoesConfirmarExclusao" onClick={confirmarExclusaoTarefa}>Confirmar</button>
+                                <button className="botoesConfirmarExclusao" onClick={handleFecharModalExclusaoTarefa}>Cancelar</button>
                             </div>
                         </div>
                     </div>

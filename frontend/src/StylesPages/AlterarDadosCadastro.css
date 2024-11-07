@@ -47,14 +47,15 @@ body {
 
 .botao_salvar_dados {
     background-color: #faed27;
+    color: #000;
     border: none;
     width: 80px;
     height: 37px;
 }
 
 .botao_salvar_dados:hover {
-    opacity: 0.7;
-    background-color: #FFC222;
+    background-color: #000;
+    color: #faed27;
 }
 
 .botao_deletar_dados {

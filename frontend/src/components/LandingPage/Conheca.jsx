@@ -1,3 +1,18 @@
+/**
+ * Nome do Componente: Conheca
+ *
+ * Descrição Detalhada:
+ *   O componente funcional `Conheca` apresenta uma seção na página que
+ *   destaca as principais características e benefícios do serviço ou produto
+ *   oferecido. A seção é organizada em um layout de grade que inclui cards
+ *   com títulos, descrições e imagens para cada benefício.
+ *
+ * Estrutura JSX:
+ *   - O componente é encapsulado por uma `<section>` com o ID `conhecer`, que
+ *     inclui um título principal e uma grade de cards.
+ *
+ */
+
 import './Conheca.css'
 function Conheca() {
     return (

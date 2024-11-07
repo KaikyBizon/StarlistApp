@@ -87,23 +87,20 @@ def validar_data(data):
 # Função que irá validar o horario da tarefa, se selecionado corretamente, não aparecerá mensagem, se não, aparecerá a mensagem de erro.
 
 
-def validar_horario(horario):
+def validar_horario(data, horario):
     try:
-        # Converte o horário selecionado para um objeto datetime com a data atual
-        hora_selecionada = datetime.strptime(horario, '%H:%M').replace(
-            year=datetime.now().year,
-            month=datetime.now().month,
-            day=datetime.now().day
-        )
+        # Converte o horário selecionado para um objeto datetime com a data selecionada
+        data_hora_selecionada = datetime.strptime(
+            f"{data} {horario}", '%Y-%m-%d %H:%M')
 
-        # Obtém o horário atual
-        hora_atual = datetime.now().replace(microsecond=0, second=0, minute=0)
+        # Obtém a data e hora atuais
+        data_hora_atual = datetime.now()
 
-        # Verifica se a hora selecionada é anterior ao momento atual
-        if hora_selecionada < hora_atual:
+        # Verifica se a data é hoje e se o horário é anterior ao horário atual
+        if data_hora_selecionada.date() == data_hora_atual.date() and data_hora_selecionada < data_hora_atual:
             return {'erro': True, 'mensagem_horario': 'O horário não pode ser anterior ao horário atual.'}
 
         return {'erro': False, 'mensagem_horario': ''}
 
     except ValueError:
-        return {'erro': True, 'mensagem_horario': 'Formato de hora inválido.'}
+        return {'erro': True, 'mensagem_horario': 'Formato de data ou hora inválido.'}

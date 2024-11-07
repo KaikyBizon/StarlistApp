@@ -1,3 +1,32 @@
+/**
+ * Nome do Componente: Content
+ *
+ * Descrição Detalhada:
+ *   Componente funcional React responsável pela renderização do conteúdo principal da aplicação,
+ *   utilizando o React Router para gerenciar as rotas internas. O componente define as rotas
+ *   disponíveis para a navegação, cada uma mapeada para um componente específico que representa
+ *   uma página da aplicação.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza o componente `Routes` do `react-router-dom` para definir as rotas da aplicação.
+ *   2. As rotas mapeiam caminhos de URL específicos para seus respectivos componentes, como
+ *      `Home`, `LoginForm`, `Cadastro`, `Kanban`, entre outros.
+ *   3. Inclui uma rota padrão que renderiza o componente `Home` ao acessar a raiz da aplicação.
+ *   4. Se uma rota não for encontrada, um componente `NotFound` pode ser adicionado para lidar
+ *      com erros de navegação.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um elemento <main> que contém um conjunto de rotas definidas por meio do componente
+ *     `Routes`.
+ *     - Cada `<Route>` especifica um caminho (`path`) e o componente a ser renderizado
+ *       (`element`) quando a rota correspondente é acessada.
+ *
+ * Parâmetros de Entrada:
+ *   - `props`: Propriedades passadas para o componente, embora não sejam utilizadas diretamente
+ *              neste componente específico.
+ *
+ */
+
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
 import NotFound from "../pages/NotFound";

@@ -1,3 +1,34 @@
+/**
+ * Nome do Componente: Options
+ *
+ * Descrição Detalhada:
+ *   Componente funcional que representa a barra de navegação e opções da aplicação, incluindo links para 
+ *   diferentes seções como Kanban e ToDo. Ele também exibe um botão para criar uma nova tarefa, mas 
+ *   apenas na seção ToDo. O componente é responsável por verificar o plano do usuário e condicionalmente 
+ *   renderizar opções de gerenciamento de participantes e equipe com base nesse plano.
+ *
+ * Observações Pertinentes:
+ *   1. Utiliza hooks do React como useState e useEffect para gerenciar estados e efeitos colaterais.
+ *   2. O estado `planoUsuario` armazena o ID do plano do usuário, obtido por meio de uma requisição ao backend.
+ *   3. O componente usa `useLocation` do React Router para determinar a rota atual e exibir o botão de nova tarefa 
+ *      apenas quando a rota corresponde a '/todo'.
+ *   4. O botão "Nova Tarefa" exibe um formulário para adicionar uma nova tarefa ao ser clicado.
+ *   5. A renderização condicional garante que as opções "Participantes" e "Equipe" sejam exibidas apenas se 
+ *      o plano do usuário for igual a 4.
+ *
+ * Funções Principais:
+ *   - showPlanoId: Função assíncrona que busca o ID do plano do usuário no backend e atualiza o estado `planoUsuario`.
+ *   - handleShowFormulario: Função que exibe o formulário de nova tarefa.
+ *   - handleCloseFormulario: Função que oculta o formulário de nova tarefa.
+ *
+ * Estrutura JSX:
+ *   - Renderiza um cabeçalho de navegação (Navbar) que contém:
+ *     - Links para as seções Kanban e ToDo, e possivelmente links para "Participantes" e "Equipe" 
+ *       dependendo do plano do usuário.
+ *     - Um botão "Nova Tarefa" que é exibido apenas na seção ToDo.
+ *
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Container, Nav, Navbar, NavDropdown, Modal, Button, Form, Alert } from 'react-bootstrap';
 import Formulario from './Formulario.jsx';
@@ -10,6 +41,15 @@ function Options() {
     const location = useLocation(); // Usar useLocation para obter o caminho atual
     const [planoUsuario, setPlanoUsuario] = useState(null);
 
+    // Função showPlanoId para obter e definir o ID do plano do usuário a partir do backend
+    //
+    // Alterado em 
+    // Parâmetros de entrada:
+    // Nenhum
+    // Retorno:
+    // Realiza uma requisição POST para buscar o ID do plano do usuário armazenado no backend e atualiza o estado com o valor retornado.
+    // Esta função obtém o ID do usuário no localStorage, envia a requisição para o backend solicitando o ID do plano associado, 
+    // e converte o resultado para número, armazenando-o no estado; em caso de erro, loga a falha no console.
     const showPlanoId = async () => {
         const id = localStorage.getItem("ID");
         try {
@@ -27,14 +67,17 @@ function Options() {
         }
     };
 
+    // Função handleShowFormulario para exibir o formulário ao definir o estado showFormulario como verdadeiro
     const handleShowFormulario = () => {
         setShowFormulario(true);
     };
 
+    // Função handleCloseFormulario para ocultar o formulário ao definir o estado showFormulario como falso
     const handleCloseFormulario = () => {
         setShowFormulario(false);
     };
 
+    // useEffect para chamar a função showPlanoId ao montar o componente, carregando o ID do plano do usuário
     useEffect(() => {
         showPlanoId();
     }, []);
