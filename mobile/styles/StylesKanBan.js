@@ -14,9 +14,11 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    backgroundColor: '#555',
-    color: '#FFF',
+    backgroundColor: '#222',
+    color: '#FAED27',
     borderRadius: 5,
+    borderColor: '#faed27',
+    borderWidth: 1,
     padding: 10,
     marginRight: 10,
   },
@@ -43,12 +45,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#faed27',
+    marginBottom: 5,
   },
   tarefaItem: {
-    marginTop: 8,
     padding: 8,
     backgroundColor: '#222',
     borderRadius: 4,
+    marginBottom: 10,
   },
   tituloTarefa: {
     fontSize: 16,
@@ -211,6 +214,128 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Alinha verticalmente os botões
     justifyContent: 'space-between', // Espaço entre os botões
     marginTop: 10, // Adiciona um espaço acima se necessário
+  },
+  categoriaLista: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8, // ajuste conforme necessário
+    width: '100%', // para ocupar toda a largura disponível
+  },
+  editarLista: {
+    width: 24, // ajuste o tamanho conforme necessário
+    height: 24,
+    marginLeft: 8,
+    alignSelf: 'flex-end',
+  },
+  modalContainerList: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContentList: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  modalTitleList: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  inputModalList: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 15,
+    padding: 5,
+  },
+  modalButtonsList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  btnConfirmList: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+  },
+  btnCancelList: {
+    backgroundColor: '#f44336',
+    padding: 10,
+    borderRadius: 5,
+  },
+  btnTextList: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  editarTask: {
+    width: 20,
+    height: 20,
+    marginLeft: 10, // Espaço entre os ícones
+  },
+  excluirTask: {
+    width: 20,
+    height: 20,
+    marginLeft: 10, // Espaço entre os ícones
+  },
+  tarefaRow: {
+    flexDirection: 'row', // Alinha os elementos na horizontal
+    justifyContent: 'space-between', // Distribui o espaço entre os itens
+    alignItems: 'center', // Alinha verticalmente os itens
+  },
+  editarDeleteTask: {
+    flexDirection: 'row', // Coloca os ícones lado a lado
+    alignItems: 'center', // Alinha os ícones verticalmente
+  },
+  modalContainerList: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo escurecido para o modal
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContenList: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: '#333', // Cor de fundo do modal
+    borderRadius: 10, // Bordas arredondadas
+    alignItems: 'center',
+  },
+  modalTitleList: {
+    fontSize: 16,
+    marginBottom: 15,
+    color: '#999',
+  },
+  inputModalList: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#444',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  modalButtonsList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  btnConfirmList: {
+    backgroundColor: '#FAED27', // Cor de fundo para o botão de confirmar
+    padding: 10,
+    borderRadius: 5,
+    width: '45%',
+    alignItems: 'center',
+  },
+  btnCancelList: {
+    backgroundColor: '#F44336', // Cor de fundo para o botão de cancelar
+    padding: 10,
+    borderRadius: 5,
+    width: '45%',
+    alignItems: 'center',
+  },
+  btnTextList: {
+    color: '#222',
+    fontWeight: 'bold',
   },
 });
 export default styles;
