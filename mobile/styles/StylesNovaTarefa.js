@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     // Estilo para o fundo da tela
     background: {
         flex: 1,
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#1e1e1e',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
     },
     // Estilo para os campos de entrada de texto
     inputs: {
-        backgroundColor: '#cecece',
-        width: '90%',
+        backgroundColor: '#333',
+        width: '100%',
         height: 50,
         borderRadius: 10,
         fontFamily: 'Kanit_500Medium',
-        color: "black",
+        color: '#FFF88E',
     },
     // Estilo específico para campos de entrada de data
     inputsData: {
@@ -35,9 +35,12 @@ const styles = StyleSheet.create({
     },
     // Estilo para rótulos de texto
     label: {
-        color: '#cecece',
+        color: '#FFF88E',
         fontSize: 20,
         fontFamily: 'Kanit_500Medium',
+        textAlign: 'left', // Alinha o texto da label à esquerda
+        alignSelf: 'flex-start', // Garante que a label fique à esquerda do contêiner
+        marginBottom: 5,
     },
     // Container para agrupar campos de entrada
     containerInputs: {
@@ -48,8 +51,8 @@ const styles = StyleSheet.create({
     },
     // Estilo específico para os botões de data e hora
     buttonDateAndTime: {
-        width: 166,  
-        marginHorizontal: 10,  
+        width: 192,
+        marginHorizontal: 10,
         height: 50,
         backgroundColor: '#faed27',
         alignItems: 'center',
@@ -67,24 +70,48 @@ const styles = StyleSheet.create({
     },
     // Estilo para rótulos de entrada de texto
     inputsLabel: {
-        width: '100%',
-        alignItems: 'center',
+        width: '90%', // Mantém a largura do input sem centralizar o conteúdo
         marginTop: 10,
+        alignSelf: 'center', // Mantém o contêiner centralizado na tela
+    },
+    // Contêiner para alinhar os botões na mesma linha
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+        marginTop: 15,
+        alignSelf: 'center',
     },
     // Estilo para o botão de envio
     btnSubmit: {
         backgroundColor: '#faed27',
-        marginTop: 15,
         borderRadius: 10,
-        padding: 20,
-        width: '70%',
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        width: '45%',
         justifyContent: 'center',
         alignItems: 'center',
     },
     // Estilo para o texto do botão de envio
     submitTxt: {
-        fontSize: 20,
+        fontSize: 14,
         fontFamily: 'Kanit_500Medium',
+    },
+    // Estilo para o botão de Cancelar
+    btnCancel: {
+        backgroundColor: 'red',
+        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        width: '45%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    // Estilo para o texto do botão de Cancelar
+    cancelTxt: {
+        fontSize: 14,
+        fontFamily: 'Kanit_500Medium',
+        color: '#222',
     },
     // Estilo para botões gerais
     button: {
@@ -101,6 +128,7 @@ const styles = StyleSheet.create({
     // Estilo para o texto dos botões
     buttonText: {
         fontFamily: 'Kanit_500Medium',
+        fontSize: 18,
     },
     // Estilo específico para seleção de tempo
     selectTime: {
@@ -109,7 +137,7 @@ const styles = StyleSheet.create({
     // Container para o picker (seletor)
     pickerContainer: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#222',
         borderRadius: 10,
         overflow: 'hidden',
         justifyContent: 'center',
@@ -118,6 +146,7 @@ const styles = StyleSheet.create({
     picker: {
         height: 50,
         width: '100%',
+        color:'#FFF88E'
     },
 
 })

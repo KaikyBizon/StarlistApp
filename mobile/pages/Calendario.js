@@ -26,7 +26,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity ,StyleSheet } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import MenuScreen from '../components/Menu.js';
 
@@ -53,29 +53,46 @@ const CalendarScreen = ({ navigation }) => {
         <View style={styles.calendario}>
             {/* Componente MenuScreen para o menu da aplicação */}
             <MenuScreen />
-
-            {/* Componente de calendário */}
-            <Calendar
-                // Função que é chamada quando um dia é pressionado
-                onDayPress={handleDayPress}
-                // Configura as datas marcadas
-                markedDates={{
-                    ...Object.keys(tasks).reduce((acc, date) => {
-                        acc[date] = { marked: true, dotColor: '#faed27' }; // Marca a data e define a cor do ponto
-                        return acc;
-                    }, {})
-                }}
-                // Personalização do tema do calendário
-                theme={{
-                    calendarBackground: '#9d9d9d', // Cor de fundo do calendário
-                    dayTextColor: '#494547', // Cor do texto dos dias
-                    todayTextColor: '#faed27', // Cor do texto do dia atual
-                    selectedDayBackgroundColor: '#faed27', // Cor de fundo do dia selecionado
-                    arrowColor: '#faed27', // Cor das setas de navegação do mês
-                    monthTextColor: '#faed27', // Cor do texto do mês
-                }}
-            />
+            <View style={styles.calendarBackground}>
+                {/* Componente de calendário */}
+                <Calendar
+                    // Configura as datas marcadas
+                    markedDates={{
+                        ...Object.keys(tasks).reduce((acc, date) => {
+                            acc[date] = { marked: true, dotColor: '#faed27' }; // Marca a data e define a cor do ponto
+                            return acc;
+                        }, {})
+                    }}
+                    // Personalização do tema do calendário
+                    theme={{
+                        calendarBackground: 'transparent', // Cor de fundo do calendário
+                        todayTextColor: '#faed27', // Cor do texto do dia atual
+                        selectedDayBackgroundColor: '#faed27', // Cor de fundo do dia selecionado
+                        arrowColor: '#faed27', // Cor das setas de navegação do mês
+                        monthTextColor: '#faed27', // Cor do texto do mês
+                    }}
+                    dayComponent={({ date, state }) => {
+                        return (
+                            // Função que é chamada quando um dia é pressionado
+                            <TouchableOpacity
+                                style={styles.dayContainer}
+                                onPress={() => handleDayPress(date)} 
+                            >
+                                <Text
+                                    style={[
+                                        styles.dayText,
+                                        state === 'today' && styles.todayText,
+                                        state === 'disabled' && styles.disabledText,
+                                    ]}
+                                >
+                                    {date.day}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    }}
+                />
         </View>
+        </View >
     );
 };
 
@@ -83,8 +100,25 @@ const CalendarScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     calendario: {
         flex: 1,
-        backgroundColor: '#9d9d9d',
-    }
+        backgroundColor: '#1e1e1e',
+    },
+    calendarBackground: {
+        flex: 1,
+        backgroundColor: '#1e1e1e',
+    },
+    dayContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dayText: {
+        color: '#fffccc', // Cor padrão para os dias
+    },
+    todayText: {
+        color: '#faed27', // Cor para o dia atual
+    },
+    disabledText: {
+        color: '#9d9d9d', // Cor para dias desativados
+    },
 });
 
 export default CalendarScreen;

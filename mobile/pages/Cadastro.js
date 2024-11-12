@@ -103,7 +103,7 @@ export default function Cadastro({ navigation }) {
     };
 
     try {
-      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,20 +134,7 @@ export default function Cadastro({ navigation }) {
         setMensagensErro(mensagens);
         setModalVisible(true); // Exibir modal com as mensagens de erro
       } else {
-        switch (formValues.plano) {
-          case 'gratuito':
-            navigation.navigate('Login');
-            break;
-          case 'mensal':
-          case 'anual':
-            navigation.navigate('Pagamento');
-            break;
-          case 'empresarial':
-            navigation.navigate('CadastroEmpresarial');
-            break;
-          default:
-            break;
-        }
+        navigation.navigate('VerificarEmail')
       }
 
     } catch (error) {
