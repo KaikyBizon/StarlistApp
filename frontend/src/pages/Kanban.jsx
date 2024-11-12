@@ -63,13 +63,15 @@ function Kanban({ onListaSalva }) {
     const [novaLista, setNovaLista] = useState('');// Define um estado 'novaLista' como uma string vazia, utilizado para armazenar o nome de uma nova lista a ser criada.
     const [exibirFormulario, setExibirFormulario] = useState(false);// Define um estado 'exibirFormulario' como 'false', utilizado para controlar a visibilidade do formulário para criar uma nova lista.
     const [modalVisivel, setModalVisivel] = useState(false);// Define um estado 'modalVisivel' como 'false', utilizado para controlar a visibilidade de um modal (por exemplo, confirmação de exclusão).
+    const [novoStatus, setNovoStatus] = useState(''); // Status selecionado no modal
     const [listaParaExcluir, setListaParaExcluir] = useState(null);// Define um estado 'listaParaExcluir' como 'null', utilizado para armazenar o ID da lista que está sendo selecionada para exclusão.
     const [showFormulario, setShowFormulario] = useState(false); // Controle de exibição do formulário
     const [tarefaSelecionada, setTarefaSelecionada] = useState(null); // Tarefa selecionada para edição
     const [exibirModal, setExibirModal] = useState(null);
     const [nomeEditando, setNomeEditando] = useState('');
     const [modalExclusaoTarefaVisivel, setModalExclusaoTarefaVisivel] = useState(false)
-    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null)
+    const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null);
+    const [modalStatusVisivel, setModalStatusVisivel] = useState(false);
 
     // Define um estado 'dadosList' como um objeto inicial com campos 'nome', 'tarefa_id', e 'usuario_id'.
     // 'nome' é uma string vazia, enquanto 'tarefa_id' e 'usuario_id' são obtidos do 'localStorage'.
@@ -103,7 +105,7 @@ function Kanban({ onListaSalva }) {
     // Função para buscar tarefas para cada lista específica
     const fetchTarefasParaCategoria = async (categoriaId) => {
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}`, {
+            const resposta = await fetch(`http://10.135.60.26:8085/tarefas/${categoriaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +153,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`http://10.135.60.26:8085/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,7 +224,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -261,7 +263,7 @@ function Kanban({ onListaSalva }) {
 
     const handleEditList = async (listaId) => {
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -335,7 +337,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`http://10.135.60.26:8085/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -417,7 +419,7 @@ function Kanban({ onListaSalva }) {
     const handleDeleteTarefa = async (tarefaId) => {
         console.log('ID da tarefa:', tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
                 method: 'POST', // Mantenha ou altere conforme necessário
                 headers: {
                     'Content-Type': 'application/json',
@@ -497,6 +499,25 @@ function Kanban({ onListaSalva }) {
         }
     };
 
+    const handleAbrirModalStatus = (tarefa) => {
+        setNovoStatus(tarefa.status);  // Define o status inicial da tarefa 
+        setModalStatusVisivel(true);
+    };
+
+    const handleFecharModalStatus = () => {
+        setModalStatusVisivel(false); // Fecha o modal
+    };
+
+    // Função para validar o status antes de enviar
+    const validarDados = async (status) => {
+        if (!status) {
+            Alert.alert('Erro', 'Por favor, selecione um status.');
+            return false;
+        }
+        return true;
+    };
+
+    
     return (
         <>
             <Cabecalho />
@@ -517,20 +538,22 @@ function Kanban({ onListaSalva }) {
                                         <h5 className='titulo-tarefa'>{tarefa.titulo}</h5>
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
-                                        <div className='acoes-tarefa'>
-                                            <img className='editar-tarefa' src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
-                                            <img className='excluir-tarefa' src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleAbrirModalExclusaoTarefa(tarefa)} />
+                                        <div className="acoes-tarefa">
+                                            <img className="nova-imagem" src="../../public/images/tres-pontos.png" alt="Status da tarefa" onClick={() => handleAbrirModalStatus(tarefa)} />
+                                            <img className="editar-tarefa" src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
+                                            <img className="excluir-tarefa" src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleAbrirModalExclusaoTarefa(tarefa)} />
                                         </div>
+
                                     </div>
                                 ))}
-                                <div className="formulario-fixo">
+                                <div className="formulario-fixo">'
                                     <button onClick={() => handleExibirFormulario(categoria.id)} className='nova-tarefa'>Nova tarefa</button>
                                     {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
                                     <img src="../../public/images/lixeira.png" alt="Excluir lista" onClick={() => handleDeleteLista(categoria.id)} className='excluir' />
                                 </div>
                             </div>
                             {exibirModal === categoria.id && (
-                                <div className="modal-overlay-editar">
+                                <div className="modal-overlay-editar">'
                                     <div className="modal-conte-editar">
                                         <h3>Editar Nome da Lista</h3>
                                         <form
@@ -589,6 +612,24 @@ function Kanban({ onListaSalva }) {
                         </div>
                     </div>
                 )}
+
+                {modalStatusVisivel && (
+                    <div className="modal-status">
+                        <div className="modalContent">
+                            <h3>Status da Tarefa</h3>
+                            <div>
+                                <button onClick={() => setNovoStatus('andamento')}>Andamento</button>
+                                <button onClick={() => setNovoStatus('pausada')}>Pausada</button>
+                                <button onClick={() => setNovoStatus('finalizado')}>Finalizado</button>
+                            </div>
+                           
+                            <button id="fechar" onClick={handleFecharModalStatus}>Fechar</button>
+                        </div>
+                    </div>
+                )}
+
+
+
 
                 {showFormulario && (
                     <Formulario
