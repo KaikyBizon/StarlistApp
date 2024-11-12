@@ -59,7 +59,7 @@ function Kanban() {
     setUserId(usuario_id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${usuario_id}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${usuario_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ function Kanban() {
 
   const fetchTarefasParaCategoria = async (categoriaId) => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/tarefas/${categoriaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,10 +150,55 @@ function Kanban() {
     }
   };
 
+  const handleAddTask = async () => {
+    if (!tarefaNome.trim() || !tarefaData || !tarefaHorario || !tarefaEtiqueta) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    try {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'criar_tarefa',
+          dados: {
+            titulo: tarefaNome,
+            descricao: tarefaDescricao,
+            data: tarefaData,
+            horario: tarefaHorario,
+            etiqueta: tarefaEtiqueta,
+            lista_id: listaId,
+            usuario_id: userId,
+          }
+        }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        Alert.alert('Erro', resultado.mensagens_erro);
+      } else {
+        Alert.alert('Sucesso', 'Tarefa criada com sucesso!');
+        // Limpar os campos após adicionar a tarefa
+        setTarefaNome('');
+        setTarefaData('');
+        setTarefaHorario('');
+        setTarefaEtiqueta('');
+        setTarefaDescricao('');
+        setModalVisible(false);
+        setRefresh(!refresh); // Atualiza a lista de tarefas
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
 
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

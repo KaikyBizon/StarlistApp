@@ -10,6 +10,7 @@ import Pagamento from '../pages/Pagamento';
 import PlanCarousel from '../pages/PlanCarousel'
 import CarouselCardItem from '../pages/PlanCarousel';
 import CadastroEmpresarial from '../pages/CadastroEmpresarial';
+import VerificarEmail from '../pages/VerificarEmail';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function StackRoutes() {
     <Stack.Navigator initialRouteName="Bemvindo" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Bemvindo" component={BoasVindas} screenOptions={{ headerShown: false }}/>
       <Stack.Screen name="Cadastro" component={Cadastro}/>
+      <Stack.Screen name="VerificarEmail" component={VerificarEmail}/>
       <Stack.Screen name="CadastroEmpresarial" component={CadastroEmpresarial}/>
       <Stack.Screen name="home" component={TabRoutes}/>
       <Stack.Screen name="Login" component={LoginForm}/>

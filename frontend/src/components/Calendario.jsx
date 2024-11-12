@@ -1,3 +1,5 @@
+
+
 /**
  * Nome do Componente: Calendario
  *
@@ -37,28 +39,29 @@ const months = [
 
 const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
-const Calendario = ({ events, onSelectDate }) => {
+const Calendario = ({ onSelectDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [selectedDay, setSelectedDay] = useState(null); // Estado para o dia selecionado
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [events, setEvents] = useState([]); // Estado para armazenar eventos
 
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  // Função fetchTarefas para buscar todas as tarefas do usuário no backend
-  // 
-  // Alterado em 
+  // Função fetchTarefas para buscar as tarefas de um usuário e atualizar o estado com os dados recebidos
+  //
+  // Alterado em 12/11/2024
   // Parâmetros de entrada:
-  // Nenhum
+  // - Nenhum
   // Retorno:
-  // Realiza uma requisição POST para obter as tarefas do usuário e trata possíveis erros durante a busca
-  // Esta função utiliza o ID do usuário armazenado no localStorage, envia uma requisição em formato JSON e, em caso de sucesso, recebe as tarefas do backend; 
-  // se houver um erro, registra a mensagem de erro no console.
+  // - Atualiza o estado com as tarefas recebidas do servidor e exibe os dados no console
+  // Esta função realiza uma requisição HTTP para buscar as tarefas de um usuário específico. O ID do usuário é recuperado
+  // do localStorage e enviado para o servidor no corpo da requisição. Caso a requisição seja bem-sucedida, as tarefas
+  // são armazenadas no estado de eventos e exibidas no console. Em caso de erro, a função exibe uma mensagem de erro no console.
   const fetchTarefas = async () => {
     const usuarioId = localStorage.getItem('ID');
-
     try {
-      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,17 +69,19 @@ const Calendario = ({ events, onSelectDate }) => {
         body: JSON.stringify({ acao: "carregar_todas_tarefas", dados: { usuarioId } })
       });
       const resultado = (await resposta.json()).dados_tarefa;
-      console.log(resultado)
-
+      setEvents(resultado); // Armazena as tarefas no estado de eventos
+      console.log('resultado', resultado);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     }
   };
 
+
   // Efeito que busca as tarefas ao montar o componente, chamando a função fetchTarefas.
   useEffect(() => {
     fetchTarefas();
   }, []);
+
 
   // Função handlePrevMonth para alterar o mês atual para o mês anterior
   // 
@@ -116,44 +121,45 @@ const Calendario = ({ events, onSelectDate }) => {
     setSelectedDay(null); // Limpa a seleção ao mudar de mês
   };
 
-  // Função formatDate para converter uma string de data no formato 'dd/mm/aaaa' em um objeto Date
-  // 
-  // Alterado em 
+  // Função formatDate para formatar uma string de data no formato 'YYYY-MM-DD' em um objeto Date
+  //
+  // Alterado em 12/11/2024
   // Parâmetros de entrada:
-  // dateString - string - data no formato 'dd/mm/aaaa'
+  // - dateString: uma string representando uma data no formato 'YYYY-MM-DD'
   // Retorno:
-  // Retorna um objeto Date correspondente à data fornecida ou uma data inválida se os valores não forem válidos
-  // Esta função divide a string de data em dia, mês e ano, converte os valores para números, 
-  // e cria um novo objeto Date utilizando esses valores; se qualquer parte da data estiver ausente, retorna uma data inválida (NaN).
+  // - Retorna um objeto Date com o ano, mês e dia extraídos da string dateString
+  // Esta função divide a string de data na separação do hífen ('-'), converte cada parte para um número e cria
+  // um objeto Date. O mês é subtraído em 1, pois em JavaScript os meses começam do índice 0 (janeiro é 0, fevereiro é 1, etc.).
   const formatDate = (dateString) => {
-    const [day, month, year] = dateString.split('/').map(Number);
-    if (day && month && year) {
-      return new Date(year, month - 1, day);
-    }
-    return new Date(NaN);
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day); // Cria uma data com o ano, mês e dia
   };
 
-  // Função hasEvent para verificar se um determinado dia possui eventos associados
-  // 
-  // Alterado em 
+  // Função hasEvent para verificar se há um evento em um dia específico
+  //
+  // Alterado em 12/11/2024
   // Parâmetros de entrada:
-  // day - número - dia do mês a ser verificado
+  // - day: o dia do mês que será verificado para a presença de um evento
   // Retorno:
-  // Retorna um booleano indicando se existem eventos para o dia especificado
-  // Esta função verifica se algum evento na lista de eventos ocorre no dia informado, 
-  // convertendo a data do evento para um objeto Date; se a data for válida, compara o dia, mês e ano 
-  // para determinar se há um evento correspondente ao dia fornecido.
+  // - Retorna um valor booleano (true ou false) indicando se existe um evento para o dia informado
+  // Esta função verifica se algum evento na lista de eventos ocorre no dia específico. 
+  // Para cada evento, a data é convertida para um objeto Date e comparada com o dia atual (com ano, mês e dia limpos).
+  // A data do evento e a data atual são ajustadas para ignorar a hora e garantir que a comparação seja feita apenas
+  // com o dia, mês e ano.
+
   const hasEvent = (day) => {
     return events.some(event => {
-      const eventDate = formatDate(event.data);
-      if (isNaN(eventDate.getTime())) {
-        return false;
-      }
-      return (
-        eventDate.getDate() === day + 1 &&
-        eventDate.getMonth() === currentMonth &&
-        eventDate.getFullYear() === currentYear
-      );
+      if (!event) return false;
+
+      const eventDate = formatDate(event); // Converte a data do evento para um objeto Date
+      if (!eventDate) return false; // Ignora se a data do evento for inválida
+
+      // Limpa a data de evento e a data atual para comparar apenas o dia, mês e ano
+      const cleanedEventDate = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+      const cleanedCurrentDate = new Date(currentYear, currentMonth, day + 1);
+
+      // Verifica se a data do evento corresponde ao dia, mês e ano atual
+      return cleanedEventDate.getTime() === cleanedCurrentDate.getTime();
     });
   };
 
@@ -206,3 +212,4 @@ const Calendario = ({ events, onSelectDate }) => {
 };
 
 export default Calendario;
+
