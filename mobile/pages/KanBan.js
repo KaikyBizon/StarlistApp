@@ -42,7 +42,6 @@ function Kanban() {
   const [categorias, setCategorias] = useState([]);
   const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
   const [userId, setUserId] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [listaId, setListaId] = useState(null);
   const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] = useState(false);
   const [listaParaExcluir, setListaParaExcluir] = useState(null);
@@ -51,6 +50,7 @@ function Kanban() {
   const [novoNomeLista, setNovoNomeLista] = useState(''); // Estado para o novo nome da lista
   const [editModalVisible, setEditModalVisible] = useState(false); // Novo estado para o modal de edição
   const [selectedTask, setSelectedTask] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Mover a função fetchCategoriasETarefas para fora do useEffect
   const fetchCategoriasETarefas = async () => {
@@ -221,8 +221,14 @@ function Kanban() {
   };
 
   const handleEditTask = (task) => {
-    setSelectedTask(task); // Define a tarefa selecionada
-    setModalVisible(true);  // Abre o modal de edição
+    setSelectedTask(task); // Armazena a tarefa que será editada
+    setModalVisible(true); // Abre o modal de edição
+  };
+  
+  const handleAddNewTask = (categoriaId) => {
+    setListaId(categoriaId); // Define a categoria
+    setSelectedTask(null); // Limpa a tarefa selecionada para indicar uma nova tarefa
+    setModalVisible(true); // Abre o modal para adicionar a tarefa
   };
 
   return (
@@ -270,16 +276,12 @@ function Kanban() {
             </ScrollView>
 
             <View style={styles.btnContainer}>
-            <TouchableOpacity
+              <TouchableOpacity
                 style={styles.btnAdicionarTarefa}
-                onPress={() => {
-                  setListaId(categoria.id);
-                  setModalVisible(true);
-                }}
+                onPress={() => handleAddNewTask(categoria.id)}
               >
                 <Text style={styles.btnText}>Nova tarefa</Text>
               </TouchableOpacity>
-
               <TouchableOpacity
                 onPress={() => {
                   setListaParaExcluir(categoria.id); // Define a lista a ser excluída
@@ -345,12 +347,11 @@ function Kanban() {
       </Modal>
 
       <Formulario
-        visible={modalVisible}
-        listaId={listaId}
+        modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        refresh={refresh}
-        setRefresh={setRefresh}
-        userId={userId} // Passando userId para o Formulario
+        userId={userId}
+        listaId={listaId}
+        selectedTask={selectedTask} // Adiciona a tarefa selecionada como prop
       />
     </View>
   );
