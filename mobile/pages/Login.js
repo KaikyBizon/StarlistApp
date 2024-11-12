@@ -109,7 +109,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -146,10 +146,42 @@ function LoginForm({ navigation }) {
     };
 
     // Lógica para redefinir a senha
-    const handlePasswordReset = async () => {
-        // Lógica para redefinir a senha
-        setIsPasswordResetModalVisible(false);
-    };
+   // Lógica para redefinir a senha
+const handlePasswordReset = async () => {
+    if (!resetEmail || !newPassword || !confirmNewPassword) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        alert("As senhas não coincidem.");
+        return;
+    }
+    console.log( resetEmail, newPassword)
+    try {
+        const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                acao: 'redifinir_senha',
+                dados: { resetEmail, newPassword },
+            }),
+        });
+        const resultado = await resposta.json();
+
+        if (resultado.error) {
+            alert("Erro ao redefinir a senha. Tente novamente.");
+        } else {
+            alert("Senha redefinida com sucesso!");
+            setIsPasswordResetModalVisible(false);  // Fechar o modal após redefinir a senha
+        }
+    } catch (error) {
+        console.error('Erro ao redefinir a senha:', error);
+        alert("Erro ao conectar com o servidor.");
+    }
+};
 
     // Carregamento da fonte Kanit_500Medium
     const [fontLoaded] = useFonts({

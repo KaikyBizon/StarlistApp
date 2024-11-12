@@ -32,11 +32,10 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/StylesKanBan.js';
-import { View, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Text, Modal, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity, Alert, ScrollView, Text, Modal, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Menu from '../components/Menu';
-import { Picker } from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import Formulario from './Formulario.js';
 
 function Kanban() {
   const [inputValue, setInputValue] = useState('');
@@ -44,51 +43,14 @@ function Kanban() {
   const [tarefasPorCategoria, setTarefasPorCategoria] = useState({});
   const [userId, setUserId] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [tarefaNome, setTarefaNome] = useState('');
-  const [tarefaData, setTarefaData] = useState('');
-  const [tarefaHorario, setTarefaHorario] = useState('');
-  const [tarefaEtiqueta, setTarefaEtiqueta] = useState('');
-  const [tarefaDescricao, setTarefaDescricao] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-  const [mode, setMode] = useState('date');
   const [listaId, setListaId] = useState(null);
   const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] = useState(false);
   const [listaParaExcluir, setListaParaExcluir] = useState(null);
   const [refresh, setRefresh] = useState(false);
-
-  const formatDate = (date) => {
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
-
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const onChange = (event, selectedDate) => {
-    setShow(false);
-    if (selectedDate) {
-      if (mode === 'date') {
-        setTarefaData(formatDate(selectedDate));
-      } else {
-        setTarefaHorario(formatTime(selectedDate));
-      }
-      setDate(selectedDate);
-    }
-  };
-  
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  const [listaParaEditar, setListaParaEditar] = useState(null); // Estado para armazenar a lista a ser editada
+  const [novoNomeLista, setNovoNomeLista] = useState(''); // Estado para o novo nome da lista
+  const [editModalVisible, setEditModalVisible] = useState(false); // Novo estado para o modal de edição
+  const [selectedTask, setSelectedTask] = useState(null);
 
   // Mover a função fetchCategoriasETarefas para fora do useEffect
   const fetchCategoriasETarefas = async () => {
@@ -97,7 +59,7 @@ function Kanban() {
     setUserId(usuario_id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${usuario_id}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${usuario_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +94,7 @@ function Kanban() {
 
   const fetchTarefasParaCategoria = async (categoriaId) => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/tarefas/${categoriaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,23 +116,24 @@ function Kanban() {
   };
 
   const handleSubmit = async () => {
-    console.log('usuario1:',userId)
+    console.log('usuario1:', userId)
     if (!inputValue.trim()) {
       Alert.alert('Erro', 'O nome da lista não pode estar vazio');
       return;
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           acao: 'criar_lista',
-          dados:{
+          dados: {
             usuario_id: userId,
-            nome: inputValue}
+            nome: inputValue
+          }
         }),
       });
 
@@ -180,7 +143,7 @@ function Kanban() {
         Alert.alert('Erro', resultado.mensagens_erro);
       } else {
         setInputValue('');
-        fetchCategoriasETarefas(); // Agora isso funciona
+        fetchCategoriasETarefas();
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
@@ -194,7 +157,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +198,7 @@ function Kanban() {
 
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.26:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -266,6 +229,47 @@ function Kanban() {
     }
   };
 
+  const handleEditList = async () => {
+    if (!novoNomeLista.trim()) {
+      Alert.alert('Erro', 'O nome da lista não pode estar vazio');
+      return;
+    }
+
+    try {
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'editar_nome_lista',
+          dados: {
+            id: listaParaEditar, // ID da lista a ser editada
+            nomeEditando: novoNomeLista // Novo nome da lista
+          }
+        }),
+      });
+
+      const resultado = (await resposta.json()).listaCriada;
+
+      if (!resposta.ok || resultado.mensagens_erro) {
+        Alert.alert('Erro', resultado.mensagens_erro);
+      } else {
+        fetchCategoriasETarefas(); // Atualiza a lista de categorias e tarefas
+        setEditModalVisible(false); // Fecha o modal de edição
+        setListaParaEditar(null); // Limpa o estado da lista a ser editada
+        setNovoNomeLista(''); // Limpa o novo nome da lista
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
+
+  const handleEditTask = (task) => {
+    setSelectedTask(task); // Define a tarefa selecionada
+    setModalVisible(true);  // Abre o modal de edição
+  };
+
   return (
     <View style={styles.container}>
       <Menu />
@@ -273,6 +277,7 @@ function Kanban() {
         <TextInput
           style={styles.input}
           placeholder="Digite o nome da lista"
+          placeholderTextColor="#FFF88E"
           value={inputValue}
           onChangeText={setInputValue}
         />
@@ -283,21 +288,37 @@ function Kanban() {
       <ScrollView horizontal>
         {categorias.map((categoria) => (
           <View key={categoria.id} style={styles.categoriaContainer}>
-            <Text style={styles.tituloLista}>{categoria.nome}</Text>
+            <View style={styles.categoriaLista}>
+              <Text style={styles.tituloLista}>{categoria.nome}</Text>
+              <TouchableOpacity onPress={() => {
+                setNovoNomeLista(categoria.nome); // Configura o novo nome da lista
+                setListaParaEditar(categoria.id); // Define a lista a ser editada
+                setEditModalVisible(true); // Abre o modal de edição
+              }}>
+                <Image source={require('../assets/images/editar_lista.png')} style={styles.editarLista} />
+              </TouchableOpacity>
+            </View>
             <ScrollView style={styles.tarefasContainer}>
               {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                 <View key={index} style={styles.tarefaItem}>
-                  <Text style={styles.tituloTarefa}>{tarefa.titulo}</Text>
+                  <View style={styles.editarDeleteTask}>
+                    <Text style={styles.tituloTarefa}>{tarefa.titulo}</Text>
+                    <TouchableOpacity onPress={() => handleEditTask(tarefa)}>
+                      <Image source={require('../assets/images/editar_lista.png')} style={styles.editarTask} />
+                    </TouchableOpacity>
+                    <Image source={require('../assets/images/lixeira.png')} style={styles.excluirTask} />
+                  </View>
                   <Text style={styles.dataHora}>Data: {tarefa.data}</Text>
                   <Text style={styles.dataHora}>Hora: {tarefa.horario}</Text>
                 </View>
               ))}
             </ScrollView>
+
             <View style={styles.btnContainer}>
-              <TouchableOpacity
+            <TouchableOpacity
                 style={styles.btnAdicionarTarefa}
                 onPress={() => {
-                  setListaId(categoria.id); // Resgata o ID da lista
+                  setListaId(categoria.id);
                   setModalVisible(true);
                 }}
               >
@@ -317,85 +338,8 @@ function Kanban() {
 
         ))}
       </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
 
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput
-              style={styles.inputModal}
-              placeholder="Nome da Tarefa"
-              placeholderTextColor="#FFF88E"
-              value={tarefaNome}
-              onChangeText={setTarefaNome}
-            />
-            <View style={styles.dataTarefa}>
-              <View style={styles.dateTimeContainer}>
-                <TouchableOpacity
-                  onPress={() => showMode("date")}
-                  style={styles.buttonDateAndTime}
-                >
-                  <Text style={styles.buttonText}>Data: {tarefaData || 'Selecionar'}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => showMode("time")}
-                  style={styles.buttonDateAndTime}
-                >
-                  <Text style={styles.buttonText}>Hora: {tarefaHorario || 'Selecionar'}</Text>
-                </TouchableOpacity>
-              </View>
-              {show && (
-                <DateTimePicker
-                  value={date}
-                  mode={mode}
-                  is24Hour={true}
-                  display="default"
-                  onChange={onChange}
-                />
-              )}
-            </View>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={tarefaEtiqueta}
-                style={styles.inputPicker}
-                onValueChange={(itemValue) => setTarefaEtiqueta(itemValue)}
-              >
-                <Picker.Item label="Selecione uma etiqueta" value="" style={styles.etiqueta} />
-                <Picker.Item label="Trabalho" value="Trabalho" />
-                <Picker.Item label="Pessoal" value="Pessoal" />
-                <Picker.Item label="Estudo" value="Estudo" />
-              </Picker>
-            </View>
-            <TextInput
-              style={styles.inputModal}
-              placeholder="Descrição da Tarefa"
-              placeholderTextColor="#FFF88E"
-              value={tarefaDescricao}
-              onChangeText={setTarefaDescricao}
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={handleAddTask}
-                style={styles.btnSalvar}
-              >
-                <Text style={styles.btnText}>Salvar</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                style={styles.btnCancelar}
-              >
-                <Text style={styles.btnText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
+      {/* Modal de exclusão de lista completa*/}
       <Modal
         animationType="slide"
         transparent={true}
@@ -417,6 +361,42 @@ function Kanban() {
         </View>
       </Modal>
 
+      {/* Modal de Edição nome da lista*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => setEditModalVisible(false)}
+      >
+        <View style={styles.modalContainerList}>
+          <View style={styles.modalContenList}>
+            <Text style={styles.modalTitleList}>Editar Nome da Lista</Text>
+            <TextInput
+              style={styles.inputModalList}
+              placeholder="Novo nome da lista"
+              value={novoNomeLista}
+              onChangeText={setNovoNomeLista}
+            />
+            <View style={styles.modalButtonsList}>
+              <TouchableOpacity onPress={handleEditList} style={styles.btnConfirmList}>
+                <Text style={styles.btnTextList}>Confirmar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setEditModalVisible(false)} style={styles.btnCancelList}>
+                <Text style={styles.btnTextList}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Formulario
+        visible={modalVisible}
+        listaId={listaId}
+        setModalVisible={setModalVisible}
+        refresh={refresh}
+        setRefresh={setRefresh}
+        userId={userId} // Passando userId para o Formulario
+      />
     </View>
   );
 }
