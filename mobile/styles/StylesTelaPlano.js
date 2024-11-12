@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     // Estilo para o fundo dos planos
     PlanosBackground: {
         paddingTop: 8,
-        backgroundColor: '#9D9D9D',
+        backgroundColor: '#1e1e1e',
     },
     // Estilo para o fundo principal
     Background: {
@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
     },
     // Estilo para o logo dos planos
     PlanosLogo: {
-        backgroundColor: "#9d9d9d",
+        backgroundColor: "#1e1e1e",
         alignItems: "center",
         justifyContent: "center",
     },
     // Estilo para o texto "Escolha seu plano"
     EscolhaPlano: {
-        color: '#404040',
+        color: '#faed27',
         fontSize: 17,
         fontFamily: 'Kanit_500Medium',
     },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     // Estilo para o contêiner do carrossel
     carrosel: {
-        backgroundColor: '#726C6F',
+        backgroundColor: '#333',
         width: 350,
         height: 600,
         alignItems: "center",
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     // Estilo para o texto dos planos
     textPlanos: {
         paddingBottom: 20,
-        color: '#CECECE',
+        color: '#FFF88E',
         fontFamily: 'Kanit_500Medium',
     },
     // Estilo para o botão do carrossel
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
     // Estilo para o botão do carrossel
     CarroselButton: {
-        backgroundColor: '#726C6F',
+        backgroundColor: '#333',
         height: 40,
         borderWidth: 2,
         borderColor: '#FFF100',

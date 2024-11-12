@@ -208,7 +208,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         };
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -272,7 +272,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
             </View>
             <View style={styles.containerInputs}>
                 <View style={styles.inputsLabel}>
-                    <Text style={styles.label}>TÍTULO</Text>
+                    <Text style={styles.label}>TÍTULO:</Text>
                     <TextInput
                         style={styles.inputs}
                         autoCorrect={false}
@@ -304,7 +304,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                     )}
                 </View>
                 <View style={styles.inputsLabel}>
-                    <Text style={styles.label}>ETIQUETA</Text>
+                    <Text style={styles.label}>ETIQUETA:</Text>
                     <View style={[styles.inputs, styles.pickerContainer]}>
                         <Picker
                             selectedValue={dadosTask.etiqueta}
@@ -320,7 +320,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                     </View>
                 </View>
                 <View style={styles.inputsLabel}>
-                    <Text style={styles.label}>DESCRIÇÃO</Text>
+                    <Text style={styles.label}>DESCRIÇÃO:</Text>
                     <TextInput
                         style={styles.inputs}
                         autoCorrect={false}
@@ -329,10 +329,14 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                         multiline={true}
                     />
                 </View>
-
-                <TouchableOpacity style={styles.btnSubmit}>
-                    <Text style={styles.submitTxt} onPress={handleSubmit}>SALVAR TAREFA</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
+                        <Text style={styles.submitTxt}>SALVAR TAREFA</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnCancel}>
+                        <Text style={styles.cancelTxt}>CANCELAR</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             <StatusBar style='auto' />
         </KeyboardAvoidingView>

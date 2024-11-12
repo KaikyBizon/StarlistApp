@@ -329,9 +329,11 @@ def processar_dados(dados):
         if not mensagens_erro_tarefa:
             print(tarefa)
             editar_tarefa(tarefa)
-            dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
+            dados_tarefa = {'error': False,
+                            'Tarefa editada': 'Tarefa editada com sucesso!'}
         else:
-            dados_tarefa = {'error': True, 'mensagens_erro': mensagens_erro_tarefa}
+            dados_tarefa = {'error': True,
+                            'mensagens_erro': mensagens_erro_tarefa}
 
     # Carregar tarefas
     # Kaiky
@@ -363,15 +365,17 @@ def processar_dados(dados):
         id_usuario = dados_processados.get('usuarioId')
         allTasks = select_all_tasks(id_usuario)
         # Filtra para remover itens `None` e formata a data manualmente como 'aa-mm-dd'
-        formatted_tasks = [f"{date.year % 100:02}-{date.month:02}-{date.day:02}" for (date,) in allTasks if date is not None and date.year >= 1900]
+        formatted_tasks = [f"{date.year}-{date.month:02}-{date.day:02}" for (
+            date,) in allTasks if date is not None and date.year >= 1900]
         dados_tarefa = formatted_tasks
-
 
     if acao == 'verificar_email':
         if str(dados_processados) == str(codigo_confirmacao):
-            dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
+            dados_cadastro = {'error': False,
+                              'mensagem': 'Código validado com sucesso!'}
         else:
-            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
+            dados_cadastro = {'error': True,
+                              'mensagem': 'Código inválido. Tente novamente!'}
 
     # Excluir tarefa
     # Kaiky
