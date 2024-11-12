@@ -29,7 +29,7 @@
  *     na equipe e cargo, além de botões para enviar ou cancelar o cadastro.
  *   - Mensagens de erro são exibidas em listas abaixo de cada campo que apresenta problemas.
  */
- 
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -55,6 +55,10 @@ function CadastroEmpresarial() {
         cargo: '',
         emailUser: localStorage.getItem('email')
     });
+    const [acao, setAcao] = useState(''); // Estado para armazenar a ação
+    const [mensagensErro, setMensagensErro] = useState([]);
+    const [showCompanyFields, setShowCompanyFields] = useState(false); // Controla a exibição dos campos de empresa
+    const navigate = useNavigate();
 
     // Função handleChange para atualizar os valores dos campos do formulário de cadastro empresarial
     // 
@@ -67,7 +71,20 @@ function CadastroEmpresarial() {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'cnpj') {
+        // Verifica se o campo alterado é o cargo
+        if (name === 'cargo') {
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                cargo: value,
+            }));
+
+            // Se o cargo for 'lider', mostra os campos de empresa
+            if (value === 'lider') {
+                setShowCompanyFields(true);
+            } else {
+                setShowCompanyFields(false);
+            }
+        } else if (name === 'cnpj') {
             const formattedCNPJ = formatCNPJ(value);
             setFormValues((prevValues) => ({
                 ...prevValues,
@@ -87,9 +104,15 @@ function CadastroEmpresarial() {
         }
     };
 
+    //Função para definir a acao a ser tomada no backend
+    useEffect(() => {
+        if (formValues.cargo === 'lider') {
+            setAcao('cadastro_empresarial_lider');
+        } else if (formValues.cargo === 'colaborador') {
+            setAcao('cadastro_empresarial_colab');
+        }
+    }, [formValues.cargo]); // só será executado quando formValues.cargo mudar
 
-    const [mensagensErro, setMensagensErro] = useState([]);
-    const navigate = useNavigate();
 
     // Função handleSubmit para submeter o cadastro empresarial
     //
@@ -100,19 +123,19 @@ function CadastroEmpresarial() {
     // - Faz uma requisição ao servidor com os dados do formulário de cadastro empresarial
     // - Se houver erros no servidor, as mensagens de erro são exibidas
     // - Se bem-sucedido, redireciona para a página de pagamento e limpa os campos do formulário
-    // Esta função envia os dados do formulário para o servidor, utilizando o método POST para o endpoint 'http://10.135.60.7:8085/receber-dados'. 
+    // Esta função envia os dados do formulário para o servidor, utilizando o método POST para o endpoint 'http://10.135.60.24:8085/receber-dados'. 
     // Caso o resultado indique um erro, as mensagens de erro são exibidas. Caso contrário, os dados são processados com sucesso e o usuário é redirecionado para a página de pagamento.
     const handleSubmit = async (e) => {
-        console.log(formValues)
+        console.log(acao)
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://192.168.137.1:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'cadastro_empresarial', dados: formValues }),
+                body: JSON.stringify({ acao: acao, dados: formValues }),
             });
 
             const resultado = (await resposta.json()).dadosCadastro;
@@ -130,6 +153,7 @@ function CadastroEmpresarial() {
                     pessoasEquipe: '',
                     cargo: ''
                 });
+                setAcao('')
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
@@ -146,58 +170,8 @@ function CadastroEmpresarial() {
 
                     <form id="right-login_empresarial" name="formulario_cadastro_empresarial" onSubmit={handleSubmit}>
                         <div className="textos_empresarial">
-                            <input
-                                type="text"
-                                name="cnpj"
-                                placeholder="Digite o CNPJ"
-                                required
-                                value={formValues.cnpj}
-                                onChange={handleChange}
-                                maxLength={18}
-                            />
-                        </div>
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_cnpj}</li>
-                            ))}
-                        </ul>
-
-                        <div className="textos_empresarial">
-                            <input
-                                type="text"
-                                name="nomeEquipe"
-                                placeholder="Nome da equipe"
-                                required
-                                value={formValues.nomeEquipe}
-                                onChange={handleChange}
-                                maxLength={40}
-                            />
-                        </div>
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_nome_equipe}</li>
-                            ))}
-                        </ul>
-
-                        <div className="textos_empresarial">
-                            <input
-                                type="number"
-                                name="pessoasEquipe"
-                                placeholder="Quantidade de Pessoas na Equipe"
-                                required
-                                value={formValues.pessoasEquipe}
-                                onChange={handleChange}
-                                min="0" // Define o valor mínimo como 0
-                            />
-                        </div>
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_numero_participantes}</li>
-                            ))}
-                        </ul>
-
-                        <div className="textos_empresarial">
-                            <select className='cargo_empresarial'
+                            <select
+                                className='cargo_empresarial'
                                 name="cargo"
                                 required
                                 value={formValues.cargo}
@@ -213,6 +187,61 @@ function CadastroEmpresarial() {
                                 <li key={index}>{mensagem.mensagem_cargo}</li>
                             ))}
                         </ul>
+
+                        {showCompanyFields && (
+                            <>
+                                <div className="textos_empresarial">
+                                    <input
+                                        type="text"
+                                        name="cnpj"
+                                        placeholder="Digite o CNPJ"
+                                        required
+                                        value={formValues.cnpj}
+                                        onChange={handleChange}
+                                        maxLength={18}
+                                    />
+                                </div>
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_cnpj}</li>
+                                    ))}
+                                </ul>
+
+                                <div className="textos_empresarial">
+                                    <input
+                                        type="text"
+                                        name="nomeEquipe"
+                                        placeholder="Nome da equipe"
+                                        required
+                                        value={formValues.nomeEquipe}
+                                        onChange={handleChange}
+                                        maxLength={40}
+                                    />
+                                </div>
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_nome_equipe}</li>
+                                    ))}
+                                </ul>
+
+                                <div className="textos_empresarial">
+                                    <input
+                                        type="number"
+                                        name="pessoasEquipe"
+                                        placeholder="Quantidade de Pessoas na Equipe"
+                                        required
+                                        value={formValues.pessoasEquipe}
+                                        onChange={handleChange}
+                                        min="0"
+                                    />
+                                </div>
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_numero_participantes}</li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
 
                         <div className="botoes_empresarial">
                             <div className="botao_confirmar">

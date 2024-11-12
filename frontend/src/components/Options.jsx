@@ -53,7 +53,7 @@ function Options() {
     const showPlanoId = async () => {
         const id = localStorage.getItem("ID");
         try {
-            const resposta = await fetch('http://10.135.60.9:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +66,6 @@ function Options() {
             console.error('Erro ao carregar dados!', error);
         }
     };
-
     // Função handleShowFormulario para exibir o formulário ao definir o estado showFormulario como verdadeiro
     const handleShowFormulario = () => {
         setShowFormulario(true);

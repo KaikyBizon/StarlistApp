@@ -14,7 +14,10 @@ from actionsBD.createEquipe import cadastroEmpresarial
 from actionsBD.editNameList import editar_nome_lista
 from actionsBD.insertCargoUser import inserirCargo
 from actionsBD.selectAllTasks import select_all_tasks
+from actionsBD.getEmailToInvite import buscar_usuario_convite
+from actionsBD.enviarConviteEquipe import enviar_convite
 from validarEmail import send_email_confirm
+from datetime import datetime
 
 from validacoes import (
     validar_nome,
@@ -37,10 +40,17 @@ from validacoesTarefa import (
     validar_horario
 )
 
+# Variável global para armazenar temporariamente os dados de cadastro
+dados_cadastro_temp = {}
+
+# Variável global para armazenar o ID do usuário convidado
+id_usuario_convidado = None
+
+
 # Função para processar os dados recebidos
-
-
 def processar_dados(dados):
+    global dados_cadastro_temp  # Declaração para utilizar a variável global
+    global id_usuario_convidado
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
@@ -67,8 +77,7 @@ def processar_dados(dados):
         cadastro_empresarial = [
             dados_processados.get('cnpj'),
             dados_processados.get('nomeEquipe'),
-            dados_processados.get('pessoasEquipe'),
-            # dados_processados.get('cargo')
+            dados_processados.get('pessoasEquipe')
         ]
 
         # recebe os valores para alteração do cadastro
@@ -158,7 +167,6 @@ def processar_dados(dados):
             if id_plano and len(id_plano) > 0 and len(id_plano[0]) > 0:
                 id_plano = id_plano[0][0]
             else:
-                # Trate o caso onde id_plano está vazio ou não contém o índice esperado
                 id_plano = None
                 mensagens_erro.append(
                     {'erro': True, 'mensagem_plano': 'Plano não encontrado.'})
@@ -166,22 +174,25 @@ def processar_dados(dados):
             for i in range(len(cadastro)):
                 if cadastro[i] in ['empresarial', 'gratuito', 'mensal', 'anual']:
                     cadastro[i] = id_plano
-
             if not mensagens_erro:
-                inserir_usuario(cadastro)
-                # Enviar e-mail de validação
+                # Armazena os dados temporariamente até a verificação do e-mail
+                email = dados_processados.get('email')
+                dados_cadastro_temp[email] = cadastro
+
+                # Envia o e-mail de confirmação
                 recipient = dados_processados.get('email')
                 subject = "Código de verificação"
-                # Armazene o retorno da função em uma variável
                 result = send_email_confirm(recipient, subject)
                 global codigo_confirmacao
                 codigo_confirmacao = result[1]
+                dados_cadastro = {'error': False,
+                                  "mensagens": 'Todos os dados estão corretos!'}
             else:
                 dados_cadastro = {'error': True,
                                   'mensagens_erro': mensagens_erro}
 
         # Efetuar cadastro empresarial
-        # Gabriel
+        # Kaiky
         # Criado dia 05/09/2024
         # Parametros entrada:
         # acao - string - receber a acao para verificar se deve ser executado este if
@@ -191,15 +202,35 @@ def processar_dados(dados):
         # Retorno:
         # erro - string - retornar a mensagem de erro caso algum dos dados esteja incorreto
         # Essa função indica se acao é um cadastro empresarial, caso seja, as informaçõe serão inseridas no banco, caso o contrairo, aparecerá uma mensagem de erro
-        if acao == 'cadastro_empresarial':
+        if acao == 'cadastro_empresarial_lider':
             cargo = dados_processados.get('cargo')
             email_user = dados_processados.get('emailUser')
+
             if not mensagens_erro_empresarial:
-                cadastroEmpresarial(cadastro_empresarial)
-                inserirCargo(cargo, email_user)
+                # Realiza o cadastro empresarial e obtém o ID da equipe criada
+                ret_cadastroEmpresarial = cadastroEmpresarial(
+                    cadastro_empresarial)
+                id_equipe = ret_cadastroEmpresarial.get('id_equipe')
+
+                # Atualiza cargo e id_equipe para lider
+                equipe_user = (cargo, id_equipe, email_user)
+                inserirCargo(equipe_user, lider=True)
+
             else:
                 dados_cadastro = {'error': True,
                                   'mensagens_erro': mensagens_erro_empresarial}
+
+        elif acao == 'cadastro_empresarial_colab':
+            cargo = dados_processados.get('cargo')
+            email_user = dados_processados.get('emailUser')
+
+            if not mensagens_erro_empresarial:
+                # Atualiza apenas cargo para colaborador
+                equipe_user = (cargo, email_user)
+                inserirCargo(equipe_user, lider=False)
+
+            else:
+                dados_cadastro = {}
 
         # Efetuar login
         # Kaiky
@@ -302,7 +333,7 @@ def processar_dados(dados):
     # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
     # Retorno:
     # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
-    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banc
+    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
     if acao == 'criar_tarefa':
         if not mensagens_erro_tarefa:
             criarTarefa(tarefa)
@@ -327,7 +358,6 @@ def processar_dados(dados):
         tarefa.remove(dados_processados.get('lista_id'))
         # Chama a função de edição com os dados da tarefa, incluindo o ID
         if not mensagens_erro_tarefa:
-            print(tarefa)
             editar_tarefa(tarefa)
             dados_tarefa = {'error': False,
                             'Tarefa editada': 'Tarefa editada com sucesso!'}
@@ -346,7 +376,6 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição verifica se a acao indica uma renderização de tarefas, e caso seja, ele executa a função para buscar as os dados no banco e retorna todas as tarefas do usuário
     if acao == 'carregar_tarefas':
-        print(dados_processados)
         id_usuario = dados_processados.get('usuarioId')
         dataTarefas = dados_processados.get('dataToCatchTarefas')
         dados_tarefa = selecionar_dados_tarefa(id_usuario, dataTarefas)
@@ -369,14 +398,32 @@ def processar_dados(dados):
             date,) in allTasks if date is not None and date.year >= 1900]
         dados_tarefa = formatted_tasks
 
+    # Verificar o código enviado no email do usuário com o código inserido no input
+    # Kaiky
+    # Criado em 31/10/24
+    # Parametros entrada:
+    # codigo_confirmacao - string - codigo enviado no email do usuario
+    # dados_processados.get('codigo') - string - valor inserido no input pelo usuário
+    # email - string - usado como chave para buscar os valores inseridos pelo usuário no cadastro
+    # cadastro - dicionário - valores inseridos pelo usuário no cadastro
+    # Retorno:
+    # erro - string - retornar algum erro caso tenha
+    # Esta condição verifica se o código inserido pelo usuário e o enviado no email dele são iguais, e se True efetua o cadstro do usuário no banco, caso não, retorna um erro de código de confirmação
     if acao == 'verificar_email':
-        if str(dados_processados) == str(codigo_confirmacao):
-            dados_cadastro = {'error': False,
-                              'mensagem': 'Código validado com sucesso!'}
+        if str(dados_processados.get('codigo')) == str(codigo_confirmacao):
+            email = dados_processados.get('email')
+            # Recupera os dados temporários e remove do dicionário
+            cadastro = dados_cadastro_temp.pop(email, None)
+            if cadastro:
+                inserir_usuario(cadastro)  # Salva no banco
+                dados_cadastro = {'error': False,
+                                  'mensagem': 'Código validado com sucesso!'}
+            else:
+                dados_cadastro = {
+                    'error': True, 'mensagem': 'Erro ao recuperar os dados de cadastro.'}
         else:
             dados_cadastro = {'error': True,
                               'mensagem': 'Código inválido. Tente novamente!'}
-
     # Excluir tarefa
     # Kaiky
     # Alterado em 22/08/24
@@ -387,18 +434,48 @@ def processar_dados(dados):
     # dados_tarefa - retorna que a tarefa foi excluída com sucesso
     # Esta condição verifica se a acao indica uma exclusão de tarefa, e caso seja, ele executa a função para excluir a tarefa no banco
     if acao == 'excluirTarefa':
-        print(dados_processados)
         id_tarefa = dados_processados.get('tarefaId')
         # Verifica se `lista_id` é None e o converte para SQL NULL
-
-        print("Id tarefa:", id_tarefa)
-        print(id_tarefa)
         excluir_tarefa(id_tarefa)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
+
+
+    # Convidar pessoa para a equipe
+    # Autor: Kaiky
+    # Criado em 12/11/2024
+    #
+    if acao == 'buscar_usuario':
+        email_convite = dados_processados.get('emailUser')
+        dados_usuario_convidado = buscar_usuario_convite(email_convite)
+        if dados_usuario_convidado:
+            # Armazena o ID do usuário na variável global
+            id_usuario_convidado = dados_usuario_convidado[0]
+            dados_cadastro = {'error': False,
+                            'dados_usuario': dados_usuario_convidado}
+        else:
+            dados_cadastro = {
+                'error': True, 'mensagens_erro': 'Usuário não encontrado, verifique o endereço de e-mail.'}
+
+
+    elif acao == 'enviar_convite':
+        if id_usuario_convidado:
+            data_atual = datetime.now()
+            data_convite = data_atual.date()
+            hora_convite = data_atual.time()
+            status_convite = "Não lida"
+            mensagem_convite = "Kaiky Bizon está te convidando para a equipe Starlist"
+            dados_convite = (id_usuario_convidado, mensagem_convite, hora_convite, data_convite, status_convite)
+            enviar_convite(dados_convite)
+            dados_cadastro = {'error': False,
+                            'mensagem': 'Convite enviado com sucesso.'}
+        else:
+            dados_cadastro = {
+                'error': True, 'mensagem': 'ID do usuário não encontrado. Busque o usuário antes de enviar o convite.'}
 
     if acao == 'selecionar_plano_id':
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
+
     return listaCriada, dados_tarefa, dados_cadastro
 
 

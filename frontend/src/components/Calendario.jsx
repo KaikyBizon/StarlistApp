@@ -61,7 +61,7 @@ const Calendario = ({ onSelectDate }) => {
   const fetchTarefas = async () => {
     const usuarioId = localStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const Calendario = ({ onSelectDate }) => {
       });
       const resultado = (await resposta.json()).dados_tarefa;
       setEvents(resultado); // Armazena as tarefas no estado de eventos
-      console.log('resultado', resultado);
+      //console.log('resultado', resultado);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     }
