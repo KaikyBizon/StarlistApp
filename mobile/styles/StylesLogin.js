@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default styles = StyleSheet.create({
     blackground: {
         flex: 1,
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#222',
         alignItems: 'center',
     },
     logo: {
@@ -15,8 +15,8 @@ export default styles = StyleSheet.create({
         width: '90%',
     },
     inputsLogin: {
-        backgroundColor: '#CECECE',
-        color: 'black',
+        backgroundColor: '#333',
+        color: '#FFF88E',
         marginBottom: 15,
         fontSize: 17,
         borderRadius: 10,
@@ -35,7 +35,7 @@ export default styles = StyleSheet.create({
         marginTop: 15,
     },
     submitTxt: {
-        color: '#9d9d9d',
+        color: '#333',
         fontSize: 18,
         fontFamily: 'Kanit_500Medium',
     },
@@ -58,10 +58,9 @@ export default styles = StyleSheet.create({
         marginTop: 22,
     },
     modalView: {
-        margin: 20,
-        backgroundColor: '#696969',
+        backgroundColor: '#333',
         borderRadius: 20,
-        padding: 35,
+        padding: 25,       // Diminui o padding para reduzir o espaço interno
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -71,53 +70,67 @@ export default styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        width: 300,        // Diminui a largura do modal
+        height: 315,       // Diminui a altura do modal
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 20,
     },
     button: {
-        borderRadius: 12,
-        padding: 10,
+        borderRadius: 6,
         elevation: 2,
+        width: 100,  // Defina uma largura maior
+        height: 50,  // Defina uma altura maior
     },
     buttonCancel: {
         backgroundColor: '#f44336',
         marginRight: 10,
+        width: 122, // Aumente a largura específica para o botão "Cancelar"
+        height: 45, // Aumente a altura específica para o botão "Cancelar"
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     buttonReset: {
         backgroundColor: '#faed27',
+        width: 122,  // Aumente a largura específica para o botão "Redefinir"
+        height: 45,  // Aumente a altura específica para o botão "Redefinir"
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     textStyle: {
-        color: '#696969',
-        fontWeight: 'bold',
+        color: '#333',
         textAlign: 'center',
+        justifyContent: 'center',  // Centraliza o conteúdo verticalmente
+        alignItems: 'center',      // Centraliza o conteúdo horizontalmente
     },
     textStyleCancelar: {
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
+        justifyContent: 'center',  // Centraliza o conteúdo verticalmente
+        alignItems: 'center',      // Centraliza o conteúdo horizontalmente
     },
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
         fontSize: 18,
-        fontWeight: 'bold',
-        color: '#cecece',
     },
     inputs: {
-        backgroundColor: '#CECECE',
-        color: '#8F8E8E',
+        backgroundColor: '#333',
+        color: '#FFF88E',
         marginBottom: 15,
-        fontSize: 17,
+        fontSize: 13,       // Aumenta o tamanho da fonte
         borderRadius: 10,
-        padding: 10,
+        borderWidth: 1,
+        borderColor: '#FAED27',
+        padding: 8,        // Aumenta o padding para dar mais espaço interno
         fontFamily: 'Kanit_500Medium',
-        width: 280,
+        width: 250,         // Aumenta a largura do input
+        height: 45,         // Aumenta a altura do input
     },
     forgotPassword: {
-        color: 'black'
+        color: '#FFF88E'
     },
 
     modalText: {
@@ -125,7 +138,7 @@ export default styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        color:'black'
+        color:'#faed27'
       },
       modalErrorText: {
         marginBottom: 10,

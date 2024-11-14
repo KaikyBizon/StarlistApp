@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     // Estilo de fundo para a tela principal
     background: {
         flex: 1,
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#222',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     // Estilo para o botão de voltar
     btnVoltar: {
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#222',
         borderRadius: 25,
         padding: 5,
     },
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     // Container principal para os conteúdos
     container: {
         width: '80%',
-        backgroundColor: '#696969',
+        backgroundColor: '#333',
         borderRadius: 10,
         padding: 20,
         shadowColor: '#000',
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     },
     // Estilo para os campos de entrada
     input: {
-        backgroundColor: '#fff',
+        backgroundColor: '#222',
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
@@ -150,12 +150,12 @@ const styles = StyleSheet.create({
     },
     // Estilo para o input no meio da linha
     inputMeio: {
-        backgroundColor: '#fff',
+        backgroundColor: '#222',
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
         textAlign: 'center',
-        color:"black",
+        color:"#FFF88E",
     },
 });
 

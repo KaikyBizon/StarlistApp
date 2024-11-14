@@ -4,7 +4,7 @@ export default styles = StyleSheet.create({
     // Estilo para o componente principal
     background: {
         flex: 1, // Ocupa toda a tela
-        backgroundColor: '#9d9d9d', // Cor de fundo cinza
+        backgroundColor: '#333', // Cor de fundo cinza
         alignItems: 'center', // Alinha itens ao centro horizontalmente
         width: '100%', // Largura igual a 100% da tela
         height: '100%', // Altura igual a 100% da tela

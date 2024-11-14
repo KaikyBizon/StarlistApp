@@ -109,7 +109,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ const handlePasswordReset = async () => {
     }
     console.log( resetEmail, newPassword)
     try {
-        const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+        const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -201,7 +201,7 @@ const handlePasswordReset = async () => {
                 <TextInput
                     style={styles.inputsLogin}
                     placeholder="Digite seu e-mail"
-                    placeholderTextColor="#2F4F4F"
+                    placeholderTextColor="#222"
                     value={formValues.email}
                     onChangeText={(text) => handleChange('email', text)}
                 />
@@ -211,7 +211,7 @@ const handlePasswordReset = async () => {
                     style={styles.inputsLogin}
                     secureTextEntry={true}
                     placeholder="Digite sua senha"
-                    placeholderTextColor="#2F4F4F"
+                    placeholderTextColor="#222"
                     value={formValues.senha}
                     onChangeText={(text) => handleChange('senha', text)}
                 />

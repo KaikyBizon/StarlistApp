@@ -3,22 +3,35 @@ import { StyleSheet } from "react-native"
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#9d9d9d",
+    backgroundColor: "#222",
     alignItems: "center",
     justifyContent: "center",
   },
   inputs: {
     borderWidth: 1,
     borderColor: 'transparent',
+    backgroundColor: "#333",
+    borderRadius: 10,
+    height: 50,
+    width: 380,
+    paddingHorizontal: 6,
+    marginBottom: 8,
+    fontFamily: 'Kanit_500Medium',
+    color: '#FFF88E',
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: 'transparent',
     backgroundColor: "#cecece",
     borderRadius: 10,
     height: 50,
     width: 380,
-    paddingHorizontal: 10,  // padding horizontal para alinhamento
+    justifyContent: 'center',
     marginBottom: 8,
-    fontFamily: 'Kanit_500Medium',
+  },
+  picker: {
     color: "black",
-    justifyContent: 'center', // Alinhamento vertical no centro
+    fontFamily: 'Kanit_500Medium',
   },
   containerLogo: {
     width: 380,
@@ -37,7 +50,8 @@ const styles = StyleSheet.create({
     width: 380,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 10,
+    marginTop: 10,
   },
   label: {
     color: "#ffffff",
@@ -45,22 +59,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Kanit_500Medium',
   },
   submitTxt: {
-    color: "#8f8e8e",
+    color: "black",
     fontSize: 18,
     fontFamily: 'Kanit_500Medium',
   },
-  temconta: {
-    fontFamily: 'Kanit_500Medium',
-    fontSize: 17,
-    marginBottom: 2,
-  },
-  facalogin: {
-    color: "#191919",
-    textDecorationLine: 'underline',
-  },
   modalView: {
     margin: 20,
-    backgroundColor: '#726C6F',
+    backgroundColor: '#222',
     borderRadius: 10,
     padding: 35,
     alignItems: 'center',
@@ -78,40 +83,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black'
+    color: '#faed27'
   },
   modalErrorText: {
     marginBottom: 10,
     textAlign: 'center',
-    color: '#faed27',
+    color: '#FFF88E',
   },
-  closeButton: {
-    backgroundColor: '#FAED27',
+  modalCloseButton: {
+    backgroundColor: '#FFF88E',
     borderRadius: 9,
     padding: 8,
     elevation: 2,
   },
-  closeButtonText: {
+  modalCloseButtonText: {
     color: '#726C6F',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  picker: {
-    height: 50,
-    width: 380,
-    backgroundColor: "#cecece",
-    borderRadius: 10,
-    justifyContent: 'center',
-    marginBottom: 8,
-    fontFamily: 'Kanit_500Medium', // Fonte personalizada
-    color: 'black', // Cor do texto selecionado
-  },
-  pickerItem: {
-    fontFamily: 'Kanit_500Medium', // Fonte personalizada para itens
-    color: 'black', // Cor dos itens
-    fontSize: 16, // Tamanho do texto
-    backgroundColor: "#cecece", // Cor de fundo dos itens
-  },
 });
 
-export default styles
+export default styles;
