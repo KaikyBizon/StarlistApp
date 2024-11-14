@@ -17,11 +17,18 @@
  *   - Inclui um botão para adicionar novos participantes.
  */
 
-import Cardgerenciar from "../components/Cardgerenciar"
+import { useState } from 'react';
+import Cardgerenciar from "../components/Cardgerenciar";
 import Cabecalho from "../components/Cabecalho";
-import '../StylesPages/gerenciarpart.css'
+import AddParticipantes from "../components/AddParticipantes";
+import '../StylesPages/gerenciarpart.css';
 
 function Gerenciarpart() {
+    const [showAddParticipanteModal, setShowAddParticipanteModal] = useState(false);
+
+    const handleShow = () => setShowAddParticipanteModal(true);
+    const handleClose = () => setShowAddParticipanteModal(false);
+
     return (
         <>
             <Cabecalho />
@@ -36,10 +43,22 @@ function Gerenciarpart() {
                         <Cardgerenciar />
                         <Cardgerenciar />
                     </div>
-                    <button className="addPart" type="button" name="botao" value="addPart" >Adicionar participantes</button>
+                    <button
+                        className="addPart"
+                        type="button"
+                        name="botao"
+                        value="addPart"
+                        onClick={handleShow} // Ao clicar, o modal é exibido
+                    >
+                        Adicionar participantes
+                    </button>
                 </div>
             </section>
+
+            {/* Renderiza o modal AddParticipantes, passando o estado e função de controle */}
+            <AddParticipantes show={showAddParticipanteModal} handleClose={handleClose} />
         </>
-    )
+    );
 }
+
 export default Gerenciarpart;

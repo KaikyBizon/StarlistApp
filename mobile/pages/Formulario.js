@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Modal, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/StylesFormulario.js';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-function Formulario({ modalVisible, setModalVisible, userId, listaId }) {
+function Formulario({ modalVisible, setModalVisible, userId, listaId, selectedTask }) {
   const [tarefaNome, setTarefaNome] = useState('');
   const [tarefaData, setTarefaData] = useState('');
   const [tarefaHorario, setTarefaHorario] = useState('');
@@ -13,12 +13,8 @@ function Formulario({ modalVisible, setModalVisible, userId, listaId }) {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
-  const [refresh, setRefresh] = useState(false);
+  const [acao, setAcao] = useState('criar_tarefa'); // Definimos o estado acao para identificar criação ou edição
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
 
   const formatTime = (date) => {
     return date.toLocaleTimeString('pt-BR', {
@@ -46,52 +42,52 @@ function Formulario({ modalVisible, setModalVisible, userId, listaId }) {
     }
   };
 
-  const handleAddTask = async () => {
+  const handleSubmit = async () => {
     if (!tarefaNome.trim() || !tarefaDescricao || !tarefaData || !tarefaHorario || !tarefaEtiqueta ) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
+      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
 
-  
+    const tarefaDados = {
+      usuario_id: userId,
+      lista_id: listaId,
+      titulo: tarefaNome,
+      descricao: tarefaDescricao,
+      data: tarefaData,
+      horario: tarefaHorario,
+      etiqueta: tarefaEtiqueta 
+    };
+
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          acao: 'criar_tarefa',
-          dados: {
-            titulo: tarefaNome,
-            descricao: tarefaDescricao,
-            data: tarefaData,
-            horario: tarefaHorario,
-            etiqueta: tarefaEtiqueta,
-            lista_id: listaId,
-            usuario_id: userId,
-          }
-        }),
-      });
-  
-      const resultado = await resposta.json();
-  
-      if (!resposta.ok || resultado.mensagens_erro) {
-        Alert.alert('Erro', resultado.mensagens_erro);
+      let resposta;
+      if (acao === 'editar_tarefa') {
+        // Se estamos editando uma tarefa
+        resposta = await fetch(`http://10.135.60.23:8085/tarefa/${selectedTask.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(tarefaDados)
+        });
       } else {
-        Alert.alert('Sucesso', 'Tarefa criada com sucesso!');
-        setTarefaNome('');
-        setTarefaData('');
-        setTarefaHorario('');
-        setTarefaEtiqueta('');
-        setTarefaDescricao('');
-        setModalVisible(false); // Fechar o modal após adicionar a tarefa
-        setRefresh(!refresh);
+        // Se estamos criando uma nova tarefa
+        resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(tarefaDados)
+        });
+      }
+
+      if (resposta.ok) {
+        Alert.alert('Sucesso', 'Tarefa salva com sucesso!');
+        setModalVisible(false); // Fecha o modal após salvar
+      } else {
+        const erro = await resposta.json().catch(() => ({ mensagem: 'Erro ao salvar tarefa' }));
+        Alert.alert('Erro', erro.mensagem || 'Erro ao salvar tarefa');
       }
     } catch (error) {
-      console.error('Erro ao enviar dados:', error);
+      console.error('Erro ao salvar tarefa:', error);
+      Alert.alert('Erro', 'Erro ao salvar tarefa');
     }
   };
-  
 
   return (
     <Modal
@@ -155,7 +151,7 @@ function Formulario({ modalVisible, setModalVisible, userId, listaId }) {
             onChangeText={setTarefaDescricao}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleAddTask} style={styles.btnSalvar}>
+            <TouchableOpacity onPress={handleSubmit} style={styles.btnSalvar}>
               <Text style={styles.btnText}>Salvar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.btnCancelar}>

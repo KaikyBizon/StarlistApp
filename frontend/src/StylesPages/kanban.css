@@ -244,12 +244,19 @@ button.botoesConfirmarExclusao:hover {
 }
 
 .editar-tarefa{
-    width: 22px;
+    width: 24px;
     cursor: pointer;
 }
 
+.nova-imagem {
+    width: 20px;
+    transform: rotate(90deg); /* Rotaciona a imagem em 90 graus */  
+     
+}
+  
+
 .excluir-tarefa { 
-    width: 22px;
+    width: 24px;
     cursor: pointer;
 }
 
@@ -360,3 +367,63 @@ button {
     transition: border-color 0.3s ease;
     color: #000000;
 }
+/* Estilo geral do overlay do modal */
+.modal-status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    z-index: 1000; /* Garante que o modal fique acima de outros elementos */
+}
+
+/* Estilo do conteúdo do modal */
+.modalContent {
+    background-color: #696969;
+    border-radius: 10px;
+    padding: 20px;
+    width: 20%; /* Largura do modal */
+    text-align: center; /* Centraliza o texto */
+    color: white; /* Cor do texto */
+}
+
+/* Estilo do título do modal */
+.modalContent h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Estilo dos botões de status */
+.modalContent button {
+    background-color: #FFD700; /* Cor amarela para o botão */
+    color: #000; /* Cor preta para o texto do botão */
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 5px 0; /* Margem vertical para separar os botões */
+    cursor: pointer; /* Cursor de ponteiro para indicar clicabilidade */
+    font-size: 16px;
+    width: 100%; /* Largura total do botão */
+    display: block; /* Faz com que cada botão ocupe uma linha */
+}
+
+
+#fechar {
+    background-color: #6C757D; /* Cor cinza para o botão de fechar */
+    margin-top: 20px; /* Espaço acima do botão de fechar */
+    color: #FAED27;
+}
+
+/* Efeito de hover nos botões */
+.modalContent button:hover {
+    opacity: 0.8; /* Efeito de opacidade ao passar o mouse */
+}
+
+
+

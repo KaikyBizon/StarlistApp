@@ -7,9 +7,8 @@
  *   Permite que o usuário insira o e-mail do participante e selecione o cargo desejado em um dropdown.
  *
  * Observações Pertinentes:
- *   1. Utiliza o hook 'useState' para controlar a visibilidade do modal.
- *   2. O modal contém um formulário onde o usuário pode inserir o e-mail do participante e selecionar um cargo.
- *   3. O componente usa `react-bootstrap` para a estrutura visual e o estilo dos componentes.
+ *   1. O modal contém um formulário onde o usuário pode inserir o e-mail do participante e selecionar um cargo.
+ *   2. O componente usa `react-bootstrap` para a estrutura visual e o estilo dos componentes.
  *
  * Estado:
  *   - show: Controla a visibilidade do modal para adicionar participantes.
@@ -25,65 +24,138 @@
  *
  */
 
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Button, Form, Modal } from 'react-bootstrap';
 import '../StylesPages/AddParticipantes.css'
+import { useState } from 'react';
 
-function AddParticipantes() {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+function AddParticipantes({ show, handleClose }) {
+    const [emailUser, setEmailUser] = useState('')
+    const [nomeUsuarioConvidado, setNomeUsuarioConvidado] = useState('')
+    const [mensagensErro, setMensagensErro] = useState('')
+
+
+    const handleEmailChange = (e) => {
+        setEmailUser(e.target.value); // Atualiza o estado com o valor digitado
+    };
+
+    // Função handleSubmit para enviar um convite para entrar na equipe
+    // Autor: Kaiky
+    // Criado em 07/11/2024
+    // Parâmetros de entrada:
+    // - e: evento de submissão do formulário
+    // Retorno:
+    // - Se o e-mail não existir, exibe a mensagem de erro
+    // - Se o envio for bem sucedido, retorna mensagem confirmando o envio
+    // Esta função envia os dados de login ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.24:8085/receber-dados'.
+    // Se o servidor retornar um erro, as mensagens de erro são exibidas na tela. Se o login for bem-sucedido, o convite é enviado.
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: 'buscar_usuario', dados: { emailUser: emailUser } }),
+            });
+            const resultado = (await resposta.json()).dadosCadastro;
+
+            if (resultado.error) {
+                // Atualiza o estado com a mensagem de erro para exibição no formulário
+                setMensagensErro(resultado.mensagens_erro);
+                setNomeUsuarioConvidado(''); // Limpa o nome do usuário em caso de erro
+            } else {
+                setMensagensErro(''); // Limpa mensagens de erro
+                setNomeUsuarioConvidado(resultado.dados_usuario[1]); // Define o nome do usuário
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+            setMensagensErro('Erro ao enviar dados para o servidor');
+            setNomeUsuarioConvidado('');
+        }
+    };
+
+    // Função sendInvitation para enviar um convite para entrar na equipe
+    // Autor: Kaiky
+    // Criado em 12/11/2024
+    // Parâmetros de entrada:
+    // - e: evento de submissão do formulário
+    // - acao: ação a ser executada no backend
+    // Retorno:
+    // - Se o convite não for enviado por algum motivo, exibe a mensagem de erro
+    // - Se o envio for bem sucedido, retorna mensagem confirmando o envio
+    // Esta função envia a requisição de convite do usuário para entrar na equipe ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.24:8085/receber-dados'.
+    const sendInvitation = async (e) => {
+        
+        e.preventDefault();
+        try {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({acao: 'enviar_convite'}),
+            });
+            const resultado = (await resposta.json()).dadosCadastro;
+
+            if (resultado.error) {
+                // Atualiza o estado com a mensagem de erro para exibição no formulário
+                setMensagensErro(resultado.mensagens_erro);
+            } else {
+                handleClose()
+                setMensagensErro(''); // Limpa mensagens de erro
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+            setMensagensErro('Erro ao enviar dados para o servidor');
+            setNomeUsuarioConvidado('');
+        }
+    };
 
     return (
-        <>
-            <NavDropdown.Item href="#action/3.1" onClick={handleShow}>
-                Adicionar Participantes
-            </NavDropdown.Item>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header className='color-addparticipante' closeButton>
+                <Modal.Title>Adicionar participantes</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className='color-addparticipante'>
+                <h3 className='nome-equipe-addparticipante'>Programadores da Fiel</h3>
+                <Form>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Email do usuário</Form.Label>
+                        <Form.Control
+                            type="email"
+                            placeholder="name@example.com"
+                            value={emailUser}
+                            onChange={handleEmailChange}
+                            autoFocus
+                        />
+                        <p>{mensagensErro}</p>
+                    </Form.Group>
 
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header className='color-addparticipante' closeButton>
-                    <Modal.Title>Adicionar participantes</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className='color-addparticipante'>
-                    <h3 className='nome-equipe-addparticipante'>Programadores da Fiel</h3>
-                    <Form>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Email do usuário</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="name@example.com"
-                                autoFocus
-                            />
-                        </Form.Group>
+                    {nomeUsuarioConvidado && (
                         <Form.Group className="mb-3 perfil-usuario">
                             <div className="perfil-addparticipante">
                                 <img src="https://cdn-icons-png.flaticon.com/128/64/64572.png" alt="perfil" />
-                                <p>Jorge</p>
+                                <p>{nomeUsuarioConvidado}</p>
                             </div>
                             <div className="drop-cargo">
-                                <select name="cargo" id="cargo">
-                                    <option value="volvo">Desenvolvedor</option>
-                                    <option value="saab">Administrador</option>
-                                    <option value="opel">Líder</option>
-                                    <option value="audi">Gerente</option>
-                                </select>
+                                <Button className='botao-enviar-addparticipante' variant="primary" onClick={sendInvitation}>
+                                    Enviar convite
+                                </Button>
                             </div>
                         </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer className='color-addparticipante'>
-                    <Button className='botao-fechar-addparticipante' variant="secondary" onClick={handleClose}>
-                        Fechar
-                    </Button>
-                    <Button className='botao-enviar-addparticipante' variant="primary" onClick={handleClose}>
-                        Enviar convite
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+                    )}
+                </Form>
+            </Modal.Body>
+            <Modal.Footer className='color-addparticipante'>
+                <Button className='botao-fechar-addparticipante' variant="secondary" onClick={handleClose}>
+                    Fechar
+                </Button>
+                <Button className='botao-enviar-addparticipante' variant="primary" onClick={handleSubmit}>
+                    Buscar usuário
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 }
 

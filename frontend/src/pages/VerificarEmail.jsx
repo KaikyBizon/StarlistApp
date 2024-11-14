@@ -27,7 +27,7 @@
  */
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button } from 'react-bootstrap';
 import '../StylesPages/VerificarEmail.css'
 
@@ -35,6 +35,10 @@ function VerificarEmail() {
     const [codigo, setCodigo] = useState('');
     const [mensagemErro, setMensagemErro] = useState('')
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Obtendo o plano do state enviado pelo componente Cadastro
+    const plano = location.state?.plano;
 
     // Função que atualiza o estado do código com o valor do input quando ocorre uma mudança.
     const handleChange = (e) => {
@@ -64,17 +68,25 @@ function VerificarEmail() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'verificar_email', dados: codigo }),
+                body: JSON.stringify({ acao: 'verificar_email', dados: { email: location.state?.email, codigo: codigo } }),
             });
 
             const resultado = (await resposta.json()).dadosCadastro;
             console.log(resultado)
 
             if (resultado.error) {
-                setMensagemErro(resultado.mensagem)
+                setMensagemErro(resultado.mensagem);
             } else {
-                navigate('/TODO')
+                // Roteamento baseado no plano escolhido
+                if (location.state?.plano === 'empresarial') {
+                    navigate("/cadastroempresarial");
+                } else if (location.state?.plano === 'gratuito') {
+                    navigate("/login");
+                } else {
+                    navigate("/pagamento");
+                }
             }
+
 
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
