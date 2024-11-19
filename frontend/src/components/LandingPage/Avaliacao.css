@@ -10,7 +10,6 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-
 }
 
 .header h1 {
@@ -121,7 +120,11 @@ body {
 .testimonial-box:hover {
     transform: scale(1.05);
     background-color: #eedf13;
-    color: #4e4e4e
+    color: #4e4e4e;
+}
+
+.testimonial-box:hover .mensagem-avl {
+    color: #666663; /* Cor alterada ao passar o mouse */
 }
 
 .testimonial-box:hover .estrelas {
@@ -161,7 +164,6 @@ body {
     height: auto;
     margin-left: 10px;
 }
-
 
 .notas {
     display: flex;

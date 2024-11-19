@@ -134,7 +134,7 @@ export default function Cadastro({ navigation }) {
         setMensagensErro(mensagens);
         setModalVisible(true); // Exibir modal com as mensagens de erro
       } else {
-        navigation.navigate('VerificarEmail')
+        navigation.navigate('Login')
       }
 
     } catch (error) {
@@ -174,19 +174,19 @@ export default function Cadastro({ navigation }) {
 
       <View style={styles.containerInputs}>
         <Text style={styles.label}>NOME</Text>
-        <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('nome', text)} placeholder='Nome Completo' placeholderTextColor="#222" value={formValues.nome} />
+        <TextInput style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('nome', text)} placeholder='Nome Completo' placeholderTextColor="#888" value={formValues.nome} />
 
         <Text style={styles.label}>E-MAIL</Text>
-        <TextInput style={styles.inputs} autoCorrect={false} keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleChange('email', text)} placeholder='E-mail' placeholderTextColor="#222" value={formValues.email} />
+        <TextInput style={styles.inputs} autoCorrect={false} keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleChange('email', text)} placeholder='E-mail' placeholderTextColor="#888" value={formValues.email} />
 
         <Text style={styles.label}>SENHA</Text>
-        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('senha', text)} placeholder='Senha' placeholderTextColor="#222" value={formValues.senha} />
+        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('senha', text)} placeholder='Senha' placeholderTextColor="#888" value={formValues.senha} />
 
         <Text style={styles.label}>CONFIRME SUA SENHA</Text>
-        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' placeholderTextColor="#222" value={formValues.confirme} />
+        <TextInput secureTextEntry={true} style={styles.inputs} autoCorrect={false} onChangeText={(text) => handleChange('confirme', text)} placeholder='Confirmar sua senha' placeholderTextColor="#888" value={formValues.confirme} />
 
         <Text style={styles.label}>DATA DE NASCIMENTO</Text>
-        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY' }} placeholder='Data de nascimento' placeholderTextColor="#222" value={formValues.dataNascimento} />
+        <TextInputMask style={styles.inputs} keyboardType="numeric" autoCorrect={false} onChangeText={(text) => handleChange('dataNascimento', text)} type={'datetime'} options={{ format: 'DD/MM/YYYY' }} placeholder='Data de nascimento' placeholderTextColor="#888" value={formValues.dataNascimento} />
 
         <Text style={styles.label}>ESCOLHA SEU PLANO</Text>
         <View style={styles.inputs}>

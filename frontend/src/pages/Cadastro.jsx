@@ -78,7 +78,7 @@ function Cadastro() {
         localStorage.setItem('email', formValues.email);
 
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,9 +115,9 @@ function Cadastro() {
 return (
     <section id="fundo">
         <div id="geral">
-            <h1 className="msg">
+           {/* <h1 className="msg">
                 <div className="amarelo">Organize sua vida</div>com apenas uma tela
-            </h1>
+            </h1>*/}
             <div className="login">
                 <div className="titulo_Cadastro">
                     <h1>CADASTRE-SE</h1>

@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   label: {
-    color: "#ffffff",
+    color: "#FFF88E",
     marginBottom: 1,
     fontFamily: 'Kanit_500Medium',
   },
   submitTxt: {
-    color: "black",
+    color: "#333",
     fontSize: 18,
     fontFamily: 'Kanit_500Medium',
   },
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     color: '#FFF88E',
   },
   modalCloseButton: {
-    backgroundColor: '#FFF88E',
+    backgroundColor: "#faed27",
     borderRadius: 9,
     padding: 8,
     elevation: 2,
@@ -100,6 +100,9 @@ const styles = StyleSheet.create({
     color: '#726C6F',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  temconta: {
+    color: "#FFF88E"
   },
 });
 

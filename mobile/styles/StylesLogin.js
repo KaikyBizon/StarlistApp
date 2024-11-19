@@ -18,7 +18,7 @@ export default styles = StyleSheet.create({
         backgroundColor: '#333',
         color: '#FFF88E',
         marginBottom: 15,
-        fontSize: 17,
+        fontSize: 15,
         borderRadius: 10,
         padding: 10,
         fontFamily: 'Kanit_500Medium',
@@ -40,7 +40,7 @@ export default styles = StyleSheet.create({
         fontFamily: 'Kanit_500Medium',
     },
     login: {
-        color: '#ffffff',
+        color: '#FFEB3B',
         fontFamily: 'Kanit_500Medium',
     },
     containerError: {
@@ -60,7 +60,7 @@ export default styles = StyleSheet.create({
     modalView: {
         backgroundColor: '#333',
         borderRadius: 20,
-        padding: 25,       // Diminui o padding para reduzir o espaço interno
+        padding: 15,       // Diminui o padding para reduzir o espaço interno
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -72,6 +72,22 @@ export default styles = StyleSheet.create({
         elevation: 5,
         width: 300,        // Diminui a largura do modal
         height: 315,       // Diminui a altura do modal
+    },
+    modalError: {
+        backgroundColor: '#333',
+        borderRadius: 20,
+        padding: 15,       // Diminui o padding para reduzir o espaço interno
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width: 225,        // Diminui a largura do modal
+        height: 170,       // Diminui a altura do modal
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -117,20 +133,20 @@ export default styles = StyleSheet.create({
         fontSize: 18,
     },
     inputs: {
-        backgroundColor: '#333',
+        backgroundColor: '#424242',
         color: '#FFF88E',
         marginBottom: 15,
         fontSize: 13,       // Aumenta o tamanho da fonte
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#FAED27',
+        borderColor: "#FFE98F",
         padding: 8,        // Aumenta o padding para dar mais espaço interno
         fontFamily: 'Kanit_500Medium',
         width: 250,         // Aumenta a largura do input
         height: 45,         // Aumenta a altura do input
     },
     forgotPassword: {
-        color: '#FFF88E'
+        color: '#FFE98F'
     },
 
     modalText: {
@@ -138,15 +154,15 @@ export default styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        color:'#faed27'
+        color:'#FFEB3B'
       },
       modalErrorText: {
         marginBottom: 10,
         textAlign: 'center',
-        color: '#faed27',
+        color: '#FFF176',
       },
       closeButton: {
-        backgroundColor: '#FAED27',
+        backgroundColor: '#616161',
         borderRadius: 9,
         padding: 8,
         elevation: 2,

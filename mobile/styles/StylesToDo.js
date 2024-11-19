@@ -4,7 +4,7 @@ export default styles = StyleSheet.create({
     // Estilo para o componente principal
     background: {
         flex: 1, // Ocupa toda a tela
-        backgroundColor: '#333', // Cor de fundo cinza
+        backgroundColor: '#222', // Cor de fundo cinza
         alignItems: 'center', // Alinha itens ao centro horizontalmente
         width: '100%', // Largura igual a 100% da tela
         height: '100%', // Altura igual a 100% da tela
@@ -104,7 +104,7 @@ export default styles = StyleSheet.create({
     card: {
         minWidth: '90%',
         maxWidth: '90%',
-        backgroundColor: '#c1c1c1',
+        backgroundColor: '#333',
         borderRadius: 8,
         padding: 16,
         marginBottom: 25,
@@ -144,7 +144,7 @@ export default styles = StyleSheet.create({
     },
     cardDescription: {
         fontSize: 16,
-        color: '#696969',
+        color: '#FFF88E',
     },
     // Estilo para o rodapé do card (data, hora, ícones)
     cardFooter: {
@@ -154,7 +154,7 @@ export default styles = StyleSheet.create({
     },
     cardFooterText: {
         fontSize: 14,
-        color: '#696969',
+        color: '#FFF88E',
     },
     // Estilo para os ícones no rodapé
     iconContainer: {
@@ -183,7 +183,7 @@ export default styles = StyleSheet.create({
         height: '40%', // Ajusta a altura do modal
         width: '50%', // Ajusta a largura do modal
         left:'23%',
-        backgroundColor: '#696969',
+        backgroundColor: '#333',
         borderRadius: 10,
         padding: 20,
         alignItems: 'center', // Centraliza o conteúdo do modal
@@ -195,7 +195,7 @@ export default styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold', // Título em negrito
         marginBottom: 20,
-        color: 'black', // Cor escura para o título
+        color: '#FFF88E', // Cor escura para o título
     },
 
     statusContainer: {
@@ -209,7 +209,7 @@ export default styles = StyleSheet.create({
 
     statusText: {
         fontSize: 18,
-        color: '#69696', // Cor mais suave para o texto do status
+        color: '#FFF88E', // Cor mais suave para o texto do status
     },
 
     statusIndicator: {
@@ -223,7 +223,7 @@ export default styles = StyleSheet.create({
         width: 160,
         marginBottom: 10, // Espaço entre os botões
         borderRadius: 10, // Bordas arredondadas
-        backgroundColor: '#a0a0a0', // Cor de fundo padrão
+        backgroundColor: '#888', // Cor de fundo padrão
         textAlign: 'center', // Centraliza o texto
     },
     
@@ -243,7 +243,7 @@ export default styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: '#000000', // Cor de fundo preta para o botão
+        backgroundColor: '#222', // Cor de fundo preta para o botão
         padding: 6,
         borderRadius: 5,
         width: '56%', // Largura dos botões
@@ -251,7 +251,7 @@ export default styles = StyleSheet.create({
     },
 
     buttonText: {
-        color: '#FFD700', // Texto amarelo para o botão
+        color: '#FFF88E', // Texto amarelo para o botão
         textAlign: 'center', // Centraliza o texto no botão
     },
     

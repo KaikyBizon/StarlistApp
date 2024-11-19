@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
 
 #fundo {
-    background-image: url(../../public/images/fundo-login.png);
+    background-image: url(../../public/images/fundocadastro.png);
     background-size: 1550px;
     height: 100vh;
 }

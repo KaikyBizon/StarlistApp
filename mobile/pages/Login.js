@@ -201,7 +201,7 @@ const handlePasswordReset = async () => {
                 <TextInput
                     style={styles.inputsLogin}
                     placeholder="Digite seu e-mail"
-                    placeholderTextColor="#222"
+                    placeholderTextColor="#888"
                     value={formValues.email}
                     onChangeText={(text) => handleChange('email', text)}
                 />
@@ -211,7 +211,7 @@ const handlePasswordReset = async () => {
                     style={styles.inputsLogin}
                     secureTextEntry={true}
                     placeholder="Digite sua senha"
-                    placeholderTextColor="#222"
+                    placeholderTextColor="#888"
                     value={formValues.senha}
                     onChangeText={(text) => handleChange('senha', text)}
                 />
@@ -240,6 +240,7 @@ const handlePasswordReset = async () => {
                         <TextInput
                             style={styles.inputs}
                             placeholder="Confirme seu E-mail"
+                            placeholderTextColor="#888"
                             value={resetEmail}
                             onChangeText={(text) => setResetEmail(text)}
                         />
@@ -247,6 +248,7 @@ const handlePasswordReset = async () => {
                             style={styles.inputs}
                             secureTextEntry={true}
                             placeholder="Nova Senha"
+                            placeholderTextColor="#888"
                             value={newPassword}
                             onChangeText={(text) => setNewPassword(text)}
                         />
@@ -254,6 +256,7 @@ const handlePasswordReset = async () => {
                             style={styles.inputs}
                             secureTextEntry={true}
                             placeholder="Confirme a Nova Senha"
+                            placeholderTextColor="888"
                             value={confirmNewPassword}
                             onChangeText={(text) => setConfirmNewPassword(text)}
                         />
@@ -284,7 +287,7 @@ const handlePasswordReset = async () => {
                 }}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
+                    <View style={styles.modalError}>
                         <Text style={styles.modalText}>Erros no login:</Text>
                         {mensagensErro.map((mensagem, index) => (
                             <Text key={index} style={styles.modalErrorText}>{mensagem}</Text>

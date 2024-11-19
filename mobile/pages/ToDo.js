@@ -58,7 +58,7 @@ export default function ToDo({ navigation, route }) {
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
     try {
-      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: { usuarioId, dataToCatchTarefas } }),
@@ -144,7 +144,7 @@ export default function ToDo({ navigation, route }) {
             text: 'Excluir',
             onPress: async () => {
               try {
-                const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+                const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ dados: { tarefaId: id }, acao: 'excluirTarefa' }),
@@ -185,7 +185,7 @@ export default function ToDo({ navigation, route }) {
       return;
     }
 
-    const response = await fetch('http://10.135.60.26:8085/receber-dados', {
+    const response = await fetch('http://10.135.60.12:8085/receber-dados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ acao: 'editarTarefa', dados: { id: selectedTask.id, titulo: editedTitle, descricao: editedDescription } }),
@@ -230,7 +230,7 @@ export default function ToDo({ navigation, route }) {
     console.log(status)
     try {
       // Envia o status atualizado para o servidor
-      const response = await fetch('http://10.135.60.26:8085/receber-dados', {
+      const response = await fetch('http://10.135.60.12:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -315,7 +315,7 @@ export default function ToDo({ navigation, route }) {
                   </View>
                   <View style={styles.iconContainer}>
                     <TouchableOpacity style={styles.editar} onPress={() => openEditModal(item)}>
-                      <Feather name="edit" size={24} color="#4682B4" style={styles.icon} />
+                      <Feather name="edit" size={24} color="#faed27" style={styles.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => excluirTarefa(id)}>
                       <Feather name="trash-2" size={24} color="#FF6347" style={styles.icon} />
