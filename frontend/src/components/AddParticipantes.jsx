@@ -97,12 +97,14 @@ function AddParticipantes({ show, handleClose }) {
                 body: JSON.stringify({acao: 'enviar_convite'}),
             });
             const resultado = (await resposta.json()).dadosCadastro;
+            console.log(resultado)
 
             if (resultado.error) {
                 // Atualiza o estado com a mensagem de erro para exibição no formulário
                 setMensagensErro(resultado.mensagens_erro);
             } else {
                 handleClose()
+                setEmailUser('')
                 setMensagensErro(''); // Limpa mensagens de erro
             }
         } catch (error) {
