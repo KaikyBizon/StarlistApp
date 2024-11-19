@@ -17,8 +17,7 @@ from actionsBD.selectAllTasks import select_all_tasks
 from actionsBD.getEmailToInvite import buscar_usuario_convite
 from actionsBD.enviarConviteEquipe import enviar_convite
 from validarEmail import send_email_confirm
-from datetime import datetime
-
+import datetime
 from validacoes import (
     validar_nome,
     validar_email,
@@ -46,19 +45,26 @@ dados_cadastro_temp = {}
 # Variável global para armazenar o ID do usuário convidado
 id_usuario_convidado = None
 
+#Variável que salva o id do usuário logado
+id_user = None
+
 
 # Função para processar os dados recebidos
 def processar_dados(dados):
     global dados_cadastro_temp  # Declaração para utilizar a variável global
     global id_usuario_convidado
+    global id_user
+
+
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
+
+
     # Recebe a ação que deve ser executada
     acao = dados.get('acao')
     dados_cadastro = {}
     dados_tarefa = {}
-
     '''
     Condição para caso os dados recebidos sejam em formato de dicionário, execute essas funções.
     Sem essa condição, quando dados_processados é apenas um número, como por exemplo apenas o id do usuário,
@@ -245,23 +251,32 @@ def processar_dados(dados):
             email = dados_processados.get('email')
             senha = dados_processados.get('senha')
             user = selecionar_dados_cadastro(email, senha)
+
             if user and email == user[0] and senha == user[1]:
                 email, senha, id, nome_usuario, data_nasc = user
-                dados_cadastro = {'error': False, 'email': email, 'id': id,
-                                  'nome_usuario': nome_usuario, 'data_nasc': data_nasc}
+                dados_cadastro = {
+                    'error': False,
+                    'email': email,
+                    'id': id,
+                    'nome_usuario': nome_usuario,
+                    'data_nasc': data_nasc
+                }
+                id_user = id
+                
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': 'Email ou senha inválido'}
-
-        # Criar lista
-        # Letícia
-        # Criado em 22/08/24
-        # Parametros entrada:
-        # acao - string - receber a acao para verificar se deve ser executado este if
-        # lista - lista - recebe os dados do usuário para criar uma lista
-        # Retorno:
-        # erro - string - retorna que a lista foi criada com sucesso, caso contrário não retorna nada
-        # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
+                dados_cadastro = {
+                    'error': True,
+                    'mensagens_erro': 'Email ou senha inválidos'
+                }
+       # Criar lista
+       # Letícia
+       # Criado em 22/08/24
+       # Parametros entrada:
+       # acao - string - receber a acao para verificar se deve ser executado este if
+       # lista - lista - recebe os dados do usuário para criar uma lista
+       # Retorno:
+       # erro - string - retorna que a lista foi criada com sucesso, caso contrário não retorna nada
+       # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
         if acao == 'criar_lista':
             criarLista(lista)
             listaCriada = {'Lista criada': 'Lista criada com sucesso!'}
@@ -439,7 +454,6 @@ def processar_dados(dados):
         excluir_tarefa(id_tarefa)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
 
-
     # Convidar pessoa para a equipe
     # Autor: Kaiky
     # Criado em 12/11/2024
@@ -451,31 +465,42 @@ def processar_dados(dados):
             # Armazena o ID do usuário na variável global
             id_usuario_convidado = dados_usuario_convidado[0]
             dados_cadastro = {'error': False,
-                            'dados_usuario': dados_usuario_convidado}
+                              'dados_usuario': dados_usuario_convidado}
         else:
             dados_cadastro = {
                 'error': True, 'mensagens_erro': 'Usuário não encontrado, verifique o endereço de e-mail.'}
 
-
     elif acao == 'enviar_convite':
         if id_usuario_convidado:
-            data_atual = datetime.now()
+            id_remet = id_user
+            data_atual = datetime.datetime.now()
             data_convite = data_atual.date()
             hora_convite = data_atual.time()
             status_convite = "Não lida"
             mensagem_convite = "Kaiky Bizon está te convidando para a equipe Starlist"
-            dados_convite = (id_usuario_convidado, mensagem_convite, hora_convite, data_convite, status_convite)
-            enviar_convite(dados_convite)
-            dados_cadastro = {'error': False,
-                            'mensagem': 'Convite enviado com sucesso.'}
+            print("ID_ remet: ", id_remet)
+
+            if id_remet:
+                dados_convite = (id_remet, id_usuario_convidado, mensagem_convite, hora_convite, data_convite, status_convite)
+                enviar_convite(dados_convite)
+
+                dados_cadastro = {'error': False, 'mensagem': 'Convite enviado com sucesso.'}
+            else:
+                dados_cadastro = {
+                    'error': True,
+                    'mensagem': 'Usuário não autenticado. Faça o login novamente.'
+                }
         else:
             dados_cadastro = {
-                'error': True, 'mensagem': 'ID do usuário não encontrado. Busque o usuário antes de enviar o convite.'}
+                'error': True,
+                'mensagem': 'ID do usuário não encontrado. Busque o usuário antes de enviar o convite.'
+            }
 
     if acao == 'selecionar_plano_id':
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
 
+    
     return listaCriada, dados_tarefa, dados_cadastro
 
 
