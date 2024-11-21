@@ -25,9 +25,9 @@ Descrição/observações:
     O componente também faz uso do `AsyncStorage` para recuperar o ID do usuário, garantindo que as tarefas sejam associadas corretamente ao usuário que as cria. 
     A validação é aplicada em cada campo para garantir que os dados inseridos sejam válidos antes de permitir o envio.
 */
-
+import { useFocusEffect } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import styles from '../styles/StylesNovaTarefa.js';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
@@ -122,8 +122,9 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         usuario_id: ''
     });
 
-    //Constante para armazenar mensagens de erro
-    const [mensagens_erro, setMensagensErro] = useState([])
+    const [mensagens_erro, setMensagensErro] = useState([]);
+
+  
 
     {/*
     Nome da função: handleChange;
@@ -195,60 +196,65 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
         Caso a criação seja bem-sucedida, a função redefine os valores do formulário, recarrega a página (atualizando a lista de tarefas), e redireciona o usuário para a tela "TO DO" com a nova tarefa selecionada.
         Um pequeno atraso de 300ms é adicionado para garantir que os dados estejam prontos antes do redirecionamento.
     */}
+    // Declaração da função de reset fora do handleSubmit
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Gerar um ID único para a tarefa
         const uniqueId = Date.now(); // Usando timestamp para garantir que o ID seja único
-
+    
         const valuesTask = {
             ...dadosTask,
             data: convertDateToISO(dadosTask.data),
             id: uniqueId, // Adicionar ID único
         };
-
+    
         try {
-            const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.25:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ acao: 'criar_tarefa', dados: valuesTask }),
             });
-
+    
             const resultado = await resposta.json();
-
+    
             if (resultado.mensagens_erro) {
                 setMensagensErro(resultado.mensagens_erro);
             } else {
-                setShow(false);
-                setDadosTask({
-                    titulo: '',
-                    descricao: '',
-                    data: formatDate(new Date()),
-                    horario: formatTime(new Date()),
-                    etiqueta: '',
-                    usuario_id: dadosTask.usuario_id,
-                });
-                setRefresh(!refresh); // Recarrega a página após inserir uma tarefa
-
+                // Recarrega ou notifica outras partes do aplicativo
                 if (onTarefaSalva) {
                     onTarefaSalva();
                 }
-
-                // Adiciona um pequeno atraso para garantir que os dados estejam prontos
-                setTimeout(() => {
-                    navigation.navigate('TO DO', {
-                        selectedDate: valuesTask.data,
-                        novaTarefa: valuesTask,
-                    });
-                }, 300); // 300ms de atraso
+    
+                // Navegar para a tela "TO DO" após limpar os campos
+                navigation.navigate('TO DO', {
+                    selectedDate: valuesTask.data,
+                    novaTarefa: valuesTask,
+                });
             }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
         }
     };
-
+    
+    const handleCancel = () => {
+        // Resetando todos os campos para seus valores iniciais
+        setDadosTask((prevState) => ({
+            ...prevState,
+            titulo: '',          // Resetando título
+            data: formatDate(new Date()),  // Resetando data para o valor padrão
+            horario: formatTime(new Date()), // Resetando hora para o valor padrão
+            etiqueta: '',        // Resetando a etiqueta
+            descricao: '',       // Resetando a descrição
+        }));
+    
+        setMensagensErro([]);  // Limpar mensagens de erro, caso existam
+    };
+    
 
 
     const showMode = (currentMode) => {
@@ -277,6 +283,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                         style={styles.inputs}
                         autoCorrect={false}
                         onChangeText={(text) => handleChange('titulo', text)}
+                        value={dadosTask.titulo}
                         paddingHorizontal={10}
                     />
                 </View>
@@ -325,6 +332,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                         style={styles.inputs}
                         autoCorrect={false}
                         onChangeText={(text) => handleChange('descricao', text)}
+                        value={dadosTask.descricao}
                         paddingHorizontal={10}
                         multiline={true}
                     />
@@ -333,7 +341,7 @@ export default function NovaTarefa({ navigation, onTarefaSalva }) {
                     <TouchableOpacity style={styles.btnSubmit} onPress={handleSubmit}>
                         <Text style={styles.submitTxt}>SALVAR TAREFA</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnCancel}>
+                    <TouchableOpacity style={styles.btnCancel} onPress={handleCancel}>
                         <Text style={styles.cancelTxt}>CANCELAR</Text>
                     </TouchableOpacity>
                 </View>
