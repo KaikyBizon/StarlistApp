@@ -205,7 +205,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: black;
 }
 
-.dropdown-button {
+.btn-AbrirModal {
     width: 100%;
     padding: 10px;
     background-color: #0000;
@@ -218,7 +218,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     justify-content: space-between;
 }
 
-.dropdown-list {
+.lista-fotos {
     position: absolute;
     top: 100%;
     left: 0;
@@ -231,18 +231,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     z-index: 10;
 }
 
-.dropdown-item {
+.opcoes-fotos {
     display: flex;
     align-items: center;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.dropdown-item span{
+.opcoes-fotos span{
     padding-left: 10px;
 }
 
-.dropdown-item:hover {
+.opcoes-fotos:hover {
     background-color: rgb(154, 150, 150);
 }
 
@@ -277,4 +277,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Estilo dos placeholders dentro do input de data */
 #right-login input[type="date"]::placeholder {
     color: #FFF88E; /* Cor do placeholder */
+}
+
+.foto-dropdown {
+    position: relative;
+    width: 100%;
 }
