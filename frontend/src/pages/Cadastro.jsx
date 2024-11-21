@@ -43,7 +43,8 @@ function Cadastro() {
         senha: '',
         confirme: '',
         dataNascimento: '',
-        plano: ''
+        plano: '',
+        foto: ''
     });
 
     const [mensagensErro, setMensagensErro] = useState([]);
@@ -87,7 +88,7 @@ function Cadastro() {
             });
 
             const resultado = (await resposta.json()).dadosCadastro;
-            console.log(resultado)
+            console.log('reultado', resultado)
 
 
             if (resultado.error) {
@@ -104,173 +105,276 @@ function Cadastro() {
                     senha: '',
                     confirme: '',
                     dataNascimento: '',
-                    plano: ''
+                    plano: '',
+                    foto: ''
                 });
             }
         } catch (error) {
-        console.error('Erro ao enviar dados:', error);
-    }
-};
+            console.error('Erro ao enviar dados:', error);
+        }
+    };
 
-return (
-    <section id="fundo">
-        <div id="geral">
-           {/* <h1 className="msg">
-                <div className="amarelo">Organize sua vida</div>com apenas uma tela
-            </h1>*/}
-            <div className="login">
-                <div className="titulo_Cadastro">
-                    <h1>CADASTRE-SE</h1>
+    const handleFotoGaleria = (e) => {
+        const file = e.target.files[0]; // Pega o primeiro arquivo escolhido
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormValues((prevValues) => ({
+                    ...prevValues,
+                    foto: reader.result, // Armazena o URL da imagem no estado
+                }));
+            };
+            reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados
+        }
+    };
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const opcoesFotos = [
+        { value: 'cara.png', label: 'Foto 1', src: '../../public/images/cara.png' },
+        { value: 'cara2.png', label: 'Foto 2', src: '../../public/images/cara2.png' },
+        { value: 'mulher.png', label: 'Foto 3', src: '../../public/images/mulher.png' },
+        { value: 'mulher2.png', label: 'Foto 4', src: '../../public/images/mulher2.png' },
+        { value: 'minhaFoto', label: 'Minha Foto', src: '' }
+    ];
+
+    const handleFotoClick = (value) => {
+        if (value === 'minhaFoto') {
+            document.getElementById('input-foto').click(); // Aciona o input de arquivo
+        } else {
+            setFormValues((prevValues) => ({ ...prevValues, foto: value }));
+            setIsDropdownOpen(false); // Fecha o dropdown após a escolha
+        }
+    };
+
+    return (
+        <section id="fundo">
+            <div id="geral">
+                <h1 className="msg">
+                    <div className="amarelo">Organize sua vida</div>com apenas uma tela
+                </h1>
+                <div className="login">
+                    <div className="titulo_Cadastro">
+                        <h1>CADASTRE-SE</h1>
+                    </div>
+
+                    <form id="right-login" name="formulario_cadastro">
+                        {/* Campos do formulário */}
+                        <div className="textos">
+                            <input
+                                type="text"
+                                name="nome"
+                                id="nome_usuario"
+                                placeholder="Digite seu nome de usuário"
+                                required
+                                data-min-length="3"
+                                data-max-length="30"
+                                data-required
+                                value={formValues.nome}
+                                onChange={handleChange}
+                                maxLength={30}
+                            />
+
+                            {/* Exibição de mensagens de erro */}
+                            {mensagensErro.some(mensagem => mensagem.mensagem_nome) && (
+                                <ul className='erro'>
+                                    {mensagensErro.filter(mensagem => mensagem.mensagem_nome).map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_nome}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+
+
+
+                        <div className="textos">
+                            <input
+                                type="email"
+                                name="email"
+                                id="email_usuario"
+                                placeholder="Digite um e-mail"
+                                data-email-validate
+                                required
+                                data-mix-length="11"
+                                data-max-length="50"
+                                value={formValues.email}
+                                onChange={handleChange}
+                            />
+                            {mensagensErro.some(mensagem => mensagem.mensagem_email) && (
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_email}</li>
+                                    ))}
+                                </ul>)}
+                        </div>
+
+                        <div className="textos">
+                            <input
+                                type="password"
+                                name="senha"
+                                id="senha_usuario"
+                                placeholder="Digite uma senha"
+                                data-min-length="6"
+                                data-max-length="15"
+                                data-password-validate
+                                required
+                                value={formValues.senha}
+                                onChange={handleChange}
+                                maxLength={64}
+                            />
+                            {mensagensErro.some(mensagem => mensagem.mensagem_senha) && (
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_senha}</li>
+                                    ))}
+                                </ul>)}
+                        </div>
+
+                        <div className="textos">
+                            <input
+                                type="password"
+                                name="confirme"
+                                id="confirma_senha"
+                                placeholder="Confirme sua senha"
+                                required
+                                data-equal="Senha"
+                                value={formValues.confirme}
+                                onChange={handleChange}
+                                maxLength={64}
+                            />
+                            {mensagensErro.some(mensagem => mensagem.mensagem_confirmar) && (
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_confirmar}</li>
+                                    ))}
+                                </ul>)}
+                        </div>
+
+                        <div className="textos">
+                            <input
+                                type="date"
+                                name="dataNascimento"
+                                id="data_nasc"
+                                placeholder="Data de nascimento"
+                                data-valida-nasc
+                                required
+                                value={formValues.dataNascimento}
+                                onChange={handleChange}
+                            />
+                            {mensagensErro.some(mensagem => mensagem.mensagem_idade) && (
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_idade}</li>
+                                    ))}
+                                </ul>)}
+                        </div>
+
+                        <div className="textos">
+                            <select
+                                name="plano"
+                                id="plano"
+                                value={formValues.plano}
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled hidden>Selecione um plano</option>
+                                <option value="gratuito">Gratuito</option>
+                                <option value="mensal">Mensal</option>
+                                <option value="anual">Anual</option>
+                                <option value="empresarial">Empresarial</option>
+                            </select>
+
+                            {mensagensErro.some(mensagem => mensagem.mensagem_plano) && (
+                                <ul className='erro'>
+                                    {mensagensErro.map((mensagem, index) => (
+                                        <li key={index}>{mensagem.mensagem_plano}</li>
+                                    ))}
+                                </ul>)}
+
+                        </div>
+
+                        <div className="textos">
+                            <div className="foto-dropdown">
+                                <button
+                                    className="dropdown-button"
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                >
+                                    {formValues.foto ? (
+                                        <span>
+                                            <img
+                                                src={formValues.foto.startsWith('data:image') ? formValues.foto : opcoesFotos.find((opcao) => opcao.value === formValues.foto).src}
+                                                alt="Foto selecionada"
+                                                style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+                                            />
+                                            &nbsp;{formValues.foto.startsWith('data:image') ? 'Minha Foto' : opcoesFotos.find((opcao) => opcao.value === formValues.foto).label}
+                                        </span>
+                                    ) : (
+                                        "Selecione uma foto"
+                                    )}
+                                </button>
+
+                                {isDropdownOpen && (
+                                    <ul className="dropdown-list">
+                                        {opcoesFotos.map((opcao) => (
+                                            <li
+                                                key={opcao.value}
+                                                className="dropdown-item"
+                                                onClick={() => handleFotoClick(opcao.value)}
+                                            >
+                                                {opcao.value === 'minhaFoto' ? (
+                                                    <>
+                                                        <input
+                                                            type="file"
+                                                            id="input-foto"
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFotoGaleria}
+                                                        />
+                                                        <span>Escolher da galeria</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <img
+                                                            src={opcao.src}
+                                                            alt={opcao.label}
+                                                            style={{ width: "30px", height: "30px", borderRadius: "50%", marginRight: "10px" }}
+                                                        />
+                                                        {opcao.label}
+                                                    </>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+
+
+
+                        <div className='Link_JaTemConta'>
+                            <p className='JaTemConta'>Já tem uma conta? <Link to="/login" className='VaParaLogin'>Faça Login</Link></p>
+                        </div>
+
+                        <div className="botoes">
+                            <div className="botao_confirmar">
+                                <button className='botao_confirmar' id="btn-submit" type="submit" name="submit" value="Cadastrar-se" onClick={handleSubmit}>Enviar</button>
+                            </div>
+                            <div className="botao_confirmar">
+                                <button className='botao_confirmar' id="btn-cancel" type="button" name="botao" value="Cancelar" onClick={() => setFormValues({
+                                    nome: '',
+                                    email: '',
+                                    senha: '',
+                                    confirme: '',
+                                    dataNascimento: '',
+                                    plano: '',
+                                    foto: ''
+                                })}>Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <form id="right-login" name="formulario_cadastro">
-                    {/* Campos do formulário */}
-                    <div className="textos">
-                        <input
-                            type="text"
-                            name="nome"
-                            id="nome_usuario"
-                            placeholder="Digite seu nome de usuário"
-                            required
-                            data-min-length="3"
-                            data-max-length="30"
-                            data-required
-                            value={formValues.nome}
-                            onChange={handleChange}
-                            maxLength={30}
-                        />
-                    </div>
-
-                    {/* Exibição de mensagens de erro */}
-                    <ul className='erro'>
-                        {mensagensErro.map((mensagem, index) => (
-                            <li key={index}>{mensagem.mensagem_nome}</li>
-                        ))}
-                    </ul>
-
-                    <div className="textos">
-                        <input
-                            type="email"
-                            name="email"
-                            id="email_usuario"
-                            placeholder="Digite um e-mail"
-                            data-email-validate
-                            required
-                            data-mix-length="11"
-                            data-max-length="50"
-                            value={formValues.email}
-                            onChange={handleChange}
-                        />
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_email}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="textos">
-                        <input
-                            type="password"
-                            name="senha"
-                            id="senha_usuario"
-                            placeholder="Digite uma senha"
-                            data-min-length="6"
-                            data-max-length="15"
-                            data-password-validate
-                            required
-                            value={formValues.senha}
-                            onChange={handleChange}
-                            maxLength={64}
-                        />
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_senha}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="textos">
-                        <input
-                            type="password"
-                            name="confirme"
-                            id="confirma_senha"
-                            placeholder="Confirme sua senha"
-                            required
-                            data-equal="Senha"
-                            value={formValues.confirme}
-                            onChange={handleChange}
-                            maxLength={64}
-                        />
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_confirmar}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="textos">
-                        <input
-                            type="date"
-                            name="dataNascimento"
-                            id="data_nasc"
-                            placeholder="Data de nascimento"
-                            data-valida-nasc
-                            required
-                            value={formValues.dataNascimento}
-                            onChange={handleChange}
-                        />
-                        <ul className='erro'>
-                            {mensagensErro.map((mensagem, index) => (
-                                <li key={index}>{mensagem.mensagem_idade}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="textos">
-                        <select
-                            name="plano"
-                            id="plano"
-                            value={formValues.plano}
-                            onChange={handleChange}
-                        >
-                            <option value="" disabled hidden>Selecione um plano</option>
-                            <option value="gratuito">Gratuito</option>
-                            <option value="mensal">Mensal</option>
-                            <option value="anual">Anual</option>
-                            <option value="empresarial">Empresarial</option>
-                        </select>
-                    </div>
-
-                    <ul className='erro'>
-                        {mensagensErro.map((mensagem, index) => (
-                            <li key={index}>{mensagem.mensagem_plano}</li>
-                        ))}
-                    </ul>
-
-                    <div className='Link_JaTemConta'>
-                        <p className='JaTemConta'>Já tem uma conta? <Link to="/login" className='VaParaLogin'>Faça Login</Link></p>
-                    </div>
-
-                    <div className="botoes">
-                        <div className="botao_confirmar">
-                            <button className='botao_confirmar' id="btn-submit" type="submit" name="submit" value="Cadastrar-se" onClick={handleSubmit}>Enviar</button>
-                        </div>
-                        <div className="botao_confirmar">
-                            <button className='botao_confirmar' id="btn-cancel" type="button" name="botao" value="Cancelar" onClick={() => setFormValues({
-                                nome: '',
-                                email: '',
-                                senha: '',
-                                confirme: '',
-                                dataNascimento: '',
-                                plano: ''
-                            })}>Cancelar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-);
+            </div >
+        </section >
+    );
 };
 
 export { Cadastro };

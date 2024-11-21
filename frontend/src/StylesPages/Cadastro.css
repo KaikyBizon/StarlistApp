@@ -168,3 +168,50 @@
 .JaTemConta{
     color: black;
 }
+
+.dropdown-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0000;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: rgb(140, 137, 137);
+    border: 1px solid #0000;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item span{
+    padding-left: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: rgb(154, 150, 150);
+}
+
+.foto-preview img {
+    margin-top: 10px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+}
