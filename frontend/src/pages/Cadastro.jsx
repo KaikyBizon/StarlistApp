@@ -44,7 +44,7 @@ function Cadastro() {
         confirme: '',
         dataNascimento: '',
         plano: '',
-        foto: ''
+        foto: null
     });
 
     const [mensagensErro, setMensagensErro] = useState([]);
