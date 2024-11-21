@@ -12,14 +12,10 @@
 
 #geral {
     display: flex;
-    height: 645px;
-    justify-content: space-around;
+    justify-content: flex-end; /* Posiciona o formulário à direita da tela */
     align-items: center;
-}
-
-#geral .msg {
-    font-size: 35pt;
-    color: #000000;
+    height: 730px; /* Garante alinhamento vertical */
+    padding-right: 150px; /* Espaço da borda direita */
 }
 
 .login,
@@ -31,23 +27,34 @@
 
 .login {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: flex-end; /* Alinha os elementos dentro da div.login */
+    width: 350px;
 }
 
 #right-login{
-    margin-left: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os botões dentro do formulário */
+    width: 100%; /* Garante que os elementos se alinhem ao formulário */
 }
 
-#right-login input {
-    display: flex;
-    justify-content: center;
-    max-width: 300px;
+#right-login input, 
+#right-login select {
+    width: 100%; /* Faz os inputs ocuparem toda a largura da div */
+    padding: 3px; /* Adiciona espaçamento interno */
+    border: none; /* Remove borda padrão */
+    border-bottom: 2px solid #5e5b5b; /* Linha preta na parte inferior */
+    outline: none; /* Remove borda azul ao focar */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
+    font-size: 15px; /* Mantém legibilidade */
 }
 
 .textos {
     display: flex;
-    flex-direction: column; /* Exibe a label e o select um abaixo do outro */
-    align-items: flex-start; /* Alinha itens à esquerda */
+    flex-direction: column;
+    align-items: flex-start; /* Alinha os inputs à esquerda */
+    width: 100%; /* Garante alinhamento correto */
 }
 
 .textos input {
@@ -59,22 +66,34 @@
     border-bottom: 1px solid #000000;
 }
 
-.titulo_Cadastro {
-    color: #000000;
-    font-weight: 30pt;
-    padding: 50px;
+#plano{
+    margin: 0px;
+}
 
+#geral .titulo_Cadastro h1 {
+    color: #FFEB3B !important; 
+}
+
+.titulo_Cadastro {
+    text-align: center; /* Centraliza o título no formulário */
+    width: 100%;
+    font-size: 30pt;
+    margin-bottom: 20px;
 }
 
 .textos input::placeholder {
-    color: #000000;
-    font-size: 8pt;
-    opacity: 0.8;
+    color: #FFF88E;
+    font-size: 14px;
 }
 
 .textos input:focus {
     outline: 0;
-    color: #000000;
+    color: #FFF88E;
+}
+
+/* Esconde o ícone de calendário nativo */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
 }
 
 /* Estilo para o dropdown */
@@ -84,24 +103,20 @@
     margin: 20px 0; /* Ajuste de margem para espaço entre elementos */
     background: transparent; /* Removendo o fundo branco */
     border: 0;
-    border-bottom: 1px solid #000000;
-    color: #000000; /* Mesma cor dos placeholders */
-    font-size: 8pt; /* Mesma fonte dos placeholders */
-    opacity: 0.8; /* Mesma opacidade dos placeholders */
+    border-bottom: 1px solid #000000; /* Linha de borda inferior */
+    color: #FFF88E; /* Cor do texto do dropdown */
+    font-size: 14px; /* Tamanho da fonte */
 }
 
-/* Estilo para a opção de "placeholder" (primeira opção) */
+/* Estilo da opção placeholder (primeira opção) */
 .textos select option:first-child {
-    color: #000000;
-    font-size: 8pt;
-    opacity: 0.8;
-}
+    color: #999999; /* Cor mais clara para o placeholder */
+    font-size: 14px;
+} 
 
-/* Estilo específico para a opção de "placeholder" (primeira opção) */
-.textos select option:first-child {
-    color: #000000;
-    font-size: 8pt;
-    opacity: 0.8;
+/* Estilo das opções do dropdown (não placeholder) */
+.textos select option {
+    color: #000000; /* Cor do texto das opções do dropdown */
 }
 
 /* Remove as setas padrão do select */
@@ -109,40 +124,57 @@
     display: none;
 } 
 
-/* Ajustes ao focar no dropdown */
+/* Estilo para quando o dropdown está em foco */
 .textos select:focus {
     outline: none;  /* Remove a borda de foco padrão */
-    border-bottom: 1px solid #000000;  /* Mantém o estilo ao focar */
+    border-bottom: 1px solid #000000;  /* Mantém o estilo de borda ao focar */
+} 
+
+/* Estilo para as opções selecionadas */
+.textos select:focus option {
+    color: #FFF88E; /* Cor do texto da opção selecionada */
+    background-color: #5e5b5b; /* Fundo amarelo para a opção selecionada */
+}
+
+/* Estilo para as opções do dropdown quando passar o mouse por cima */
+.textos select option:hover {
+    color: #FFF88E; /* Cor do texto quando passar o mouse */
+    background-color: #333333; /* Cor de fundo quando passar o mouse */
 }
 
 .btn-cadastro,
 #btn-submit,
 #btn-cancel {
     cursor: pointer;
-    border-radius: 30px;
+    border-radius: 12px;
     border: 0;
-    padding: 12px 30px;
-    width: 140px;
-    height: 50px;
-    background-color: rgb(255, 197, 0);
+    padding: 15px 30px; /* Reduzi o padding para reduzir o espaçamento entre os botões */
+    width: 150px; /* Ajustei a largura do botão para mantê-los semelhantes */
+    height: 50px; /* Ajustei a altura do botão */
+    background-color: #FFEB3B;
+    box-sizing: border-box; /* Inclui padding no cálculo da largura */
+    font-size: 16px; /* Tamanho da fonte mais compatível com os novos tamanhos */
 }
 
 .btn-cadastro:hover,
 #btn-submit:hover,
 #btn-cancel:hover {
-    color: rgb(255, 197, 0);
+    color: #FFEB3B;
     background-color: #000000;
 }
 
 .botoes {
     display: flex;
-    justify-content: space-around;
-    margin-right: 70px;
+    justify-content: center; /* Alinha os botões ao centro */
+    gap: 50px; /* Espaçamento horizontal entre os botões */
+    margin-top: 20px;
+    width: 100%; /* Faz a div ocupar toda a largura disponível */
 }
 
 .Link_JaTemConta{
-    margin-bottom: 10px;
-    margin-top: 5px;
+    text-align: left; /* Alinha o link "Já tem conta?" à esquerda */
+    width: 100%;
+    margin-top: 10px;
 }
 
 .error-validation {
@@ -160,8 +192,12 @@
     width: 300px;
 }
 
+.error-validation, .erro {
+    text-align: left; /* Alinha os erros à esquerda */
+}
+
 .VaParaLogin{
-    color: black;
+    color: #FFF88E;
     text-decoration: underline;
 }
 
@@ -169,7 +205,7 @@
     color: black;
 }
 
-.dropdown-button {
+.btn-AbrirModal {
     width: 100%;
     padding: 10px;
     background-color: #0000;
@@ -182,7 +218,7 @@
     justify-content: space-between;
 }
 
-.dropdown-list {
+.lista-fotos {
     position: absolute;
     top: 100%;
     left: 0;
@@ -195,18 +231,18 @@
     z-index: 10;
 }
 
-.dropdown-item {
+.opcoes-fotos {
     display: flex;
     align-items: center;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.dropdown-item span{
+.opcoes-fotos span{
     padding-left: 10px;
 }
 
-.dropdown-item:hover {
+.opcoes-fotos:hover {
     background-color: rgb(154, 150, 150);
 }
 
@@ -214,4 +250,36 @@
     margin-top: 10px;
     border: 2px solid #ccc;
     border-radius: 50%;
+    color: #FFF88E;
+} 
+
+/* Estilo geral para o input de data */
+#right-login input[type="date"] {
+    width: 100%; /* Faz o input ocupar toda a largura do formulário */
+    padding: 3px; /* Espaçamento interno */
+    border: none; /* Remove a borda padrão */
+    border-bottom: 2px solid #5e5b5b; /* Linha na parte inferior */
+    outline: none; /* Remove borda azul ao focar */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
+    font-size: 15px; /* Tamanho de fonte */
+    color: #FFF88E; /* Cor do texto no estado normal */
+    background-color: transparent; /* Fundo transparente */
+}
+
+/* Estilo ao focar no input de data */
+#right-login input[type="date"]:focus {
+    outline: none; /* Remove a borda padrão do foco */
+    border-bottom: 2px solid #5e5b5b; /* Altera a cor da linha inferior ao focar */
+    color: #FFF88E; /* Cor do texto ao focar */
+    background-color: transparent; /* Mantém o fundo transparente */
+}
+
+/* Estilo dos placeholders dentro do input de data */
+#right-login input[type="date"]::placeholder {
+    color: #FFF88E; /* Cor do placeholder */
+}
+
+.foto-dropdown {
+    position: relative;
+    width: 100%;
 }
