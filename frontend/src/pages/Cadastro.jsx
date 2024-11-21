@@ -79,7 +79,7 @@ function Cadastro() {
         localStorage.setItem('email', formValues.email);
 
         try {
-            const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,6 +113,7 @@ function Cadastro() {
             console.error('Erro ao enviar dados:', error);
         }
     };
+
 
     const handleFotoGaleria = (e) => {
         const file = e.target.files[0]; // Pega o primeiro arquivo escolhido
@@ -372,9 +373,8 @@ function Cadastro() {
                         </div>
                     </form>
                 </div>
-            </div >
-        </section >
-    );
-};
+            </div>
+        </section>                        
+)}
 
-export { Cadastro };
+export {Cadastro};
