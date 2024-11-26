@@ -54,12 +54,11 @@ function Kanban() {
 
   // Mover a função fetchCategoriasETarefas para fora do useEffect
   const fetchCategoriasETarefas = async () => {
-    const usuario_id = await AsyncStorage.getItem('ID');
-    console.log(usuario_id)
-    setUserId(usuario_id);
+    const id = await AsyncStorage.getItem('ID');
+    setUserId(id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.26:8085/lista/${usuario_id}`, {
+      const resposta = await fetch(`http://10.135.60.23:8085/lista/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +93,7 @@ function Kanban() {
 
   const fetchTarefasParaCategoria = async (categoriaId) => {
     try {
-      const resposta = await fetch(`http://10.135.60.26:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,6 +101,7 @@ function Kanban() {
       });
 
       const resultado = await resposta.json();
+      console.log("tarefas: ", resultado)
 
       if (resposta.ok) {
         return resultado;
@@ -123,7 +123,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,55 +150,9 @@ function Kanban() {
     }
   };
 
-  const handleAddTask = async () => {
-    if (!tarefaNome.trim() || !tarefaData || !tarefaHorario || !tarefaEtiqueta) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
-      return;
-    }
-
-    try {
-      const resposta = await fetch('http://10.135.60.26:8085/receber-dados', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          acao: 'criar_tarefa',
-          dados: {
-            titulo: tarefaNome,
-            descricao: tarefaDescricao,
-            data: tarefaData,
-            horario: tarefaHorario,
-            etiqueta: tarefaEtiqueta,
-            lista_id: listaId,
-            usuario_id: userId,
-          }
-        }),
-      });
-
-      const resultado = await resposta.json();
-
-      if (!resposta.ok || resultado.mensagens_erro) {
-        Alert.alert('Erro', resultado.mensagens_erro);
-      } else {
-        Alert.alert('Sucesso', 'Tarefa criada com sucesso!');
-        // Limpar os campos após adicionar a tarefa
-        setTarefaNome('');
-        setTarefaData('');
-        setTarefaHorario('');
-        setTarefaEtiqueta('');
-        setTarefaDescricao('');
-        setModalVisible(false);
-        setRefresh(!refresh); // Atualiza a lista de tarefas
-      }
-    } catch (error) {
-      console.error('Erro ao enviar dados:', error);
-    }
-  };
-
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.26:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -265,9 +219,21 @@ function Kanban() {
     }
   };
 
-  const handleEditTask = (task) => {
-    setSelectedTask(task); // Armazena a tarefa que será editada
-    setModalVisible(true); // Abre o modal de edição
+  const handleEditTask = (task, categoriaId) => {
+    // Função para formatar a data de DD/MM/YYYY para YYYY-MM-DD
+    const formatDate = (date) => {
+      const [day, month, year] = date.split('/');
+      return `${year}-${month}-${day}`;
+    };
+
+    setSelectedTask({
+      ...task,
+      etiqueta: task.etiqueta || '', // Define etiqueta como string vazia se for undefined
+      descricao: task.descricao || '', // Define descricao como string vazia se for undefined
+      data: task.data ? formatDate(task.data) : '' // Formata a data se existir
+    });
+    setListaId(categoriaId);
+    setModalVisible(true);
   };
   
   const handleAddNewTask = (categoriaId) => {
