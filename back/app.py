@@ -93,8 +93,7 @@ def tarefas(id_lista):
     try:
         ret_tarefa = selecionar_lista_tarefa(id_lista)
         # Ajustar a estrutura de dados conforme necessário
-        resultado = [{'id': item[0],  'titulo': item[1],
-                      'data': item[3], 'horario': item[4]} for item in ret_tarefa]
+        resultado = [{'id': item[0],  'titulo': item[1], 'etiqueta': item[2], 'texto': item[3], 'data': item[4], 'horario':item[5]} for item in ret_tarefa]
         return jsonify(resultado)
     except Exception as e:
         print('Erro ao selecionar dados:', e)

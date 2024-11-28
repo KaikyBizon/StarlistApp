@@ -45,7 +45,7 @@ dados_cadastro_temp = {}
 # Variável global para armazenar o ID do usuário convidado
 id_usuario_convidado = None
 
-#Variável que salva o id do usuário logado
+# Variável que salva o id do usuário logado
 id_user = None
 
 
@@ -55,11 +55,9 @@ def processar_dados(dados):
     global id_usuario_convidado
     global id_user
 
-
     print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
-
 
     # Recebe a ação que deve ser executada
     acao = dados.get('acao')
@@ -223,8 +221,7 @@ def processar_dados(dados):
                 inserirCargo(equipe_user, lider=True)
 
             else:
-                dados_cadastro = {'error': True,
-                                  'mensagens_erro': mensagens_erro_empresarial}
+                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial}
 
         elif acao == 'cadastro_empresarial_colab':
             cargo = dados_processados.get('cargo')
@@ -262,12 +259,31 @@ def processar_dados(dados):
                     'data_nasc': data_nasc
                 }
                 id_user = id
-                
+
             else:
                 dados_cadastro = {
                     'error': True,
                     'mensagens_erro': 'Email ou senha inválidos'
                 }
+
+        # Inserir usuário
+        # Kaiky
+        # Alterado em 15/08/24
+        # Parametros entrada:
+        # acao - string - receber a acao para verificar se deve ser executado este if
+        # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
+        # Retorno:
+        # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
+        # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
+        if acao == 'criar_tarefa':
+            if not mensagens_erro_tarefa:
+                print("Tarefa: ", tarefa)
+                criarTarefa(tarefa)
+                dados_tarefa = {'error': False,
+                            'Tarefa criada': 'Tarefa criada com sucesso!'}
+            else:
+                dados_tarefa = {'error': True,
+                            'mensagens_erro': mensagens_erro_tarefa}
        # Criar lista
        # Letícia
        # Criado em 22/08/24
@@ -340,24 +356,6 @@ def processar_dados(dados):
         else:
             dados_cadastro = {'error': 'Dados não recuperados!'}
 
-    # Inserir usuário
-    # Kaiky
-    # Alterado em 15/08/24
-    # Parametros entrada:
-    # acao - string - receber a acao para verificar se deve ser executado este if
-    # tarefa - lista - recebe os dados que o usuário inseriu e usa como valores para salvar no backend
-    # Retorno:
-    # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
-    # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
-    if acao == 'criar_tarefa':
-        if not mensagens_erro_tarefa:
-            criarTarefa(tarefa)
-            dados_tarefa = {'error': False,
-                            'Tarefa criada': 'Tarefa criada com sucesso!'}
-        else:
-            dados_tarefa = {'error': True,
-                            'mensagens_erro': mensagens_erro_tarefa}
-
     # Editar tarefa
     # Kaiky
     # Criado em 20/08/24
@@ -372,13 +370,14 @@ def processar_dados(dados):
         tarefa.remove(dados_processados.get('usuario_id'))
         tarefa.remove(dados_processados.get('lista_id'))
         # Chama a função de edição com os dados da tarefa, incluindo o ID
+        print(tarefa)
+        print(mensagens_erro_tarefa)
         if not mensagens_erro_tarefa:
+            print(tarefa)
             editar_tarefa(tarefa)
-            dados_tarefa = {'error': False,
-                            'Tarefa editada': 'Tarefa editada com sucesso!'}
+            dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
         else:
-            dados_tarefa = {'error': True,
-                            'mensagens_erro': mensagens_erro_tarefa}
+            dados_tarefa = {'error': True, 'mensagens_erro': mensagens_erro_tarefa}
 
     # Carregar tarefas
     # Kaiky
@@ -481,10 +480,12 @@ def processar_dados(dados):
             print("ID_ remet: ", id_remet)
 
             if id_remet:
-                dados_convite = (id_remet, id_usuario_convidado, mensagem_convite, hora_convite, data_convite, status_convite)
+                dados_convite = (id_remet, id_usuario_convidado, mensagem_convite,
+                                 hora_convite, data_convite, status_convite)
                 enviar_convite(dados_convite)
 
-                dados_cadastro = {'error': False, 'mensagem': 'Convite enviado com sucesso.'}
+                dados_cadastro = {'error': False,
+                                  'mensagem': 'Convite enviado com sucesso.'}
             else:
                 dados_cadastro = {
                     'error': True,
@@ -500,7 +501,6 @@ def processar_dados(dados):
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
 
-    
     return listaCriada, dados_tarefa, dados_cadastro
 
 

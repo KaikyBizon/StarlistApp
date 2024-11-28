@@ -4,8 +4,10 @@ import styles from '../styles/StylesFormulario.js';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-function Formulario({ modalVisible, setModalVisible, userId, listaId, selectedTask }) {
+function Formulario({ modalVisible, setModalVisible, selectedTask }) {
+  console.log(selectedTask)
   const [tarefaNome, setTarefaNome] = useState('');
+  const [tarefaId, setTarefaId] = useState('')
   const [tarefaData, setTarefaData] = useState('');
   const [tarefaHorario, setTarefaHorario] = useState('');
   const [tarefaEtiqueta, setTarefaEtiqueta] = useState('');
@@ -13,7 +15,31 @@ function Formulario({ modalVisible, setModalVisible, userId, listaId, selectedTa
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
-  const [acao, setAcao] = useState('criar_tarefa'); // Definimos o estado acao para identificar criação ou edição
+  const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
+
+  // Atualiza os estados com base na ação (criar ou editar)
+  useEffect(() => {
+    if (selectedTask) {
+      setTarefaNome(selectedTask.titulo || '');
+      setTarefaData(selectedTask.data || '');
+      setTarefaHorario(selectedTask.horario || '');
+      setTarefaEtiqueta(selectedTask.etiqueta || '');
+      setTarefaDescricao(selectedTask.texto || '');
+      setTarefaId(selectedTask.id || '')
+      setAcao('editar_tarefa')
+    } else {
+      setTarefaNome('');
+      setTarefaData('');
+      setTarefaHorario('');
+      setTarefaEtiqueta('');
+      setTarefaDescricao('');
+    }
+  }, [acao, selectedTask]); // Executa sempre que acao ou selectedTask mudar
+
+  const showMode = (currentMode) => {
+    setMode(currentMode); // Define o modo (data ou hora)
+    setShow(true); // Exibe o DateTimePicker
+  };
 
 
   const formatTime = (date) => {
@@ -43,36 +69,37 @@ function Formulario({ modalVisible, setModalVisible, userId, listaId, selectedTa
   };
 
   const handleSubmit = async () => {
-    if (!tarefaNome.trim() || !tarefaDescricao || !tarefaData || !tarefaHorario || !tarefaEtiqueta ) {
+    if (!tarefaNome.trim() || !tarefaDescricao || !tarefaData || !tarefaHorario || !tarefaEtiqueta) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
 
     const tarefaDados = {
-      usuario_id: userId,
-      lista_id: listaId,
+      id: tarefaId,
       titulo: tarefaNome,
       descricao: tarefaDescricao,
       data: tarefaData,
       horario: tarefaHorario,
-      etiqueta: tarefaEtiqueta 
+      etiqueta: tarefaEtiqueta
     };
+    console.log(tarefaDados)
+
 
     try {
       let resposta;
       if (acao === 'editar_tarefa') {
         // Se estamos editando uma tarefa
-        resposta = await fetch(`http://10.135.60.23:8085/tarefa/${selectedTask.id}`, {
+        resposta = await fetch(`http://10.135.60.23:8085/receber-dados`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(tarefaDados)
+          body: JSON.stringify({ acao: acao, dados: tarefaDados })
         });
       } else {
         // Se estamos criando uma nova tarefa
         resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(tarefaDados)
+          body: JSON.stringify({ acao: acao, dados: tarefaDados })
         });
       }
 
