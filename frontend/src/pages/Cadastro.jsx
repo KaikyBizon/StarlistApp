@@ -151,9 +151,6 @@ function Cadastro() {
     return (
         <section id="fundo">
             <div id="geral">
-                <h1 className="msg">
-                    <div className="amarelo">Organize sua vida</div>com apenas uma tela
-                </h1>
                 <div className="login">
                     <div className="titulo_Cadastro">
                         <h1>CADASTRE-SE</h1>
