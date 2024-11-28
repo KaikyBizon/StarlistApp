@@ -76,15 +76,26 @@ function Cadastro() {
     // Esta função previne o comportamento padrão do formulário, armazena o email no localStorage, envia os dados do formulário em formato JSON para o backend, e com base na resposta, exibe mensagens de erro ou redireciona o usuário para a página de verificação de e-mail
     const handleSubmit = async (e) => {
         e.preventDefault();
-        localStorage.setItem('email', formValues.email);
+        console.log(formValues)
+        const data = new FormData();
+        data.append("acao", "cadastro")
+        data.append("nome", formValues.nome);
+        data.append("dataNascimento", formValues.dataNascimento);
+        data.append("email", formValues.email);
+        data.append("senha", formValues.senha);
+        data.append("confirme", formValues.confirme);
+        data.append("plano", formValues.plano);
+        if (formValues.foto) {
+            data.append("foto", formValues.foto);
+        }
 
+
+        localStorage.setItem('email', formValues.email);
+        console.table(data)
         try {
-            const resposta = await fetch('http://10.135.60.10:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/save-user', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ acao: 'cadastro', dados: formValues }),
+                body: data,
             });
 
             const resultado = (await resposta.json()).dadosCadastro;
@@ -114,32 +125,31 @@ function Cadastro() {
         }
     };
 
-
     const handleFotoGaleria = (e) => {
         const file = e.target.files[0]; // Pega o primeiro arquivo escolhido
         if (file) {
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                foto: file, // Salva o arquivo diretamente no estado
+            }));
+
+            // Para exibir o preview da imagem
             const reader = new FileReader();
             reader.onloadend = () => {
+                const previewImg = reader.result; // URL para exibição
                 setFormValues((prevValues) => ({
                     ...prevValues,
-                    foto: reader.result, // Armazena o URL da imagem no estado
+                    fotoPreview: previewImg, // Adiciona preview sem sobrescrever o arquivo
                 }));
             };
-            reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados
+            reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados para preview
         }
     };
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const opcoesFotos = [
-        { value: 'cara.png', label: 'Foto 1', src: '../../public/images/cara.png' },
-        { value: 'cara2.png', label: 'Foto 2', src: '../../public/images/cara2.png' },
-        { value: 'mulher.png', label: 'Foto 3', src: '../../public/images/mulher.png' },
-        { value: 'mulher2.png', label: 'Foto 4', src: '../../public/images/mulher2.png' },
-        { value: 'minhaFoto', label: 'Minha Foto', src: '' }
-    ];
-
     const handleFotoClick = (value) => {
+        console.log(isDropdownOpen)
         if (value === 'minhaFoto') {
             document.getElementById('input-foto').click(); // Aciona o input de arquivo
         } else {
@@ -293,59 +303,32 @@ function Cadastro() {
                         <div className="textos">
                             <div className="foto-dropdown">
                                 <button
-                                    className="dropdown-button"
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    type='button'
+                                    className="dropdown-button btn-AbrirModal"
+                                    onClick={() => document.getElementById('input-foto').click()}
                                 >
-                                    {formValues.foto ? (
+                                    {formValues.fotoPreview ? (
                                         <span>
                                             <img
-                                                src={formValues.foto.startsWith('data:image') ? formValues.foto : opcoesFotos.find((opcao) => opcao.value === formValues.foto).src}
+                                                src={formValues.fotoPreview}
                                                 alt="Foto selecionada"
                                                 style={{ width: "30px", height: "30px", borderRadius: "50%" }}
                                             />
-                                            &nbsp;{formValues.foto.startsWith('data:image') ? 'Minha Foto' : opcoesFotos.find((opcao) => opcao.value === formValues.foto).label}
+                                            &nbsp;Minha Foto
                                         </span>
                                     ) : (
                                         "Selecione uma foto"
                                     )}
                                 </button>
-
-                                {isDropdownOpen && (
-                                    <ul className="dropdown-list">
-                                        {opcoesFotos.map((opcao) => (
-                                            <li
-                                                key={opcao.value}
-                                                className="dropdown-item"
-                                                onClick={() => handleFotoClick(opcao.value)}
-                                            >
-                                                {opcao.value === 'minhaFoto' ? (
-                                                    <>
-                                                        <input
-                                                            type="file"
-                                                            id="input-foto"
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            onChange={handleFotoGaleria}
-                                                        />
-                                                        <span>Escolher da galeria</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <img
-                                                            src={opcao.src}
-                                                            alt={opcao.label}
-                                                            style={{ width: "30px", height: "30px", borderRadius: "50%", marginRight: "10px" }}
-                                                        />
-                                                        {opcao.label}
-                                                    </>
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
+                                <input
+                                    type="file"
+                                    id="input-foto"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={handleFotoGaleria}
+                                />
                             </div>
                         </div>
-
 
 
                         <div className='Link_JaTemConta'>
@@ -370,8 +353,9 @@ function Cadastro() {
                         </div>
                     </form>
                 </div>
-            </div>
-        </section>                        
-)}
+            </div >
+        </section >
+    );
+};
 
-export {Cadastro};
+export { Cadastro };
