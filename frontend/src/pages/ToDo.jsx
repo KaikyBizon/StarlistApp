@@ -68,7 +68,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ function ToDo() {
     const excluirTarefa = async (tarefaId) => {
         console.log(tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -255,49 +255,64 @@ function ToDo() {
 
                 </section>
                 <div className="back-cards">
-                    {mensagensErro.length > 0 && (
-                        <div className="erro-mensagens">
-                            {mensagensErro.map((erro, index) => (
-                                <p key={index}>{erro}</p>
-                            ))}
-                        </div>
-                    )}
-                    {!dataToCatchTarefas && <p>Selecione uma data para ver as tarefas.</p>} {/* Mensagem inicial */}
-                    {filteredTasks && filteredTasks.length > 0 ? (
-                        filteredTasks.map((tarefa) => {
-                            const { tarefaId, titulo, etiqueta, descricao, data, horario } = tarefa;
-                            const corEtiqueta = etiqueta === 'Importante' ? 'red' :
-                                etiqueta === 'Pendência' ? 'orange' :
-                                    etiqueta === 'Reunião' ? 'blue' : 'transparent';
-
-                            return (
-                                <Card className='cards-tarefa' key={tarefaId}>
-                                    <Card.Header>
-                                        <div className='data_etiqueta'>
-                                            {data || 'Data não informada'}
-                                            <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}></div>
-                                        </div>
-                                        <div className='card_icons'>
-                                            <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(tarefaId)} />
-                                            <img src="../../public/images/editar_lista.png" alt="Editar" onClick={() => handleEditarClick(tarefa)} />
-                                        </div>
-                                    </Card.Header>
-                                    <Card.Body className="content-infoTask">
-                                        <Card.Title className='titulo-todo'>{titulo || 'Título não informado'}</Card.Title>
-                                        <Card.Text className='descricao'>
-                                            {descricao || 'Descrição não informada'}
-                                        </Card.Text>
-                                        <Card.Text className='todo-horario'>
-                                            {`Horário: ${horario || 'Horário não informado'}`}
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            );
-                        })
-                    ) : (
-                        <p>Nenhuma tarefa encontrada</p>
-                    )}
+    {!dataToCatchTarefas ? (
+        // Exibe apenas essa mensagem se nenhuma data foi selecionada
+        <div id="aviso_todo">
+            <p >Selecione uma data para ver as tarefas</p>
+            <img src="../../public/images/imagem_todo.png" alt="" />
+        </div>
+        
+    ) : (
+        // Caso uma data seja selecionada, exibe as tarefas ou a mensagem de "Nenhuma tarefa encontrada"
+        <>
+            {mensagensErro.length > 0 && (
+                <div className="erro-mensagens">
+                    {mensagensErro.map((erro, index) => (
+                        <p key={index}>{erro}</p>
+                    ))}
                 </div>
+            )}
+            {filteredTasks && filteredTasks.length > 0 ? (
+                filteredTasks.map((tarefa) => {
+                    const { tarefaId, titulo, etiqueta, descricao, data, horario } = tarefa;
+                    const corEtiqueta = etiqueta === 'Importante' ? 'red' :
+                        etiqueta === 'Pendência' ? 'orange' :
+                            etiqueta === 'Reunião' ? 'blue' : 'transparent';
+
+                    return (
+                        <Card className='cards-tarefa' key={tarefaId}>
+                            <Card.Header>
+                                <div className='data_etiqueta'>
+                                    {data || 'Data não informada'}
+                                    <div className='etiqueta' style={{ backgroundColor: corEtiqueta }}></div>
+                                </div>
+                                <div className='card_icons'>
+                                    <img src="../../public/images/lixeira.png" alt="Excluir" onClick={() => handleExcluirClick(tarefaId)} />
+                                    <img src="../../public/images/editar_lista.png" alt="Editar" onClick={() => handleEditarClick(tarefa)} />
+                                </div>
+                            </Card.Header>
+                            <Card.Body className="content-infoTask">
+                                <Card.Title className='titulo-todo'>{titulo || 'Título não informado'}</Card.Title>
+                                <Card.Text className='descricao'>
+                                    {descricao || 'Descrição não informada'}
+                                </Card.Text>
+                                <Card.Text className='todo-horario'>
+                                    {`Horário: ${horario || 'Horário não informado'}`}
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    );
+                })
+            ) : (
+                <div id="aviso_todo">
+                     <p>Nenhuma tarefa encontrada</p>
+                     <img src="../../public/images/imagem_todo2.png" alt="" />
+                </div>
+               
+            )}
+        </>
+    )}
+</div>
             </section>
 
             {showFormulario && (
