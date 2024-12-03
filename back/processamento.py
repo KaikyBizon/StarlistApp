@@ -16,6 +16,7 @@ from actionsBD.insertCargoUser import inserirCargo
 from actionsBD.selectAllTasks import select_all_tasks
 from actionsBD.getEmailToInvite import buscar_usuario_convite
 from actionsBD.enviarConviteEquipe import enviar_convite
+from actionsBD.getMessages import buscar_mensagens
 from validarEmail import send_email_confirm
 import datetime
 from validacoes import (
@@ -221,7 +222,8 @@ def processar_dados(dados):
                 inserirCargo(equipe_user, lider=True)
 
             else:
-                dados_cadastro = {'error': True, 'mensagens_erro': mensagens_erro_empresarial}
+                dados_cadastro = {'error': True,
+                                  'mensagens_erro': mensagens_erro_empresarial}
 
         elif acao == 'cadastro_empresarial_colab':
             cargo = dados_processados.get('cargo')
@@ -280,10 +282,10 @@ def processar_dados(dados):
                 print("Tarefa: ", tarefa)
                 criarTarefa(tarefa)
                 dados_tarefa = {'error': False,
-                            'Tarefa criada': 'Tarefa criada com sucesso!'}
+                                'Tarefa criada': 'Tarefa criada com sucesso!'}
             else:
                 dados_tarefa = {'error': True,
-                            'mensagens_erro': mensagens_erro_tarefa}
+                                'mensagens_erro': mensagens_erro_tarefa}
        # Criar lista
        # Letícia
        # Criado em 22/08/24
@@ -375,9 +377,11 @@ def processar_dados(dados):
         if not mensagens_erro_tarefa:
             print(tarefa)
             editar_tarefa(tarefa)
-            dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
+            dados_tarefa = {'error': False,
+                            'Tarefa editada': 'Tarefa editada com sucesso!'}
         else:
-            dados_tarefa = {'error': True, 'mensagens_erro': mensagens_erro_tarefa}
+            dados_tarefa = {'error': True,
+                            'mensagens_erro': mensagens_erro_tarefa}
 
     # Carregar tarefas
     # Kaiky
@@ -500,6 +504,15 @@ def processar_dados(dados):
     if acao == 'selecionar_plano_id':
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
+
+    if acao == 'buscar_mensagens':
+        id_user = dados_processados.get("id_usuario")
+        mensagens = buscar_mensagens(id_user)
+        if mensagens:
+            dados_cadastro = {"error": False, "mensagens": mensagens}
+        else:
+            dados_cadastro = {"error": True,
+                              mensagens: "Nenhuma tarefa encontrada!"}
 
     return listaCriada, dados_tarefa, dados_cadastro
 
