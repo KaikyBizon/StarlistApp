@@ -93,7 +93,7 @@ function Cadastro() {
         localStorage.setItem('email', formValues.email);
         console.table(data)
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/save-user', {
+            const resposta = await fetch('http://10.135.60.12:8085/save-user', {
                 method: 'POST',
                 body: data,
             });
@@ -192,8 +192,6 @@ function Cadastro() {
                                 </ul>
                             )}
                         </div>
-
-
 
                         <div className="textos">
                             <input
@@ -302,10 +300,9 @@ function Cadastro() {
 
                         <div className="textos">
                             <div className="foto-dropdown">
-                                <button
-                                    type='button'
-                                    className="dropdown-button btn-AbrirModal"
-                                    onClick={() => document.getElementById('input-foto').click()}
+                                <label
+                                    id="input-foto-button"
+                                    htmlFor="input-foto"
                                 >
                                     {formValues.fotoPreview ? (
                                         <span>
@@ -319,7 +316,7 @@ function Cadastro() {
                                     ) : (
                                         "Selecione uma foto"
                                     )}
-                                </button>
+                                </label>
                                 <input
                                     type="file"
                                     id="input-foto"
@@ -329,6 +326,7 @@ function Cadastro() {
                                 />
                             </div>
                         </div>
+
 
 
                         <div className='Link_JaTemConta'>

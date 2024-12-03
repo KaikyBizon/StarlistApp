@@ -282,4 +282,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .foto-dropdown {
     position: relative;
     width: 100%;
+} 
+
+#input-foto-button {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #FFF88E;
+    border-radius: 8px; 
+    color: #FFF88E;
+    background-color: transparent;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 12px; 
+}
+
+#input-foto-button:hover {
+    opacity: 0.8; 
 }
