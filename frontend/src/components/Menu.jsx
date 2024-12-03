@@ -27,12 +27,65 @@
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../StylesPages/Menu.css'
 
 
 export default function Menu({ onSearch }) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [notifications, setNotifications] = useState([]);  // Estado para armazenar as notificações
+    const [alertas, setAlertas] = useState([]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetch("http://10.135.60.24:8085/api/eventos/proximos")
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.length > 0) {
+                        setAlertas(data);
+                    } else {
+                        setAlertas([]);
+                    }
+                })
+                .catch((error) => console.error("Erro ao buscar eventos próximos:", error));
+        }, 6000); // Verificar a cada 60 segundos
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // Função showDados para carregar as mensagens do usuário
+    // Autor: Kaiky
+    // Criado em 19/11/24
+    // Parâmetros de entrada:
+    // Nenhum parâmetro de entrada direto, mas utiliza `formAlter.id` para identificar o usuário
+    // Retorno:
+    // Faz uma requisição ao servidor para buscar os dados do usuário e atualiza o estado `formAlter` com as informações obtidas
+    // Esta função realiza uma requisição POST para buscar os dados do usuário, preenche o formulário com nome, email, data de nascimento e ID, e define o nome do usuário no estado
+    const showDados = async () => {
+        const id_usuario = localStorage.getItem("ID")
+        try {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: 'buscar_mensagens', dados: { id_usuario: id_usuario } }),
+            });
+            const dados = (await resposta.json()).dadosCadastro;
+            console.log(dados)
+            if (dados.error) {
+
+            } else {
+                setNotifications(dados.mensagens);  // Atualiza o estado com as mensagens recebidas
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados!', error)
+        }
+    };
+
+    useEffect(() => {
+        showDados();
+    }, []);
 
     // Função handleSearchChange para atualizar o termo de busca e executar a função de busca com o valor inserido
     const handleSearchChange = (event) => {
@@ -41,7 +94,25 @@ export default function Menu({ onSearch }) {
         onSearch(value);
     };
 
-   return (
+    // Mostrar notificações do usuário
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };
+
+    const handleAceitar = (id) => {
+        console.log(`Notificação ${id} aceita`);
+        // Lógica para processar a aceitação (exemplo: enviar para o backend)
+    };
+
+    const handleRecusar = (id) => {
+        console.log(`Notificação ${id} recusada`);
+        // Lógica para processar a recusa (exemplo: enviar para o backend)
+    };
+
+
+    return (
 
         <header className="menu">
             {/*logo do menu*/}
@@ -63,7 +134,62 @@ export default function Menu({ onSearch }) {
             {/*icones do menu*/}
             <div className="icones">
                 <img src="https://cdn-icons-png.flaticon.com/128/7524/7524806.png" alt="duvidas" />
-                <img src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png" alt="sino" />
+                <div className="notification-icon">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png"
+                        alt="sino"
+                        onClick={toggleNotifications}
+                        style={{ cursor: "pointer" }}
+                    />
+                    {showNotifications && (
+                        <div className="notifications-dropdown">
+                            <h4>Notificações</h4>
+                            <ul>
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification, index) => (
+                                        <li key={`notification-${index}`}>
+                                            {/* Mostra a mensagem da notificação */}
+                                            <span style={{ marginRight: '10px' }}>{notification[1]}</span>
+
+                                            {/* Botões para aceitar e recusar */}
+                                            <button
+                                                onClick={() => handleAceitar(notification[0])}
+                                                className="btn btn-success btn-sm"
+                                                style={{ marginRight: '5px' }}
+                                            >
+                                                Aceitar
+                                            </button>
+                                            <button
+                                                onClick={() => handleRecusar(notification.id)}
+                                                className="btn btn-danger btn-sm"
+                                            >
+                                                Recusar
+                                            </button>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>Sem novas notificações</li>
+                                )}
+                            </ul>
+
+
+                            <h4>Alertas</h4>
+                            <ul>
+                                {alertas.length > 0 ? (
+                                    alertas.map((alerta, index) => (
+                                        <li key={`alerta-${index}`}>
+                                            A tarefa <strong>{alerta.titulo}</strong> começa em 1 minuto
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>Sem novos alertas</li>
+                                )}
+                            </ul>
+
+                        </div>
+                    )}
+                </div>
+
 
                 {/*botão para alterar dados do usuário*/}
                 <Dropdown>
