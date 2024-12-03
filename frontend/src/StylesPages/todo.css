@@ -29,9 +29,7 @@
     display: flex;
 }
 
-
-/*Tirando margem de todos os "p" da página*/
-p {
+p{
     margin: 0;
 }
 
@@ -126,4 +124,19 @@ p {
 .titulo-todo{
     margin: 0px;
     color:#F1D327 ;
+}
+
+#aviso_todo{
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#aviso_todo img{
+    width: 400px;
+}
+
+#aviso_todo p{
+    font-size: 20pt;
 }
