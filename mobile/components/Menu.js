@@ -49,7 +49,7 @@ const MenuScreen = ({ searchText, setSearchText }) => {
             <TextInput
               style={styles.searchBar}
               placeholder="Pesquisar..."
-              placeholderTextColor="black"
+              placeholderTextColor={searchVisible ? "#fff556" : "black"}
               value={searchText}
               onChangeText={setSearchText}
               
@@ -60,23 +60,23 @@ const MenuScreen = ({ searchText, setSearchText }) => {
             style={styles.iconButton}
             onPress={() => setSearchVisible(!searchVisible)}
           >
-            <Feather size={24} name="search" />
+            <Feather size={24} name="search" color='#fff556' />
           </TouchableOpacity>
           {/* Botão para navegar para a tela 'Planos' */}
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => navigation.navigate('Planos')}
           >
-            <Feather size={24} name="shopping-cart" />
+            <Feather size={24} name="shopping-cart" color='#fff556' />
           </TouchableOpacity>
         </View>
       ),
       // Estilo do cabeçalho
       headerStyle: {
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#222',
       },
       // Cor dos ícones do cabeçalho
-      headerTintColor: '#000',
+      headerTintColor: '#fff556',
     });
   }, [navigation, searchVisible, searchText]); // Dependências do hook useLayoutEffect
 

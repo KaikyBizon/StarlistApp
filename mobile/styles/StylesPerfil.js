@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     containerProfile: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#9d9d9d',
+        backgroundColor: '#1e1e1e',
     },
 
     // Container para informações do perfil
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#404040', 
+        color: '#fff556', 
         fontFamily: 'Kanit_500Medium',
     },
 
@@ -33,20 +33,21 @@ const styles = StyleSheet.create({
     userId: {
         fontSize: 16,
         marginTop: 5,
-        color: '#404040',
+        color: '#fff556',
         fontFamily: 'Kanit_500Medium',
     },
 
     // Estilo para o campo de entrada de texto no perfil
     textinputPerfil: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: '#1e1e1e',
         borderWidth: 1,
         marginTop: 0,
         marginBottom: 30,
         paddingHorizontal: 10,
         borderRadius: 10,
-        color: 'black',  
+        backgroundColor:'#333',
+        color: '#f9e79f',  
         fontFamily: 'Kanit_500Medium',
     },
 
@@ -103,20 +104,20 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 5,
         marginTop: 10,
-        backgroundColor: '#696969',
+        backgroundColor: '#404040',
     },
 
     // Estilo para o texto do botão de sair
     buttonTextSair: {
-        color: '#c1c1c1',
+        color: '#ffeb3b',
         fontSize: 16,
         fontWeight: 'bold',
         fontFamily: 'Kanit_500Medium',
     },
 
-    // Estilo para os inputs do perfil
+    // Estilo para a label dos inputs
     inputPerfil: {
-        color: '#faed27', 
+        color: '#fff556', 
         fontFamily: 'Kanit_500Medium',
     },
 
