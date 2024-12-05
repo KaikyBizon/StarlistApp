@@ -27,7 +27,7 @@
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../StylesPages/Menu.css'
 
 
@@ -38,7 +38,7 @@ export default function Menu({ onSearch }) {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            fetch("http://10.135.60.24:8085/api/eventos/proximos")
+            fetch("http://10.135.60.12:8085/api/eventos/proximos")
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.length > 0) {
@@ -64,7 +64,7 @@ export default function Menu({ onSearch }) {
     const showDados = async () => {
         const id_usuario = localStorage.getItem("ID")
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,6 +96,28 @@ export default function Menu({ onSearch }) {
 
     // Mostrar notificações do usuário
     const [showNotifications, setShowNotifications] = useState(false);
+
+    const notificationRef = useRef(null); // Referência para o ícone e o dropdown 
+
+    const handleClickOutside = (event) => {
+        if (
+            notificationRef.current &&
+            !notificationRef.current.contains(event.target)
+        ) {
+            setShowNotifications(false); // Fecha o dropdown ao clicar fora
+        }
+    };
+
+    useEffect(() => {
+        if (showNotifications) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showNotifications]);
 
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
@@ -134,7 +156,7 @@ export default function Menu({ onSearch }) {
             {/*icones do menu*/}
             <div className="icones">
                 <img src="https://cdn-icons-png.flaticon.com/128/7524/7524806.png" alt="duvidas" />
-                <div className="notification-icon">
+                <div className="notification-icon" ref={notificationRef}>
                     <img
                         src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png"
                         alt="sino"
@@ -193,7 +215,7 @@ export default function Menu({ onSearch }) {
 
                 {/*botão para alterar dados do usuário*/}
                 <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <Dropdown.Toggle variant="success" id="dropdown-basic" className="no-caret">
                         <img src="https://cdn-icons-png.flaticon.com/128/64/64572.png" alt="minha-conta" />
                     </Dropdown.Toggle>
 
