@@ -192,7 +192,7 @@ function Formulario({ tarefa, onClose, listaId }) {
               as="textarea"
               rows={3}
               name='descricao'
-              value={dadosTask.descricao}
+              value={dadosTask.texto}
               onChange={handleChange}
             />
           </Form.Group>
@@ -209,9 +209,9 @@ function Formulario({ tarefa, onClose, listaId }) {
               onChange={handleChange}
             >
               <option value="">Selecione uma etiqueta</option>
-              <option value="Importante">Importante</option>
-              <option value="Pendência">Pendência</option>
-              <option value="Reunião">Reunião</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Pessoal">Pessoal</option>
+              <option value="Estudo">Estudo</option>
             </Form.Select>
           </Form.Group>
           {/* Exibição de mensagens de erro */}

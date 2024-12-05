@@ -38,7 +38,7 @@
     margin-right: 5px;
     min-height: 150px;
     border: 2px solid #565656;
-    max-height: 600px;
+    max-height: 598px;
     /* Ajuste conforme necessário */
     overflow-y: auto;
     /* Adiciona a rolagem vertical */
@@ -74,16 +74,17 @@
 /* Nome da tarefa (a fazer, fazendo, feito, etc.) */
 .titulo-lista {
     color: #faed27;
-    text-align: center;
+    text-align: center; /* O texto ficará centralizado, mas vamos alinhar os itens com flex */
     position: sticky;
     top: 0;
     background-color: #494545;
-    /* Fundo branco para garantir que o texto seja legível */
     z-index: 2;
-    /* Garante que o título fique acima das tarefas */
     padding: 15px;
     cursor: pointer;
-
+    display: flex; /* Alinha os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens horizontalmente no contêiner */
+    align-items: center; /* Alinha os itens verticalmente */
+    gap: 10px; /* Espaço entre o nome da lista e a imagem */
 }
 
 .tarefa-item {
@@ -243,8 +244,13 @@ button.botoesConfirmarExclusao:hover {
     flex-direction: row-reverse;
 }
 
+.editar-lista {
+    width: 20px; /* Tamanho da imagem */
+    cursor: pointer; /* Mostra que a imagem é clicável */
+}
+
 .editar-tarefa{
-    width: 24px;
+    width: 30px;
     cursor: pointer;
 }
 
@@ -254,9 +260,8 @@ button.botoesConfirmarExclusao:hover {
      
 }
   
-
 .excluir-tarefa { 
-    width: 24px;
+    width: 22px;
     cursor: pointer;
 }
 
@@ -367,6 +372,7 @@ button {
     transition: border-color 0.3s ease;
     color: #000000;
 }
+
 /* Estilo geral do overlay do modal */
 .modal-status {
     position: fixed;
@@ -413,7 +419,6 @@ button {
     display: block; /* Faz com que cada botão ocupe uma linha */
 }
 
-
 #fechar {
     background-color: #6C757D; /* Cor cinza para o botão de fechar */
     margin-top: 20px; /* Espaço acima do botão de fechar */
@@ -424,6 +429,3 @@ button {
 .modalContent button:hover {
     opacity: 0.8; /* Efeito de opacidade ao passar o mouse */
 }
-
-
-
