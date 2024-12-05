@@ -86,7 +86,7 @@ function AddParticipantes({ show, handleClose }) {
     // - Se o envio for bem sucedido, retorna mensagem confirmando o envio
     // Esta função envia a requisição de convite do usuário para entrar na equipe ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.24:8085/receber-dados'.
     const sendInvitation = async (e) => {
-        
+        const id_usuario = localStorage.getItem("ID")
         e.preventDefault();
         try {
             const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
@@ -94,7 +94,7 @@ function AddParticipantes({ show, handleClose }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({acao: 'enviar_convite'}),
+                body: JSON.stringify({acao: 'enviar_convite', dados: {id_usuario}}),
             });
             const resultado = (await resposta.json()).dadosCadastro;
             console.log(resultado)
