@@ -85,7 +85,6 @@ function LoginForm({ navigation }) {
             Esta função é utilizada para atualizar os valores do estado do formulário React. Ela recebe o nome do campo e o valor atual do campo como parâmetros e utiliza o método setFormValues para atualizar o estado. O estado atualizado inclui todos os valores anteriores juntamente com o novo valor do campo especificado. Isso permite que o formulário reflita os inputs mais recentes dos usuários.
     */}
 
-    // Atualiza os valores do formulário
     const handleChange = (name, value) => {
         setFormValues((prevValues) => ({
             ...prevValues,
@@ -109,7 +108,7 @@ function LoginForm({ navigation }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -145,8 +144,21 @@ function LoginForm({ navigation }) {
         }
     };
 
-    // Lógica para redefinir a senha
-   // Lógica para redefinir a senha
+   {/*
+    Nome da função: handlePasswordReset;
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Processar a redefinição de senha do usuário após validação e comunicação com o backend;
+    Descrição/observações:
+        - Verifica se todos os campos obrigatórios (resetEmail, newPassword, confirmNewPassword) estão preenchidos;
+        - Garante que as senhas informadas coincidam antes de enviar a requisição;
+        - Faz uma requisição POST ao backend para redefinir a senha com os dados fornecidos;
+        - Trata a resposta do servidor:
+            - Exibe uma mensagem de erro caso a redefinição falhe;
+            - Mostra uma mensagem de sucesso e fecha o modal em caso de êxito;
+        - Implementa um tratamento de erros para problemas de conexão com o servidor.
+*/}
+
 const handlePasswordReset = async () => {
     if (!resetEmail || !newPassword || !confirmNewPassword) {
         alert("Por favor, preencha todos os campos.");
@@ -159,7 +171,7 @@ const handlePasswordReset = async () => {
     }
     console.log( resetEmail, newPassword)
     try {
-        const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+        const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
