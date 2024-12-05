@@ -337,5 +337,47 @@ const styles = StyleSheet.create({
     color: '#222',
     fontWeight: 'bold',
   },
+
+
+  modalExcluirTarefa: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalDeleteTask: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTextTask: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  buttonDeleteTask: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  btnTextExcluirTask: {
+    fontSize: 16,
+    color: '#fff',
+  },
+  btnDelete: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  btnFechar: {
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  
 });
 export default styles;

@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginRight: 10,
-        width: 70,
+        width: 130,
+        alignItems: 'center',
     },
     btnCancelar: {
         backgroundColor: '#dc3545',
