@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 # Importe a função deletarUsuario
 from processamento import processar_dados, deletar_usuario
 from lista import selecionar_dados_lista, selecionar_lista_tarefa
+from actionsBD.selectTasksNotification import tarefas_notificacao
+from actionsBD.selectIdEquipeUser import select_id_equipe_user
 from actionsBD.deleteList_bd import deleteList_bd
 
 app = Flask(__name__)
@@ -62,7 +64,6 @@ def salvar_foto():
                 foto_data = file.read()
 
             dados['dados']['foto'] = foto_data
-
             listaCriada, dados_tarefa, dados_cadastro = processar_dados(dados)
             response_data = {
                 "listaCriada": listaCriada,
@@ -79,7 +80,8 @@ def salvar_foto():
 @app.route('/lista/<int:usuario_id>', methods=['GET'])
 def lista(usuario_id):
     try:
-        ret_lista = selecionar_dados_lista(usuario_id)
+        equipe_user = select_id_equipe_user(usuario_id)
+        ret_lista = selecionar_dados_lista(usuario_id, equipe_user)
         # Ajustar a estrutura de dados conforme necessário
         resultado = [{'id': item[0],  'nome': item[1]} for item in ret_lista]
         return jsonify(resultado)
@@ -88,12 +90,15 @@ def lista(usuario_id):
         return jsonify({'error': 'Erro ao recuperar dados'}), 500
 
 
-@app.route('/tarefas/<int:id_lista>', methods=['GET'])
-def tarefas(id_lista):
+@app.route('/tarefas/<int:id_lista>/<int:usuario_id>', methods=['GET'])
+def tarefas(id_lista, usuario_id):
     try:
-        ret_tarefa = selecionar_lista_tarefa(id_lista)
+        print(id_lista)
+        equipe_user = select_id_equipe_user(usuario_id)
+        ret_tarefa = selecionar_lista_tarefa(id_lista, equipe_user)
         # Ajustar a estrutura de dados conforme necessário
-        resultado = [{'id': item[0],  'titulo': item[1], 'etiqueta': item[2], 'texto': item[3], 'data': item[4], 'horario':item[5]} for item in ret_tarefa]
+        resultado = [{'id': item[0],  'titulo': item[1], 'etiqueta': item[2],
+                      'texto': item[3], 'data': item[4], 'horario': item[5]} for item in ret_tarefa]
         return jsonify(resultado)
     except Exception as e:
         print('Erro ao selecionar dados:', e)
@@ -109,6 +114,40 @@ def excluir_lista(lista_id):
     except Exception as e:
         print('Erro ao excluir lista:', e)
         return jsonify({'erro': True, 'mensagem': 'Erro ao excluir lista'}), 500
+
+
+@app.route('/api/eventos/proximos', methods=['GET'])
+def get_eventos_proximos():
+    try:
+
+        # Obter a data e hora atuais
+        from datetime import datetime
+        now = datetime.now()
+
+        # Converter para strings de data e hora
+        now_date_str = now.strftime('%Y-%m-%d')
+        now_time_str = now.strftime('%H:%M:%S')
+
+        # Calcular o limite de 1 minuto diretamente com strings
+        now_plus_one_minute = (
+            now.hour * 3600 + now.minute * 60 + now.second + 60) % 86400
+        one_minute_later_time = f"{now_plus_one_minute // 3600:02}:{(now_plus_one_minute % 3600) // 60:02}:{now_plus_one_minute % 60:02}"
+
+        rows = tarefas_notificacao(
+            now_date_str, now_time_str, one_minute_later_time)
+        # Formatar o resultado
+        result = []
+        for row in rows:
+            result.append({
+                "id": row[0],
+                "titulo": row[1],
+                "hora": str(row[2])
+            })
+        # print(result)
+        return jsonify(result), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 
 
 # Obtendo o endereço IP local

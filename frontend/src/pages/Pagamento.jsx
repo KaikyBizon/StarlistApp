@@ -240,7 +240,7 @@ export default function Pagamento() {
                     <p className="codigoPix">{pixCode}</p>
                     <p className="infoQr">Código QR:</p>
                     <div className="imagemQr">
-                        <img src="/public/images/qr-code.png" alt="qrcode" />
+                        <img src="/public/images/qr_code.png" alt="qrcode" />
                     </div>
                     <button className='btnPagar' onClick={handledPayment}>
                         Concluir

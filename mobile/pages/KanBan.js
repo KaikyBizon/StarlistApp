@@ -55,13 +55,28 @@ function Kanban() {
   const [confirmDeleteTaskModalVisible, setConfirmDeleteTaskModalVisible] = useState(false);
   const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null);
 
-  // Mover a função fetchCategoriasETarefas para fora do useEffect
+  {/*
+    Nome da função: fetchCategoriasETarefas;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Buscar as categorias de tarefas e suas respectivas tarefas associadas a um usuário, e atualizar os estados com os dados obtidos;
+    Descrição/observações:
+        - Recupera o ID do usuário armazenado no AsyncStorage;
+        - Faz uma requisição GET para buscar as categorias de tarefas associadas ao usuário;
+        - Se a resposta for bem-sucedida, armazena as categorias no estado 'categorias' e, em seguida, faz uma requisição para buscar as tarefas associadas a cada categoria;
+        - Utiliza a função 'fetchTarefasParaCategoria' para buscar as tarefas de cada categoria;
+        - Combina as tarefas obtidas em um objeto e atualiza o estado 'tarefasPorCategoria' com os dados das tarefas por categoria;
+        - Em caso de erro, exibe uma mensagem de erro no console.
+*/}
+
   const fetchCategoriasETarefas = async () => {
     const id = await AsyncStorage.getItem('ID');
     setUserId(id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${id}`, {
+      const resposta = await fetch(`http://10.135.60.21:8085/lista/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -89,13 +104,28 @@ function Kanban() {
     }
   };
 
+  // Disparar a função fetchCategoriasETarefas toda vez que a variável 'refresh' for alterada;
   useEffect(() => {
     fetchCategoriasETarefas();
   }, [refresh]);
 
+  {/*
+    Nome da função: fetchTarefasParaCategoria;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: categoriaId (ID da categoria para a qual as tarefas serão buscadas);
+    Retorno: Um array de tarefas ou um array vazio em caso de erro;
+    Finalidade: Buscar as tarefas associadas a uma categoria específica;
+    Descrição/observações:
+        - Faz uma requisição GET para buscar as tarefas relacionadas à categoria fornecida;
+        - Se a resposta for bem-sucedida, retorna as tarefas obtidas;
+        - Caso a resposta contenha erros, exibe uma mensagem de erro no console e retorna um array vazio;
+        - Em caso de erro na requisição (ex.: erro de rede), exibe uma mensagem de erro no console e retorna um array vazio.
+*/}
+
   const fetchTarefasParaCategoria = async (categoriaId) => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.21:8085/tarefas/${categoriaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -116,6 +146,22 @@ function Kanban() {
     }
   };
 
+  {/*
+    Nome da função: handleSubmit;
+    Autor: [Seu nome];
+    Data de criação: [Data de criação];
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Enviar dados para criar uma nova lista e tratar os possíveis erros;
+    Descrição/observações:
+        - Verifica se o campo de entrada 'inputValue' não está vazio antes de enviar os dados;
+        - Faz uma requisição POST para criar uma nova lista no backend;
+        - Envia o ID do usuário e o nome da lista como dados para o backend;
+        - Se a resposta for bem-sucedida e a lista for criada, limpa o campo de entrada e faz uma nova requisição para buscar as categorias e tarefas;
+        - Em caso de erro, exibe uma mensagem de erro com o motivo retornado pelo backend;
+        - Em caso de erro na requisição (ex.: erro de rede), exibe um erro no console.
+*/}
+
   const handleSubmit = async () => {
     if (!inputValue.trim()) {
       Alert.alert('Erro', 'O nome da lista não pode estar vazio');
@@ -123,7 +169,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,9 +196,24 @@ function Kanban() {
     }
   };
 
+  {/*
+    Nome da função: confirmarExclusao;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Confirmar e realizar a exclusão de uma lista, além de atualizar os estados relevantes no frontend;
+    Descrição/observações:
+        - Faz uma requisição DELETE para excluir uma lista do backend com base no ID fornecido (listaParaExcluir);
+        - Se a exclusão for bem-sucedida, remove a lista das categorias e das tarefas associadas, atualizando os estados 'categorias' e 'tarefasPorCategoria';
+        - Exibe um alerta informando o sucesso ou falha da operação;
+        - Em caso de erro na requisição ou no processamento, exibe uma mensagem de erro no console e um alerta no frontend;
+        - Após o processo de exclusão, fecha o modal de confirmação e redefine o estado relacionado à lista a ser excluída.
+*/}
+
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.23:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.21:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -183,6 +244,22 @@ function Kanban() {
     }
   };
 
+  {/*
+    Nome da função: handleEditList;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Editar o nome de uma lista e atualizar o backend com o novo nome;
+    Descrição/observações:
+        - Verifica se o novo nome da lista não está vazio antes de prosseguir com a edição;
+        - Atualiza o estado local 'categorias' para refletir imediatamente a mudança no nome da lista;
+        - Faz uma requisição POST para enviar o novo nome da lista para o backend;
+        - Se a resposta for bem-sucedida, fecha o modal de edição e limpa o estado relacionado ao nome da lista e à lista a ser editada;
+        - Se houver erros na requisição ou no backend, exibe uma mensagem de erro no frontend;
+        - Em caso de erro na requisição (ex.: erro de rede), exibe o erro no console.
+*/}
+
   const handleEditList = async () => {
     if (!novoNomeLista.trim()) {
       Alert.alert('Erro', 'O nome da lista não pode estar vazio');
@@ -196,7 +273,7 @@ function Kanban() {
     setCategorias(novaCategorias);
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,6 +301,19 @@ function Kanban() {
     }
   };
 
+{/*
+    Nome da função: handleEditTask;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: task (tarefa a ser editada), categoriaId (ID da categoria à qual a tarefa pertence);
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Preencher os campos de edição com as informações da tarefa selecionada e abrir o modal de edição;
+    Descrição/observações:
+        - A função formata a data da tarefa de DD/MM/YYYY para o formato YYYY-MM-DD, necessário para o campo de data;
+        - Preenche o estado 'selectedTask' com os dados da tarefa, incluindo a etiqueta, descrição e a data formatada;
+        - Define o 'categoriaId' no estado 'listaId' para associar a tarefa à categoria correta;
+        - Exibe o modal de edição ao alterar o estado 'modalVisible' para true, permitindo ao usuário editar a tarefa.
+*/}
 
   const handleEditTask = (task, categoriaId) => {
     // Função para formatar a data de DD/MM/YYYY para YYYY-MM-DD
@@ -242,17 +332,35 @@ function Kanban() {
     setModalVisible(true);
   };
 
+  // Disparar a função fetchCategoriasETarefas toda vez que a variável 'refresh' for alterada;
   const handleAddNewTask = (categoriaId) => {
     setListaId(categoriaId);
     setSelectedTask(null);
     setModalVisible(true);
   };
 
-  const handleDeleteTask = (task, categoriaId) => {
+  // Preparar os dados da tarefa para exclusão e exibir o modal de confirmação de exclusão;
+  const handleDeletetask = (task, categoriaId) => {
     console.log("Tarefa selecionada para exclusão:", task);
     setTarefaParaExcluir({ ...task, categoria_id: categoriaId });
     setConfirmDeleteTaskModalVisible(true);
   };
+
+  {/*
+    Nome da função: confirmarExclusaoTarefa;
+    Autor: Leticia;
+    Data de criação: 12/24;
+    Parâmetros de entrada: Nenhum;
+    Retorno: Nenhum retorno explícito;
+    Finalidade: Confirmar e realizar a exclusão de uma tarefa e atualizar o estado das tarefas por categoria;
+    Descrição/observações:
+        - Verifica se os dados da tarefa a ser excluída estão completos antes de prosseguir;
+        - Faz uma requisição POST para excluir a tarefa no backend, enviando o ID da tarefa e o ID da categoria;
+        - Se a tarefa for excluída com sucesso, remove a tarefa do estado 'tarefasPorCategoria' e exibe um alerta de sucesso;
+        - Se a categoria da tarefa não for encontrada ou a requisição falhar, exibe um alerta de erro;
+        - Em caso de erro na requisição (ex.: erro de rede), exibe o erro no console e um alerta no frontend;
+        - Após a exclusão, fecha o modal de confirmação e redefine o estado da tarefa a ser excluída.
+*/}
 
   const confirmarExclusaoTarefa = async () => {
     try {
@@ -264,7 +372,7 @@ function Kanban() {
         return Alert.alert("Erro", "Dados da tarefa estão incompletos.");
       }
 
-      const resposta = await fetch(`http://10.135.60.23:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.21:8085/receber-dados`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

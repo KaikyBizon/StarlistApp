@@ -50,27 +50,28 @@ function LoginForm() {
   // - Faz uma requisição ao servidor para autenticar o usuário com base nos dados do formulário de login
   // - Se houver erros no login, exibe as mensagens de erro
   // - Se o login for bem-sucedido, armazena o ID, email e nome do usuário no localStorage e redireciona para a página de Kanban
-  // Esta função envia os dados de login ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.17:8085/receber-dados'.
+  // Esta função envia os dados de login ao servidor, utilizando o método POST para o endpoint 'http://10.135.60.24:8085/receber-dados'.
   // Se o servidor retornar um erro, as mensagens de erro são exibidas no formulário. Se o login for bem-sucedido, as informações do usuário são armazenadas no localStorage e o usuário é redirecionado para a página Kanban.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resposta = await fetch('http://10.135.60.17:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ acao: 'efetuar_login', dados: formValues }),
       });
-      const resultado = (await resposta.json()).dadosCadastro;
+      const resultado = await resposta.json();
+      console.log(resultado)
 
-      if (resultado.error) {
+      if (resultado.dadosCadastro.error) {
         // Atualiza o estado com as mensagens de erro para exibição no formulário
-        setMensagensErro(resultado.mensagens_erro);
+        setMensagensErro(resultado.dadosCadastro.mensagens_erro);
       } else {
-        localStorage.setItem('ID', resultado.id);
-        localStorage.setItem('email', resultado.email);
-        localStorage.setItem('nome_usuario', resultado.nome_usuario);
+        localStorage.setItem('ID', resultado.dadosCadastro.id);
+        localStorage.setItem('email', resultado.dadosCadastro.email);
+        localStorage.setItem('nome_usuario', resultado.dadosCadastro.nome_usuario);
         navigate("/kanban");
         // Dados foram processados com sucesso
 

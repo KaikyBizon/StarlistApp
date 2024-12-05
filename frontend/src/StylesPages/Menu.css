@@ -60,6 +60,7 @@ input#pesquisar {
 .icones {
     display: flex;
     align-items: center;
+    padding-right: 15px; 
 }
 
 
@@ -89,4 +90,121 @@ input#pesquisar {
 p.alterar_dados {
     padding-left: 15px;
     color: #faed27;
+} 
+
+/* Estilo para o dropdown de notificações */
+.notifications-dropdown {
+    position: absolute;
+    top: 50px; /* Abaixo do ícone de notificações */
+    right: 0;
+    width: 300px; /* Largura ajustada */
+    background-color: #4b4b4b; /* Cor de fundo do menu */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    padding: 10px;
+    z-index: 1000; /* Para aparecer acima de outros elementos */
+    color: #faed27; /* Cor da escrita */
+    font-size: 14px; /* Tamanho ajustado do texto */
 }
+
+/* Título das seções no dropdown */
+.notifications-dropdown h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #fff88e; /* Título com cor mais clara */
+    border-bottom: 1px solid #faed27;
+    padding-bottom: 5px;
+}
+
+/* Estilo para as listas de notificações e alertas */
+.notifications-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 150px; /* Limita o tamanho e adiciona scroll se necessário */
+    overflow-y: auto;
+}
+
+/* Estilo para os itens da lista */
+.notifications-dropdown ul li {
+    margin-bottom: 8px;
+    padding: 5px;
+    background-color: #6e6e6e; /* Cor de fundo dos itens */
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Para espaçar texto e botões */
+}
+
+/* Botões de aceitar e recusar */
+.notifications-dropdown ul li button {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.notifications-dropdown ul li button.btn-success {
+    background-color: #28a745; /* Verde para aceitar */
+}
+
+.notifications-dropdown ul li button.btn-danger {
+    background-color: #dc3545; /* Vermelho para recusar */
+}
+
+/* Estilo para a mensagem "Sem novas notificações" */
+.notifications-dropdown ul li:last-child {
+    text-align: center;
+    color: #c1c1c1;
+    font-size: 14px;
+} 
+
+/* Dropdown de notificações */
+.notifications-dropdown {
+    position: absolute;
+    top: 45px; /* Distância do topo para alinhar abaixo do ícone */
+    right: 0; /* Alinha o dropdown ao lado direito do ícone */
+    width: 250px; /* Largura ajustada */
+    background-color: #4b4b4b;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1000;
+    color: #faed27;
+    font-size: 14px;
+}
+
+/* Dropdown do perfil */
+.dropdown-menu {
+    position: absolute;
+    top: 45px; /* Distância do topo para alinhar abaixo do botão */
+    right: 0; /* Alinha o dropdown ao lado direito do botão */
+    background-color: #4b4b4b;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1000;
+    color: #faed27;
+    border: none; /* Remove a borda padrão */
+}
+
+/* Estilo adicional para ícones para manter alinhamento */
+.notification-icon,
+#dropdown-basic {
+    position: relative; /* Mantém o contexto de posicionamento para o dropdown */
+    display: inline-block;
+}
+
+/* Centraliza o texto dentro do dropdown */
+.notifications-dropdown h4,
+.notifications-dropdown ul,
+.dropdown-menu {
+    text-align: left;
+}  
+
+.no-caret::after {
+    display: none !important; /* Remove a setinha */
+} 

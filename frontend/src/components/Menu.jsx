@@ -27,7 +27,7 @@
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../StylesPages/Menu.css'
 
 
@@ -48,10 +48,11 @@ export default function Menu({ onSearch }) {
                     }
                 })
                 .catch((error) => console.error("Erro ao buscar eventos próximos:", error));
-        }, 6000); // Verificar a cada 60 segundos
+        }, 60000); // Verificar a cada 60 segundos
 
         return () => clearInterval(interval);
     }, []);
+    //console.log(alertas)
 
     // Função showDados para carregar as mensagens do usuário
     // Autor: Kaiky
@@ -84,8 +85,14 @@ export default function Menu({ onSearch }) {
     };
 
     useEffect(() => {
-        showDados();
-    }, []);
+        // Define o intervalo para executar a função a cada 20 segundos
+        const interval = setInterval(() => {
+            showDados();
+        }, 20000); // 20000ms = 20 segundos
+
+        // Limpa o intervalo quando o componente for desmontado
+        return () => clearInterval(interval);
+    }, []); // A lista de dependências vazia garante que o efeito seja configurado apenas uma vez
 
     // Função handleSearchChange para atualizar o termo de busca e executar a função de busca com o valor inserido
     const handleSearchChange = (event) => {
@@ -97,20 +104,63 @@ export default function Menu({ onSearch }) {
     // Mostrar notificações do usuário
     const [showNotifications, setShowNotifications] = useState(false);
 
+    const notificationRef = useRef(null); // Referência para o ícone e o dropdown 
+
+    const handleClickOutside = (event) => {
+        if (
+            notificationRef.current &&
+            !notificationRef.current.contains(event.target)
+        ) {
+            setShowNotifications(false); // Fecha o dropdown ao clicar fora
+        }
+    };
+
+    useEffect(() => {
+        if (showNotifications) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showNotifications]);
+
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
     };
 
-    const handleAceitar = (id) => {
-        console.log(`Notificação ${id} aceita`);
-        // Lógica para processar a aceitação (exemplo: enviar para o backend)
-    };
+    // Função handleRespostaConvite para enviar a resposta do convite de equipe para o backend e processar a resposta
+    // Autor: Kaiky
+    // Criado em 03/12/2024
+    // Parâmetros de entrada:
+    // id - id da mensagem de convite
+    // aceito - retorna se a pessoa aceitou ou recusou o convite
+    // Retorno:
+    // Realiza uma requisição POST para enviar o retorno ao backend
+    // Esta função envia a resposta do usuário ao convite de equipe para tratamento do backend
+    const handleRespostaConvite = async (id, aceito) => {
+        const id_usuario = localStorage.getItem("ID")
+        try {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ acao: "resposta_convite", dados: { id, aceito, id_usuario } }),
+            });
 
-    const handleRecusar = (id) => {
-        console.log(`Notificação ${id} recusada`);
-        // Lógica para processar a recusa (exemplo: enviar para o backend)
-    };
+            const resultado = (await resposta.json()).dados_tarefa;
+            console.log(resultado)
+            if (resultado) {
+                showDados()
+            }
 
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+        }
+
+    };
 
     return (
 
@@ -134,7 +184,7 @@ export default function Menu({ onSearch }) {
             {/*icones do menu*/}
             <div className="icones">
                 <img src="https://cdn-icons-png.flaticon.com/128/7524/7524806.png" alt="duvidas" />
-                <div className="notification-icon">
+                <div className="notification-icon" ref={notificationRef}>
                     <img
                         src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png"
                         alt="sino"
@@ -153,14 +203,14 @@ export default function Menu({ onSearch }) {
 
                                             {/* Botões para aceitar e recusar */}
                                             <button
-                                                onClick={() => handleAceitar(notification[0])}
+                                                onClick={() => handleRespostaConvite(notification[0], true)}
                                                 className="btn btn-success btn-sm"
                                                 style={{ marginRight: '5px' }}
                                             >
                                                 Aceitar
                                             </button>
                                             <button
-                                                onClick={() => handleRecusar(notification.id)}
+                                                onClick={() => handleRespostaConvite(notification[0], false)}
                                                 className="btn btn-danger btn-sm"
                                             >
                                                 Recusar
@@ -193,7 +243,7 @@ export default function Menu({ onSearch }) {
 
                 {/*botão para alterar dados do usuário*/}
                 <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <Dropdown.Toggle variant="success" id="dropdown-basic" className="no-caret">
                         <img src="https://cdn-icons-png.flaticon.com/128/64/64572.png" alt="minha-conta" />
                     </Dropdown.Toggle>
 
