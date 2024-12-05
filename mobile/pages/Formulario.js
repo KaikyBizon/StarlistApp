@@ -4,10 +4,8 @@ import styles from '../styles/StylesFormulario.js';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-function Formulario({ modalVisible, setModalVisible, selectedTask }) {
-  console.log(selectedTask)
+function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTask, refreshTasks }) {
   const [tarefaNome, setTarefaNome] = useState('');
-  const [tarefaId, setTarefaId] = useState('')
   const [tarefaData, setTarefaData] = useState('');
   const [tarefaHorario, setTarefaHorario] = useState('');
   const [tarefaEtiqueta, setTarefaEtiqueta] = useState('');
@@ -15,18 +13,17 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
-  const [acao, setAcao] = useState('criar_tarefa'); // Estado para armazenar a ação
+  const [refresh, setRefresh] = useState(false);
+  const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
+  const [mostrarErros, setMostrarErros] = useState(false);
 
-  // Atualiza os estados com base na ação (criar ou editar)
   useEffect(() => {
     if (selectedTask) {
       setTarefaNome(selectedTask.titulo || '');
-      setTarefaData(selectedTask.data || '');
-      setTarefaHorario(selectedTask.horario || '');
+      setTarefaData(selectedTask.data ? formatDateToYMD(new Date(selectedTask.data)) : formatDateToYMD(new Date()));
+      setTarefaHorario(selectedTask.horario || formatTime(new Date()));
       setTarefaEtiqueta(selectedTask.etiqueta || '');
-      setTarefaDescricao(selectedTask.texto || '');
-      setTarefaId(selectedTask.id || '')
-      setAcao('editar_tarefa')
+      setTarefaDescricao(selectedTask.descricao || '');
     } else {
       setTarefaNome('');
       setTarefaData('');
@@ -34,13 +31,7 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
       setTarefaEtiqueta('');
       setTarefaDescricao('');
     }
-  }, [acao, selectedTask]); // Executa sempre que acao ou selectedTask mudar
-
-  const showMode = (currentMode) => {
-    setMode(currentMode); // Define o modo (data ou hora)
-    setShow(true); // Exibe o DateTimePicker
-  };
-
+  }, [selectedTask]);
 
   const formatTime = (date) => {
     return date.toLocaleTimeString('pt-BR', {
@@ -68,51 +59,115 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
     }
   };
 
+  const showDatePicker = () => {
+    setMode('date');
+    setShow(true);
+  };
+
+  const showTimePicker = () => {
+    setMode('time');
+    setShow(true);
+  };
+
   const handleSubmit = async () => {
-    if (!tarefaNome.trim() || !tarefaDescricao || !tarefaData || !tarefaHorario || !tarefaEtiqueta) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+    setMostrarErros(true); // Ativa a exibição de erros ao tentar enviar
+    if (!tarefaNome.trim() || !tarefaData || !tarefaHorario || !tarefaEtiqueta || !tarefaDescricao) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
-    const tarefaDados = {
-      id: tarefaId,
-      titulo: tarefaNome,
-      descricao: tarefaDescricao,
-      data: tarefaData,
-      horario: tarefaHorario,
-      etiqueta: tarefaEtiqueta
-    };
-    console.log(tarefaDados)
-
-
     try {
-      let resposta;
-      if (acao === 'editar_tarefa') {
-        // Se estamos editando uma tarefa
-        resposta = await fetch(`http://10.135.60.23:8085/receber-dados`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ acao: acao, dados: tarefaDados })
-        });
-      } else {
-        // Se estamos criando uma nova tarefa
-        resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ acao: acao, dados: tarefaDados })
-        });
-      }
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'criar_tarefa',
+          dados: {
+            titulo: tarefaNome,
+            descricao: tarefaDescricao,
+            data: tarefaData,
+            horario: tarefaHorario,
+            etiqueta: tarefaEtiqueta,
+            lista_id: listaId,
+            usuario_id: userId,
+          }
+        }),
+      });
 
-      if (resposta.ok) {
-        Alert.alert('Sucesso', 'Tarefa salva com sucesso!');
-        setModalVisible(false); // Fecha o modal após salvar
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.dados_tarefa.error) {
+        const mensagensErro = resultado.dados_tarefa.mensagens_erro
+          .map((erro, index) => `Erro ${index + 1}: ${erro.mensagem || JSON.stringify(erro)}`)
+          .join('\n');
+
+        Alert.alert('Erro', mensagensErro);
+        setMensagensErro(resultado.dados_tarefa.mensagens_erro);
       } else {
-        const erro = await resposta.json().catch(() => ({ mensagem: 'Erro ao salvar tarefa' }));
-        Alert.alert('Erro', erro.mensagem || 'Erro ao salvar tarefa');
+        Alert.alert('Sucesso', 'Tarefa criada com sucesso!');
+        setTarefaNome('');
+        setTarefaData('');
+        setTarefaHorario('');
+        setTarefaEtiqueta('');
+        setTarefaDescricao('');
+        onRequestClose();
+        refreshTasks();
+        setRefresh(!refresh);
       }
     } catch (error) {
-      console.error('Erro ao salvar tarefa:', error);
-      Alert.alert('Erro', 'Erro ao salvar tarefa');
+      console.error('Erro ao enviar dados:', error);
+      Alert.alert('Erro', 'Não foi possível criar a tarefa.');
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!tarefaNome.trim() || !tarefaData || !tarefaHorario || !tarefaEtiqueta || !tarefaDescricao) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    try {
+      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'editar_tarefa',
+          dados: {
+            id: selectedTask.id,
+            titulo: tarefaNome,
+            descricao: tarefaDescricao,
+            data: tarefaData,
+            horario: tarefaHorario,
+            etiqueta: tarefaEtiqueta,
+            lista_id: listaId,
+            usuario_id: userId,
+          },
+        }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.dados_tarefa.error) {
+        const mensagensErro = resultado.dados_tarefa.mensagens_erro
+          .map((erro, index) => `Erro ${index + 1}: ${erro.mensagem || JSON.stringify(erro)}`)
+          .join('\n');
+
+        Alert.alert('Erro', mensagensErro);
+        setMensagensErro(resultado.dados_tarefa.mensagens_erro);
+      } else {
+        Alert.alert('Sucesso', 'Tarefa atualizada com sucesso!');
+        onRequestClose();
+        refreshTasks();
+        setRefresh((prevState) => !prevState);
+      }
+
+    } catch (error) {
+      console.error('Erro ao atualizar tarefa:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar a tarefa.');
     }
   };
 
@@ -121,7 +176,7 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={() => setModalVisible(false)}
+      onRequestClose={onRequestClose}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
@@ -136,13 +191,13 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
           <View style={styles.dataTarefa}>
             <View style={styles.dateTimeContainer}>
               <TouchableOpacity
-                onPress={() => showMode("date")}
+                onPress={showDatePicker}
                 style={styles.buttonDateAndTime}
               >
                 <Text style={styles.buttonText}>Data: {tarefaData || 'Selecionar'}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => showMode("time")}
+                onPress={showTimePicker}
                 style={styles.buttonDateAndTime}
               >
                 <Text style={styles.buttonText}>Hora: {tarefaHorario || 'Selecionar'}</Text>
@@ -178,13 +233,26 @@ function Formulario({ modalVisible, setModalVisible, selectedTask }) {
             onChangeText={setTarefaDescricao}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSubmit} style={styles.btnSalvar}>
-              <Text style={styles.btnText}>Salvar</Text>
+            <TouchableOpacity
+              style={styles.btnSalvar}
+              onPress={selectedTask ? handleUpdate : handleSubmit}
+            >
+              <Text style={styles.btnText}>
+                {selectedTask ? 'Alterar Tarefa' : 'Adicionar Tarefa'}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.btnCancelar}>
+
+            <TouchableOpacity onPress={onRequestClose} style={styles.btnCancelar}>
               <Text style={styles.btnText}>Cancelar</Text>
             </TouchableOpacity>
           </View>
+          {mostrarErros && mensagensErro.length > 0 && (
+            <View style={styles.errorContainer}>
+              {mensagensErro.map((erro, index) => (
+                <Text key={index} style={styles.errorMessage}>{erro.mensagem}</Text>
+              ))}
+            </View>
+          )}
         </View>
       </View>
     </Modal>

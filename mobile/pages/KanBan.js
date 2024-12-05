@@ -52,6 +52,9 @@ function Kanban() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [confirmDeleteTaskModalVisible, setConfirmDeleteTaskModalVisible] = useState(false);
+  const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null);
+
   // Mover a função fetchCategoriasETarefas para fora do useEffect
   const fetchCategoriasETarefas = async () => {
     const id = await AsyncStorage.getItem('ID');
@@ -66,7 +69,6 @@ function Kanban() {
       });
 
       const categoriasResultado = await resposta.json();
-      console.log("Resultado:", categoriasResultado);
 
       if (resposta.ok) {
         setCategorias(categoriasResultado);
@@ -101,7 +103,6 @@ function Kanban() {
       });
 
       const resultado = await resposta.json();
-      console.log("tarefas: ", resultado)
 
       if (resposta.ok) {
         return resultado;
@@ -116,7 +117,6 @@ function Kanban() {
   };
 
   const handleSubmit = async () => {
-    console.log('usuario1:', userId)
     if (!inputValue.trim()) {
       Alert.alert('Erro', 'O nome da lista não pode estar vazio');
       return;
@@ -189,6 +189,12 @@ function Kanban() {
       return;
     }
 
+    // Atualize o estado local imediatamente
+    const novaCategorias = categorias.map((categoria) =>
+      categoria.id === listaParaEditar ? { ...categoria, nome: novoNomeLista } : categoria
+    );
+    setCategorias(novaCategorias);
+
     try {
       const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
         method: 'POST',
@@ -198,8 +204,8 @@ function Kanban() {
         body: JSON.stringify({
           acao: 'editar_nome_lista',
           dados: {
-            id: listaParaEditar, // ID da lista a ser editada
-            nomeEditando: novoNomeLista // Novo nome da lista
+            id: listaParaEditar,
+            nomeEditando: novoNomeLista,
           }
         }),
       });
@@ -209,15 +215,15 @@ function Kanban() {
       if (!resposta.ok || resultado.mensagens_erro) {
         Alert.alert('Erro', resultado.mensagens_erro);
       } else {
-        fetchCategoriasETarefas(); // Atualiza a lista de categorias e tarefas
-        setEditModalVisible(false); // Fecha o modal de edição
-        setListaParaEditar(null); // Limpa o estado da lista a ser editada
-        setNovoNomeLista(''); // Limpa o novo nome da lista
+        setEditModalVisible(false);
+        setListaParaEditar(null);
+        setNovoNomeLista('');
       }
     } catch (error) {
       console.error('Erro ao enviar dados:', error);
     }
   };
+
 
   const handleEditTask = (task, categoriaId) => {
     // Função para formatar a data de DD/MM/YYYY para YYYY-MM-DD
@@ -225,22 +231,80 @@ function Kanban() {
       const [day, month, year] = date.split('/');
       return `${year}-${month}-${day}`;
     };
-
+    console.log("ID da categoria:", categoriaId);
     setSelectedTask({
       ...task,
-      etiqueta: task.etiqueta || '', // Define etiqueta como string vazia se for undefined
-      descricao: task.descricao || '', // Define descricao como string vazia se for undefined
-      data: task.data ? formatDate(task.data) : '' // Formata a data se existir
+      etiqueta: task.etiqueta || '',
+      descricao: task.texto || '',
+      data: task.data ? formatDate(task.data) : ''
     });
     setListaId(categoriaId);
     setModalVisible(true);
   };
-  
+
   const handleAddNewTask = (categoriaId) => {
-    setListaId(categoriaId); // Define a categoria
-    setSelectedTask(null); // Limpa a tarefa selecionada para indicar uma nova tarefa
-    setModalVisible(true); // Abre o modal para adicionar a tarefa
+    setListaId(categoriaId);
+    setSelectedTask(null);
+    setModalVisible(true);
   };
+
+  const handleDeleteTask = (task, categoriaId) => {
+    console.log("Tarefa selecionada para exclusão:", task);
+    setTarefaParaExcluir({ ...task, categoria_id: categoriaId });
+    setConfirmDeleteTaskModalVisible(true);
+  };
+
+  const confirmarExclusaoTarefa = async () => {
+    try {
+      console.log("Tarefa para excluir:", tarefaParaExcluir.id);
+      console.log("Categoria da tarefa:", tarefaParaExcluir.categoria_id);
+
+      if (!tarefaParaExcluir || !tarefaParaExcluir.id || !tarefaParaExcluir.categoria_id) {
+        console.error("Dados de tarefa inválidos:", tarefaParaExcluir);
+        return Alert.alert("Erro", "Dados da tarefa estão incompletos.");
+      }
+
+      const resposta = await fetch(`http://10.135.60.23:8085/receber-dados`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          acao: 'excluirTarefa',
+          dados: {
+            tarefaId: tarefaParaExcluir.id,
+            categoriaId: tarefaParaExcluir.categoria_id
+          }
+        }),
+      });
+
+      if (resposta.ok) {
+        // Verifica se a categoria existe no estado antes de tentar filtrar
+        if (!tarefasPorCategoria[tarefaParaExcluir.categoria_id]) {
+          console.error(`Categoria com ID ${tarefaParaExcluir.categoria_id} não encontrada.`);
+          return Alert.alert("Erro", "Categoria da tarefa não encontrada.");
+        }
+
+        // Remove a tarefa excluída do estado
+        const novasTarefas = { ...tarefasPorCategoria };
+        novasTarefas[tarefaParaExcluir.categoria_id] = novasTarefas[tarefaParaExcluir.categoria_id].filter(
+          tarefa => tarefa.id !== tarefaParaExcluir.id
+        );
+        setTarefasPorCategoria(novasTarefas);
+
+        Alert.alert('Sucesso', 'Tarefa excluída com sucesso!');
+      } else {
+        Alert.alert('Erro', 'Não foi possível excluir a tarefa. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir tarefa:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao excluir a tarefa.');
+    } finally {
+      setConfirmDeleteTaskModalVisible(false);
+      setTarefaParaExcluir(null);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -275,10 +339,13 @@ function Kanban() {
                 <View key={index} style={styles.tarefaItem}>
                   <View style={styles.editarDeleteTask}>
                     <Text style={styles.tituloTarefa}>{tarefa.titulo}</Text>
-                    <TouchableOpacity onPress={() => handleEditTask(tarefa)}>
+                    <TouchableOpacity onPress={() => handleEditTask(tarefa, categoria.id)}>
                       <Image source={require('../assets/images/editar_lista.png')} style={styles.editarTask} />
                     </TouchableOpacity>
-                    <Image source={require('../assets/images/lixeira.png')} style={styles.excluirTask} />
+
+                    <TouchableOpacity onPress={() => handleDeleteTask(tarefa, categoria.id)}>
+                      <Image source={require('../assets/images/lixeira.png')} style={styles.excluirTask} />
+                    </TouchableOpacity>
                   </View>
                   <Text style={styles.dataHora}>Data: {tarefa.data}</Text>
                   <Text style={styles.dataHora}>Hora: {tarefa.horario}</Text>
@@ -357,12 +424,36 @@ function Kanban() {
         </View>
       </Modal>
 
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={confirmDeleteTaskModalVisible}
+        onRequestClose={() => setConfirmDeleteTaskModalVisible(false)}
+      >
+        <View style={styles.modalExcluirTarefa}>
+          <View style={styles.modalDeleteTask}>
+            <Text style={styles.modalTextTask}>Deseja mesmo excluir esta tarefa?</Text>
+            <View style={styles.buttonDeleteTask}>
+              <TouchableOpacity onPress={confirmarExclusaoTarefa} style={styles.btnDelete}>
+                <Text style={styles.btnTextExcluirTask}>Excluir</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setConfirmDeleteTaskModalVisible(false)} style={styles.btnFechar}>
+                <Text style={styles.btnTextExcluirTask}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
       <Formulario
         modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+        onRequestClose={() => setModalVisible(false)}
         userId={userId}
         listaId={listaId}
-        selectedTask={selectedTask} // Adiciona a tarefa selecionada como prop
+        selectedTask={selectedTask}
+        refreshTasks={fetchCategoriasETarefas}
       />
     </View>
   );

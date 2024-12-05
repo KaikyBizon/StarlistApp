@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginRight: 10,
-        width: 70,
+        width: 130,
+        alignItems: 'center',
     },
     btnCancelar: {
         backgroundColor: '#dc3545',
@@ -86,6 +87,16 @@ const styles = StyleSheet.create({
     btnNovaTarefa: {
         backgroundColor: '#333',
         height: 60,
+    },
+
+
+    erroContainer: {
+        marginVertical: 5,
+        backgroundColor: '#fff',
+    },
+    erroText: {
+        color: 'red',
+        fontSize: 14,
     },
 })
 export default styles
