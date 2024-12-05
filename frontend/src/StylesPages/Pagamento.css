@@ -25,7 +25,7 @@
 .containerPagamento {
     width: 80%; /* Largura fixa para o container */
     max-width: 600px; /* Largura máxima para limitar o tamanho */
-    background-color: #696969;
+    background-color: #222;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.8);
@@ -49,7 +49,7 @@
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #c9c9c9;
+    color: #e5e344;
     text-align: center;
 }
 
@@ -61,19 +61,6 @@
     margin-bottom: 10px;
 }
 
-/* Estilo para o botão de método de pagamento */
-.btnMetodo {
-    padding: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    flex: 1;
-    margin: 0 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-}
 
 /* Estilo para o botão de método de pagamento selecionado */
 .btnMetodoSelected {
@@ -83,7 +70,7 @@
 /* Estilo para o texto do botão */
 .txtBotao {
     font-size: 16px;
-    color: #696969;
+    color: #edea44;
 }
 
 /* Estilo para o container do código QR */
@@ -160,7 +147,9 @@
     width: 100%; /* Alargado para desktop */
     box-sizing: border-box;
     color: black;
-    border: 1px solid #ccc;
+    border: 1px solid #636363;
+    background-color: #484848;
+
 }
 
 /* Estilo para a linha de inputs */
@@ -198,8 +187,9 @@
     margin-bottom: 10px;
     text-align: center;
     color: black;
-    border: 1px solid #ccc;
+    border: 1px solid #636363;
     box-sizing: border-box; /* Inclui padding e border na largura total */
+    background-color: #484848;
 }
 
 .dadosCartao, .codigoQr {
@@ -211,7 +201,7 @@
 /* Estilo base para os botões de método de pagamento */
 .btnMetodo {
     padding: 15px;
-    background-color: #ddd;
+    background-color: #484848;
     border-radius: 5px;
     flex: 1;
     margin: 0 5px;
