@@ -48,8 +48,106 @@ export default function Pagamento() {
     const [cvv, setCvv] = useState('');
     const [cpf, setCpf] = useState('');
     const [pixCode, setPixCode] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate(); // Use o hook de navegação
+
+    // Função para validar um CPF brasileiro
+    function validaCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
+
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+        let soma = 0;
+        let resto;
+
+        // Calcula o primeiro dígito verificador
+        for (let i = 1; i <= 9; i++) {
+            soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+        soma = 0;
+        // Calcula o segundo dígito verificador
+        for (let i = 1; i <= 10; i++) {
+            soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+        return true;
+    }
+
+    // Validação de número do cartão (Luhn)
+    const validateCardNumber = (number) => {
+        const cleanedNumber = number.replace(/\s/g, ''); // Remove espaços
+        let sum = 0;
+        let shouldDouble = false;
+
+        for (let i = cleanedNumber.length - 1; i >= 0; i--) {
+            let digit = parseInt(cleanedNumber[i]);
+            if (shouldDouble) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            shouldDouble = !shouldDouble;
+        }
+
+        return sum % 10 === 0;
+    };
+
+    // Validação de nome do titular
+    const validateCardHolderName = (name) => {
+        return name.trim().split(' ').length >= 2;
+    };
+
+    // Validação de data de validade (MM/AA)
+    const validateExpiryDate = (date) => {
+        if (!/^\d{2}\/\d{2}$/.test(date)) return false;
+
+        const [month, year] = date.split('/').map(Number);
+        const currentDate = new Date();
+        const expiry = new Date(`20${year}`, month - 1);
+
+        return expiry > currentDate && month >= 1 && month <= 12;
+    };
+
+    // Validação de CVV (3 ou 4 dígitos)
+    const validateCVV = (cvv) => /^[0-9]{3}$/.test(cvv);
+
+    const validateFields = () => {
+        let validationErrors = {};
+
+        if (!cardNumber || cardNumber.length !== 19 || !validateCardNumber(cardNumber.replace(/\s/g, ''))) {
+            validationErrors.cardNumber = 'Número do cartão inválido';
+        }
+        if (!cardHolderName || !validateCardHolderName(cardHolderName)) {
+            validationErrors.cardHolderName = 'Nome do titular inválido';
+        }
+        if (!expiryDate || !validateExpiryDate(expiryDate)) {
+            validationErrors.expiryDate = 'Data de validade inválida';
+        }
+        if (!cvv || !validateCVV(cvv)) {
+            validationErrors.cvv = 'CVV inválido';
+        }
+        if (!cpf || cpf.length < 14 || !validaCPF(cpf)) {
+            validationErrors.cpf = 'CPF inválido';
+        }
+
+        setErrors(validationErrors);
+        return Object.keys(validationErrors).length === 0;
+    };
+
+    const handlePayment = () => {
+        if (validateFields()) {
+            window.alert('Pagamento Concluído: Seu pagamento foi realizado com sucesso!');
+            navigate('/login');
+        }
+    };
 
     // Função que exibe um alerta de sucesso ao concluir o pagamento e redireciona o usuário para a página de login.
     const handledPayment = () => {
@@ -177,6 +275,8 @@ export default function Pagamento() {
                 onChange={(e) => setCardNumber(e.target.value)}
                 maxLength={19}
             />
+            {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
+
             <p className='txtInfo'>Nome do titular</p>
             <input
                 className='input'
@@ -185,6 +285,8 @@ export default function Pagamento() {
                 value={cardHolderName}
                 onChange={(e) => setCardHolderName(e.target.value)}
             />
+            {errors.cardHolderName && <span className="error">{errors.cardHolderName}</span>}
+
             <div className='linha'>
                 <div className='inputLinha'>
                     <p className='txtInfo'>Data de validade</p>
@@ -196,6 +298,8 @@ export default function Pagamento() {
                         onChange={(e) => setExpiryDate(formatExpiryDate(e.target.value))}
                         maxLength={5}
                     />
+                    {errors.expiryDate && <span className="error">{errors.expiryDate}</span>}
+
                 </div>
                 <div className='inputLinha'>
                     <p className='txtInfo'>CVV</p>
@@ -207,7 +311,9 @@ export default function Pagamento() {
                         onChange={(e) => setCvv(validateNumericInput(e.target.value))}
                         maxLength={3}
                     />
+                    {errors.cvv && <span className="error">{errors.cvv}</span>}
                 </div>
+
             </div>
             <p className='txtInfo'>CPF</p>
             <input
@@ -218,9 +324,12 @@ export default function Pagamento() {
                 onChange={(e) => setCpf(e.target.value)}
                 maxLength={14}
             />
-            <button className='btnPagar' onClick={handledPayment}>
+            {errors.cpf && <span className="error">{errors.cpf}</span>}
+
+            <button className='btnPagar' onClick={handlePayment}>
                 Pagar e concluir
             </button>
+
         </div>
     );
 

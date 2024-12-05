@@ -154,7 +154,6 @@
 
 /* Estilo para os campos de entrada */
 .input {
-    background-color: #fff;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -172,6 +171,15 @@
     gap: 10px; /* Espaçamento entre os inputs */
     box-sizing: border-box; /* Inclui padding e border na largura total */
 }
+
+.input:focus, 
+.inputMeio:focus {
+    border-color: #faed27; /* Cor da borda enquanto digita */
+    outline: none; /* Remove o contorno padrão do navegador */
+    background-color: #565656; /* Cor de fundo enquanto digita */
+    transition: all 0.3s ease; /* Transição suave para o efeito */
+}
+
 
 /* Estilo para os inputs dentro da linha */
 .inputLinha {

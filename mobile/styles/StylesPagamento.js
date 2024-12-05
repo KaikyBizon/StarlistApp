@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
-        color:"black",    },
+        color:'#FFF88E',   
+     },
     // Estilo para a linha de inputs
     linha: {
         flexDirection: 'row',
@@ -156,6 +157,22 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
         color:"#FFF88E",
+    },
+
+
+    btnVerificacao: {
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        backgroundColor: '#faed27'
+    },
+    txtVerificacao: {
+        color: 'black', // Cor do texto
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
