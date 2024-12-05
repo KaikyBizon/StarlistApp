@@ -1,11 +1,11 @@
 import conexao
 
 
-def selecionar_dados_cadastro_login(email, senha):
+def select_id_equipe_user(usuario_id):
     conex = conexao.conectar()
     cursor = conex.cursor()
-    sql = "SELECT EMAIL, SENHA, ID, NOME_USUARIO, DATE_FORMAT(DATA_NASC, '%Y-%m-%d') FROM usuario WHERE EMAIL = %s AND SENHA = %s"
-    val = (email, senha)
+    sql = "SELECT ID_EQUIPE, PLANO_ID FROM usuario WHERE ID = %s"
+    val = (usuario_id, )
     cursor.execute(sql, val)
     dados_usuario = cursor.fetchone()
     conex.close()

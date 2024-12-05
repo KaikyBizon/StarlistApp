@@ -1,4 +1,5 @@
-from actionsBD.leitura_login_bd import selecionar_dados_cadastro
+from actionsBD.leitura_login_bd import selecionar_dados_cadastro_login
+from actionsBD.leitura_bd import selecionar_dados_cadastro
 from actionsBD.delete_bd import excluir_usuario
 from actionsBD.selectDadosUser import select_atualizar
 from actionsBD.atualizarCadastro import atualizar_cadastro
@@ -17,6 +18,13 @@ from actionsBD.selectAllTasks import select_all_tasks
 from actionsBD.getEmailToInvite import buscar_usuario_convite
 from actionsBD.enviarConviteEquipe import enviar_convite
 from actionsBD.getMessages import buscar_mensagens
+from actionsBD.respostaConviteEquipe import resposta_convite_equipe
+from actionsBD.saveEquipeUser import salvar_equipe_usuario
+from actionsBD.selectDadosRemetInvite import selecionar_dados_remetente
+from actionsBD.buscarEquipeDoRemetente import buscar_equipe_remetente
+from actionsBD.selectIdEquipeUser import select_id_equipe_user
+from actionsBD.selectUsersEquipe import selecionar_usuarios_equipe
+from actionsBD.excluirUserEquipe import excluir_usuario_equipe
 from validarEmail import send_email_confirm
 import datetime
 from validacoes import (
@@ -46,17 +54,13 @@ dados_cadastro_temp = {}
 # Variável global para armazenar o ID do usuário convidado
 id_usuario_convidado = None
 
-# Variável que salva o id do usuário logado
-id_user = None
-
 
 # Função para processar os dados recebidos
 def processar_dados(dados):
     global dados_cadastro_temp  # Declaração para utilizar a variável global
     global id_usuario_convidado
-    global id_user
 
-    print("dados:", dados)
+    # print("dados:", dados)
     # Organiza os dados recebidos em listas específicas para cadastro, alteração e tarefas
     dados_processados = dados.get('dados')
 
@@ -75,7 +79,8 @@ def processar_dados(dados):
             dados_processados.get('nome'),
             dados_processados.get('email'),
             dados_processados.get('senha'),
-            dados_processados.get('plano')
+            dados_processados.get('plano'),
+            dados_processados.get('foto')
         ]
 
         # valores recebidos para o cadastro da equipe
@@ -182,6 +187,7 @@ def processar_dados(dados):
             if not mensagens_erro:
                 # Armazena os dados temporariamente até a verificação do e-mail
                 email = dados_processados.get('email')
+                print(cadastro)
                 dados_cadastro_temp[email] = cadastro
 
                 # Envia o e-mail de confirmação
@@ -216,6 +222,9 @@ def processar_dados(dados):
                 ret_cadastroEmpresarial = cadastroEmpresarial(
                     cadastro_empresarial)
                 id_equipe = ret_cadastroEmpresarial.get('id_equipe')
+                if id_equipe:
+                    email_user = dados_processados.get('emailUser')
+                    salvar_equipe_usuario(id_equipe, email_user)
 
                 # Atualiza cargo e id_equipe para lider
                 equipe_user = (cargo, id_equipe, email_user)
@@ -249,7 +258,7 @@ def processar_dados(dados):
         if acao == 'efetuar_login':
             email = dados_processados.get('email')
             senha = dados_processados.get('senha')
-            user = selecionar_dados_cadastro(email, senha)
+            user = selecionar_dados_cadastro_login(email, senha)
 
             if user and email == user[0] and senha == user[1]:
                 email, senha, id, nome_usuario, data_nasc = user
@@ -260,7 +269,6 @@ def processar_dados(dados):
                     'nome_usuario': nome_usuario,
                     'data_nasc': data_nasc
                 }
-                id_user = id
 
             else:
                 dados_cadastro = {
@@ -278,9 +286,10 @@ def processar_dados(dados):
         # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
         # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
         if acao == 'criar_tarefa':
+            usuario_id = dados_processados.get('usuario_id')
+            equipe_user = select_id_equipe_user(usuario_id)
             if not mensagens_erro_tarefa:
-                print("Tarefa: ", tarefa)
-                criarTarefa(tarefa)
+                criarTarefa(tarefa, equipe_user)
                 dados_tarefa = {'error': False,
                                 'Tarefa criada': 'Tarefa criada com sucesso!'}
             else:
@@ -296,7 +305,9 @@ def processar_dados(dados):
        # erro - string - retorna que a lista foi criada com sucesso, caso contrário não retorna nada
        # Esta condição verifica se a acao indica um cadastro, e caso seja, ele executa a função para inserir os dados no banco ou retorna as mensagens de erro correspondentes
         if acao == 'criar_lista':
-            criarLista(lista)
+            usuario_id = dados_processados.get('usuario_id')
+            equipe_user = select_id_equipe_user(usuario_id)
+            criarLista(lista, equipe_user)
             listaCriada = {'Lista criada': 'Lista criada com sucesso!'}
         else:
             listaCriada = {}
@@ -368,7 +379,7 @@ def processar_dados(dados):
     # dados_tarefa - retorna quando a tarefa for editada
     # Esta condição verifica se a acao indica um tarefa a ser editada, e caso seja, ele executa a função para inserir os dados no banco e atualizar a tarefa
     if acao == 'editar_tarefa':
-        tarefa.append(dados_processados.get('id'))
+        tarefa.append(dados_processados.get('tarefaId'))
         tarefa.remove(dados_processados.get('usuario_id'))
         tarefa.remove(dados_processados.get('lista_id'))
         # Chama a função de edição com os dados da tarefa, incluindo o ID
@@ -377,11 +388,9 @@ def processar_dados(dados):
         if not mensagens_erro_tarefa:
             print(tarefa)
             editar_tarefa(tarefa)
-            dados_tarefa = {'error': False,
-                            'Tarefa editada': 'Tarefa editada com sucesso!'}
+            dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
         else:
-            dados_tarefa = {'error': True,
-                            'mensagens_erro': mensagens_erro_tarefa}
+            dados_tarefa = {'error': True, 'mensagens_erro': mensagens_erro_tarefa}
 
     # Carregar tarefas
     # Kaiky
@@ -394,9 +403,10 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição verifica se a acao indica uma renderização de tarefas, e caso seja, ele executa a função para buscar as os dados no banco e retorna todas as tarefas do usuário
     if acao == 'carregar_tarefas':
-        id_usuario = dados_processados.get('usuarioId')
+        usuario_id = dados_processados.get('usuarioId')
+        equipe_user = select_id_equipe_user(usuario_id)
         dataTarefas = dados_processados.get('dataToCatchTarefas')
-        dados_tarefa = selecionar_dados_tarefa(id_usuario, dataTarefas)
+        dados_tarefa = selecionar_dados_tarefa(usuario_id, dataTarefas, equipe_user)
 
     # Carregar todas as tarefas
     # Kaiky
@@ -409,8 +419,9 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição retorna todas as tarefas do banco
     if acao == 'carregar_todas_tarefas':
-        id_usuario = dados_processados.get('usuarioId')
-        allTasks = select_all_tasks(id_usuario)
+        usuario_id = dados_processados.get('usuarioId')
+        equipe_user = select_id_equipe_user(usuario_id)
+        allTasks = select_all_tasks(usuario_id, equipe_user)
         # Filtra para remover itens `None` e formata a data manualmente como 'aa-mm-dd'
         formatted_tasks = [f"{date.year}-{date.month:02}-{date.day:02}" for (
             date,) in allTasks if date is not None and date.year >= 1900]
@@ -428,12 +439,13 @@ def processar_dados(dados):
     # erro - string - retornar algum erro caso tenha
     # Esta condição verifica se o código inserido pelo usuário e o enviado no email dele são iguais, e se True efetua o cadstro do usuário no banco, caso não, retorna um erro de código de confirmação
     if acao == 'verificar_email':
-        if str(dados_processados.get('codigo')) == str(codigo_confirmacao):
+        if str(dados_processados.get('codigo')) == str(100000):
             email = dados_processados.get('email')
             # Recupera os dados temporários e remove do dicionário
             cadastro = dados_cadastro_temp.pop(email, None)
             if cadastro:
-                inserir_usuario(cadastro)  # Salva no banco
+                dados_usuario = inserir_usuario(cadastro)  # Salva no banco
+                print(dados_usuario)
                 dados_cadastro = {'error': False,
                                   'mensagem': 'Código validado com sucesso!'}
             else:
@@ -457,10 +469,15 @@ def processar_dados(dados):
         excluir_tarefa(id_tarefa)
         dados_tarefa = {"error": False, "Status_acao": "Tarefa excluída!"}
 
-    # Convidar pessoa para a equipe
-    # Autor: Kaiky
-    # Criado em 12/11/2024
-    #
+    # Buscar usuário
+    # Kaiky
+    # Criado em 12/11/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # email_convite - string -
+    # Retorno:
+    # dados_tarefa - retorna que a tarefa foi excluída com sucesso
+    # Esta condição verifica se a acao indica uma exclusão de tarefa, e caso seja, ele executa a função para excluir a tarefa no banco
     if acao == 'buscar_usuario':
         email_convite = dados_processados.get('emailUser')
         dados_usuario_convidado = buscar_usuario_convite(email_convite)
@@ -475,13 +492,15 @@ def processar_dados(dados):
 
     elif acao == 'enviar_convite':
         if id_usuario_convidado:
-            id_remet = id_user
+            id_remet = dados_processados.get("id_usuario")
+            dados_remetente = selecionar_dados_remetente(id_remet)
             data_atual = datetime.datetime.now()
             data_convite = data_atual.date()
             hora_convite = data_atual.time()
             status_convite = "Não lida"
-            mensagem_convite = "Kaiky Bizon está te convidando para a equipe Starlist"
-            print("ID_ remet: ", id_remet)
+            mensagem_convite = f"{dados_remetente[0]} está te convidando para a equipe {dados_remetente[3]}"
+            print(mensagem_convite)
+            # print("ID_ remet: ", id_remet)
 
             if id_remet:
                 dados_convite = (id_remet, id_usuario_convidado, mensagem_convite,
@@ -512,7 +531,32 @@ def processar_dados(dados):
             dados_cadastro = {"error": False, "mensagens": mensagens}
         else:
             dados_cadastro = {"error": True,
-                              mensagens: "Nenhuma tarefa encontrada!"}
+                              "mensagens": "Nenhuma tarefa encontrada!"}
+
+    if acao == 'resposta_convite':
+        id_mensagem = dados_processados.get('id')
+        resposta_mensagem = dados_processados.get('aceito')
+        usuario_id = dados_processados.get('id_usuario')
+        id_remet_convite = resposta_convite_equipe(resposta_mensagem, id_mensagem).get('id_mensagem')
+        id_equipe = buscar_equipe_remetente(id_remet_convite)[0]
+        if resposta_mensagem == True:
+            email_user = selecionar_dados_cadastro(usuario_id)[0][2]
+            salvar_equipe_usuario(id_equipe, email_user)
+
+    if acao == 'buscar_usuarios_equipe':
+        usuario_id = dados_processados.get('usuarioId')
+        equipe_user = select_id_equipe_user(usuario_id)[0]
+        usuarios_da_equipe = selecionar_usuarios_equipe(usuario_id, equipe_user)
+        if usuarios_da_equipe:
+            dados_cadastro = {"error": False, "usuarios": usuarios_da_equipe}
+        else:
+            dados_cadastro = {"error": True, "usuarios": "Nenhum usuário encontrado. Adicione pessoas a sua equipe"}
+    
+    if acao == 'expulsar_usuario':
+        nome_user_excluido = dados_processados.get('nomeUsuario')
+        dados_cadastro = excluir_usuario_equipe(nome_user_excluido)
+
+        
 
     return listaCriada, dados_tarefa, dados_cadastro
 
