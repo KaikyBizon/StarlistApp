@@ -76,7 +76,6 @@ function Cadastro() {
     // Esta função previne o comportamento padrão do formulário, armazena o email no localStorage, envia os dados do formulário em formato JSON para o backend, e com base na resposta, exibe mensagens de erro ou redireciona o usuário para a página de verificação de e-mail
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formValues)
         const data = new FormData();
         data.append("acao", "cadastro")
         data.append("nome", formValues.nome);
@@ -91,9 +90,8 @@ function Cadastro() {
 
 
         localStorage.setItem('email', formValues.email);
-        console.table(data)
         try {
-            const resposta = await fetch('http://10.135.60.12:8085/save-user', {
+            const resposta = await fetch('http://10.135.60.24:8085/save-user', {
                 method: 'POST',
                 body: data,
             });

@@ -78,9 +78,7 @@ const styles = StyleSheet.create({
     inputPicker: {
         width: '100%',
     },
-    etiqueta: {
-        color: '#FFF88E',
-    },
+    
     buttonText: {
         color: '#FFF88E',
     },

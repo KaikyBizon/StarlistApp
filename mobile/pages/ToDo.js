@@ -6,6 +6,7 @@ import styles from '../styles/StylesToDo';
 import { useFonts, Kanit_500Medium } from '@expo-google-fonts/kanit';
 import MenuScreen from '../components/Menu';
 import { Feather } from '@expo/vector-icons';
+import Formulario from './Formulario.js';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização em português
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,6 +44,7 @@ export default function ToDo({ navigation, route }) {
   const [tarefas, setTarefas] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [mensagensErro, setMensagensErro] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [dataToCatchTarefas, setDataToCatchTarefas] = useState(route.params?.selectedDate);
   const [modalVisible, setModalVisible] = useState(false); // Estado do modal de edição
   const [statusModalVisible, setStatusModalVisible] = useState(false); // Estado do modal de status
@@ -57,8 +59,9 @@ export default function ToDo({ navigation, route }) {
   // Função para buscar tarefas do servidor
   const fetchTarefas = async () => {
     const usuarioId = await AsyncStorage.getItem('ID');
+    setUserId(usuarioId)
     try {
-      const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: "carregar_tarefas", dados: { usuarioId, dataToCatchTarefas } }),
@@ -144,7 +147,7 @@ export default function ToDo({ navigation, route }) {
             text: 'Excluir',
             onPress: async () => {
               try {
-                const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+                const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ dados: { tarefaId: id }, acao: 'excluirTarefa' }),
@@ -173,9 +176,22 @@ export default function ToDo({ navigation, route }) {
   };
 
   const openEditModal = (task) => {
-    setSelectedTask(task);
+    const formatDate = (date) => {
+      const [day, month, year] = date.split('/');
+      return `${year}-${month}-${day}`;
+    };
+    setSelectedTask({
+      ...task,
+      data: task.data ? formatDate(task.data) : ''
+    });
     setEditedTitle(task.titulo);
     setEditedDescription(task.descricao);
+    setModalVisible(true);
+  };
+
+  // Disparar a função fetchCategoriasETarefas toda vez que a variável 'refresh' for alterada;
+  const handleAddNewTask = () => {
+    setSelectedTask(null);
     setModalVisible(true);
   };
 
@@ -185,7 +201,7 @@ export default function ToDo({ navigation, route }) {
       return;
     }
 
-    const response = await fetch('http://10.135.60.12:8085/receber-dados', {
+    const response = await fetch('http://10.135.60.24:8085/receber-dados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ acao: 'editarTarefa', dados: { id: selectedTask.id, titulo: editedTitle, descricao: editedDescription } }),
@@ -230,7 +246,7 @@ export default function ToDo({ navigation, route }) {
     console.log(status)
     try {
       // Envia o status atualizado para o servidor
-      const response = await fetch('http://10.135.60.12:8085/receber-dados', {
+      const response = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -268,9 +284,6 @@ export default function ToDo({ navigation, route }) {
     <View style={styles.background}>
       <MenuScreen />
       <View style={styles.containerMenu}>
-        <TouchableOpacity onPress={showDatePickerHandler}>
-          <Feather size={32} name="calendar" />
-        </TouchableOpacity>
         <Text style={styles.txtData}>{moment(date).format('DD [DE] MMMM [DE] YYYY').toUpperCase()}</Text>
       </View>
 
@@ -354,8 +367,25 @@ export default function ToDo({ navigation, route }) {
           </View>
         </View>
       </Modal>
-
       <StatusBar style="auto" />
+
+
+      <View style={styles.containerbtn}>
+        <TouchableOpacity
+          style={styles.btnAdicionarTarefa}
+          onPress={handleAddNewTask}
+        >
+          <Text style={styles.btnText}>Nova tarefa</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Formulario
+        modalVisible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+        userId={userId}
+        selectedTask={selectedTask}
+        refreshTasks={fetchTarefas}
+      />
     </View>
   );
 }

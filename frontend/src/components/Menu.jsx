@@ -48,7 +48,7 @@ export default function Menu({ onSearch }) {
                     }
                 })
                 .catch((error) => console.error("Erro ao buscar eventos próximos:", error));
-        }, 60000); // Verificar a cada 60 segundos
+        }, 6000); // Verificar a cada 6 segundos
 
         return () => clearInterval(interval);
     }, []);
@@ -63,32 +63,35 @@ export default function Menu({ onSearch }) {
     // Faz uma requisição ao servidor para buscar os dados do usuário e atualiza o estado `formAlter` com as informações obtidas
     // Esta função realiza uma requisição POST para buscar os dados do usuário, preenche o formulário com nome, email, data de nascimento e ID, e define o nome do usuário no estado
     const showDados = async () => {
-        const id_usuario = localStorage.getItem("ID")
+        const id_usuario = localStorage.getItem("ID");
         try {
             const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: 'buscar_mensagens', dados: { id_usuario: id_usuario } }),
+                body: JSON.stringify({ acao: 'buscar_mensagens', dados: { id_usuario } }),
             });
             const dados = (await resposta.json()).dadosCadastro;
-            console.log(dados)
             if (dados.error) {
-
+                console.error('Erro no backend:', dados.error);
             } else {
-                setNotifications(dados.mensagens);  // Atualiza o estado com as mensagens recebidas
+                // Atualize notificações apenas se elas forem diferentes
+                if (JSON.stringify(dados.mensagens) !== JSON.stringify(notifications)) {
+                    setNotifications(dados.mensagens || []);
+                }
             }
         } catch (error) {
-            console.error('Erro ao carregar dados!', error)
+            console.error('Erro ao carregar dados!', error);
         }
     };
+
 
     useEffect(() => {
         // Define o intervalo para executar a função a cada 20 segundos
         const interval = setInterval(() => {
             showDados();
-        }, 20000); // 20000ms = 20 segundos
+        }, 1000); // 20000ms = 20 segundos
 
         // Limpa o intervalo quando o componente for desmontado
         return () => clearInterval(interval);
@@ -140,27 +143,36 @@ export default function Menu({ onSearch }) {
     // Realiza uma requisição POST para enviar o retorno ao backend
     // Esta função envia a resposta do usuário ao convite de equipe para tratamento do backend
     const handleRespostaConvite = async (id, aceito) => {
-        const id_usuario = localStorage.getItem("ID")
+        const id_usuario = localStorage.getItem("ID");
         try {
+            // Atualize o estado local primeiro
+            setNotifications((prevNotifications) =>
+                prevNotifications.filter((notif) => notif[0] !== id)
+            );
+
             const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ acao: "resposta_convite", dados: { id, aceito, id_usuario } }),
+                body: JSON.stringify({
+                    acao: "resposta_convite",
+                    dados: { id, aceito, id_usuario },
+                }),
             });
 
             const resultado = (await resposta.json()).dados_tarefa;
-            console.log(resultado)
-            if (resultado) {
-                showDados()
-            }
+            console.log(resultado);
 
+            // Depois, atualize os dados gerais
+            if (resultado) {
+                showDados();
+            }
         } catch (error) {
             console.error('Erro ao enviar dados:', error);
         }
-
     };
+
 
     return (
 
@@ -183,7 +195,6 @@ export default function Menu({ onSearch }) {
             </div>
             {/*icones do menu*/}
             <div className="icones">
-                <img src="https://cdn-icons-png.flaticon.com/128/7524/7524806.png" alt="duvidas" />
                 <div className="notification-icon" ref={notificationRef}>
                     <img
                         src="https://cdn-icons-png.flaticon.com/128/3602/3602123.png"
@@ -202,19 +213,21 @@ export default function Menu({ onSearch }) {
                                             <span style={{ marginRight: '10px' }}>{notification[1]}</span>
 
                                             {/* Botões para aceitar e recusar */}
-                                            <button
-                                                onClick={() => handleRespostaConvite(notification[0], true)}
-                                                className="btn btn-success btn-sm"
-                                                style={{ marginRight: '5px' }}
-                                            >
-                                                Aceitar
-                                            </button>
-                                            <button
-                                                onClick={() => handleRespostaConvite(notification[0], false)}
-                                                className="btn btn-danger btn-sm"
-                                            >
-                                                Recusar
-                                            </button>
+                                            <div className='btn-aceitar'>
+                                                <button
+                                                    onClick={() => handleRespostaConvite(notification[0], true)}
+                                                    className="btn btn-success btn-sm"
+                                                    style={{ marginRight: '5px' }}
+                                                >
+                                                    Aceitar
+                                                </button>
+                                                <button
+                                                    onClick={() => handleRespostaConvite(notification[0], false)}
+                                                    className="btn btn-danger btn-sm"
+                                                >
+                                                    Recusar
+                                                </button>
+                                            </div>
                                         </li>
                                     ))
                                 ) : (
@@ -238,27 +251,41 @@ export default function Menu({ onSearch }) {
 
                         </div>
                     )}
+
+                    {notifications.length > 0 && (
+                        <span className="notification-dot"></span> // Ponto vermelho
+                    )}
                 </div>
+
 
 
                 {/*botão para alterar dados do usuário*/}
                 <Dropdown>
                     <Dropdown.Toggle variant="success" id="dropdown-basic" className="no-caret">
-                        <img src="https://cdn-icons-png.flaticon.com/128/64/64572.png" alt="minha-conta" />
+                        {localStorage.getItem('foto_perfil') && (
+                            <img
+                                src={`data:image/jpeg;base64,${localStorage.getItem('foto_perfil')}`}
+                                alt={`Foto de ${localStorage.getItem('nome_usuario')}`}
+                            />
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
                         <Link to="/alterar_dados_cadastro">
-                            <Dropdown.Item className='alterar_dados' href="#/action-1">Alterar dados</Dropdown.Item>
+                            <Dropdown.Item className="alterar_dados" href="#/action-1">
+                                Alterar dados
+                            </Dropdown.Item>
                         </Link>
-                        <Link to='/login'>
-                            <Dropdown.Item className='alterar_dados' href="#/action-1">Sair da conta</Dropdown.Item>
+                        <Link to="/login">
+                            <Dropdown.Item className="alterar_dados" href="#/action-1">
+                                Sair da conta
+                            </Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
-                        <p className='alterar_dados' href="#/action-1">{localStorage.getItem("nome_usuario")}</p>
+                        <p className="alterar_dados">{localStorage.getItem("nome_usuario")}</p>
                     </Dropdown.Menu>
-
                 </Dropdown>
+
             </div>
         </header>
     )

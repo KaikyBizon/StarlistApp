@@ -2,8 +2,6 @@ import socket
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import mysql.connector
-import base64
 from werkzeug.utils import secure_filename
 # Importe a função deletarUsuario
 from processamento import processar_dados, deletar_usuario
@@ -97,8 +95,8 @@ def tarefas(id_lista, usuario_id):
         equipe_user = select_id_equipe_user(usuario_id)
         ret_tarefa = selecionar_lista_tarefa(id_lista, equipe_user)
         # Ajustar a estrutura de dados conforme necessário
-        resultado = [{'id': item[0],  'titulo': item[1], 'etiqueta': item[2],
-                      'texto': item[3], 'data': item[4], 'horario': item[5]} for item in ret_tarefa]
+        resultado = [{'tarefaId': item[0],  'titulo': item[1], 'etiqueta': item[2], 'descricao': item[3], 'data': item[4], 'horario': item[5]} for item in ret_tarefa]
+        print(resultado)
         return jsonify(resultado)
     except Exception as e:
         print('Erro ao selecionar dados:', e)

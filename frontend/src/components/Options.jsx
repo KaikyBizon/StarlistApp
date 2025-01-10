@@ -95,7 +95,6 @@ function Options() {
                                 {planoUsuario === 4 && (
                                     <>
                                         <Link to="/gerenciarpart">Participantes</Link>
-                                        <Link to="/gerenciar-equipe">Equipe</Link>
                                     </>
                                 )}
                             </Nav>

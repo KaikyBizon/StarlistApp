@@ -76,7 +76,7 @@ function Kanban() {
     setUserId(id);
 
     try {
-      const resposta = await fetch(`http://10.135.60.21:8085/lista/${id}`, {
+      const resposta = await fetch(`http://10.135.60.24:8085/lista/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -124,8 +124,9 @@ function Kanban() {
 */}
 
   const fetchTarefasParaCategoria = async (categoriaId) => {
+    const usuario_id = await AsyncStorage.getItem('ID')
     try {
-      const resposta = await fetch(`http://10.135.60.21:8085/tarefas/${categoriaId}`, {
+      const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}/${usuario_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +170,7 @@ function Kanban() {
     }
 
     try {
-      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +214,7 @@ function Kanban() {
 
   const confirmarExclusao = async () => {
     try {
-      const resposta = await fetch(`http://10.135.60.21:8085/lista/${listaParaExcluir}`, {
+      const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +274,7 @@ function Kanban() {
     setCategorias(novaCategorias);
 
     try {
-      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -325,7 +326,7 @@ function Kanban() {
     setSelectedTask({
       ...task,
       etiqueta: task.etiqueta || '',
-      descricao: task.texto || '',
+      descricao: task.descricao || '',
       data: task.data ? formatDate(task.data) : ''
     });
     setListaId(categoriaId);
@@ -340,7 +341,7 @@ function Kanban() {
   };
 
   // Preparar os dados da tarefa para exclusão e exibir o modal de confirmação de exclusão;
-  const handleDeletetask = (task, categoriaId) => {
+  const handleDeleteTask = (task, categoriaId) => {
     console.log("Tarefa selecionada para exclusão:", task);
     setTarefaParaExcluir({ ...task, categoria_id: categoriaId });
     setConfirmDeleteTaskModalVisible(true);
@@ -372,7 +373,7 @@ function Kanban() {
         return Alert.alert("Erro", "Dados da tarefa estão incompletos.");
       }
 
-      const resposta = await fetch(`http://10.135.60.21:8085/receber-dados`, {
+      const resposta = await fetch(`http://10.135.60.24:8085/receber-dados`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -539,15 +540,15 @@ function Kanban() {
         visible={confirmDeleteTaskModalVisible}
         onRequestClose={() => setConfirmDeleteTaskModalVisible(false)}
       >
-        <View style={styles.modalExcluirTarefa}>
-          <View style={styles.modalDeleteTask}>
-            <Text style={styles.modalTextTask}>Deseja mesmo excluir esta tarefa?</Text>
-            <View style={styles.buttonDeleteTask}>
+        <View style={styles.modalExcluirLista}>
+          <View style={styles.modalDeleteList}>
+            <Text style={styles.modalTextList}>Deseja mesmo excluir esta tarefa?</Text>
+            <View style={styles.buttonDeleteList}>
               <TouchableOpacity onPress={confirmarExclusaoTarefa} style={styles.btnDelete}>
-                <Text style={styles.btnTextExcluirTask}>Excluir</Text>
+                <Text style={styles.btnTextExcluirList}>Excluir</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setConfirmDeleteTaskModalVisible(false)} style={styles.btnFechar}>
-                <Text style={styles.btnTextExcluirTask}>Cancelar</Text>
+                <Text style={styles.btnTextExcluirList}>Cancelar</Text>
               </TouchableOpacity>
             </View>
           </View>

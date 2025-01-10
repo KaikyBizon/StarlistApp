@@ -26,7 +26,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
-import Geral from '../components/Geral';
 import Menu from '../components/menu';
 import Options from '../components/Options';
 import Calendario from '../components/Calendario';
@@ -68,7 +67,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +115,7 @@ function ToDo() {
     const excluirTarefa = async (tarefaId) => {
         console.log(tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -250,7 +249,6 @@ function ToDo() {
             <Options />
             <section className='interacao'>
                 <section className='calendario-left'>
-                    <Geral />
                     <Calendario events={tarefas} onSelectDate={handleDataSelecionada} />
 
                 </section>

@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/StylesVerificarEmail';
 
-const VerificarEmail = ({ navigation }) => {
+const VerificarEmail = ({ navigation, route }) => {
   const [codigo, setCodigo] = useState('');
   const [mensagemErro, setMensagemErro] = useState('');
+  const [cadastro, setCadastro] = useState(route.params)
 
   const handleVerificarCodigo = async () => {
     try {
-      const resposta = await fetch('http://10.135.60.8:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ acao: 'verificar_email', dados: codigo }),
+        body: JSON.stringify({ acao: 'verificar_email', dados: {codigo, cadastro} }),
       });
 
       const resultado = (await resposta.json()).dadosCadastro;

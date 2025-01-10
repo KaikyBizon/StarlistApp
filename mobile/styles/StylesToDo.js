@@ -9,6 +9,30 @@ export default styles = StyleSheet.create({
         width: '100%', // Largura igual a 100% da tela
         height: '100%', // Altura igual a 100% da tela
     },
+    btnAdicionarTarefa: {
+        backgroundColor: '#faed27',
+        padding: 10,
+        borderRadius: 5,
+        marginRight: 10, // Espaço entre os botões
+    },
+    containerbtn: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    btnAdicionarTarefa: {
+        position: 'absolute',
+        bottom: 20, // Distância do botão até a parte inferior
+        left: 100, // Distância do botão até o lado direito
+        backgroundColor: '#faed27',
+        padding: 15,
+        borderRadius: 5, // Deixa o botão arredondado
+        elevation: 5, // Adiciona uma sombra no Android
+    },
+    btnText: {
+        color: '#333',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
     // Estilo para ícones de menu
     menu: {
         width: 30, // Largura de 30
@@ -20,6 +44,7 @@ export default styles = StyleSheet.create({
         alignItems: 'center', // Alinha itens ao centro verticalmente
         width: '90%', // Largura igual a 90% do contêiner pai
         height: '17%', // Altura igual a 17% do contêiner pai
+        justifyContent: 'space-evenly'
     },
     // Estilo para texto de data
     txtData: {
@@ -124,7 +149,7 @@ export default styles = StyleSheet.create({
     cardTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#fff',
     },
     etiqueta: {
         width: 15, // Largura do quadrado da etiqueta
@@ -182,7 +207,7 @@ export default styles = StyleSheet.create({
     modalContent: {
         height: '40%', // Ajusta a altura do modal
         width: '50%', // Ajusta a largura do modal
-        left:'23%',
+        left: '23%',
         backgroundColor: '#333',
         borderRadius: 10,
         padding: 20,
@@ -226,7 +251,7 @@ export default styles = StyleSheet.create({
         backgroundColor: '#888', // Cor de fundo padrão
         textAlign: 'center', // Centraliza o texto
     },
-    
+
     input: {
         borderColor: '#A9A9A9', // Cinza escuro para o input
         borderWidth: 1,
@@ -239,7 +264,7 @@ export default styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        
+
     },
 
     button: {
@@ -254,7 +279,7 @@ export default styles = StyleSheet.create({
         color: '#FFF88E', // Texto amarelo para o botão
         textAlign: 'center', // Centraliza o texto no botão
     },
-    
+
 
     iconContainer: {
         flexDirection: 'row',    // Alinha os itens horizontalmente

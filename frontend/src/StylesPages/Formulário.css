@@ -1,0 +1,29 @@
+/* Estiliza todos os inputs do formulário para ter o mesmo tamanho */
+form input, 
+form select, 
+form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Alinha os inputs de data e hora lado a lado */
+.dataEvento {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.dataEvento input[type="date"],
+.dataEvento input[type="time"] {
+  flex: 1; /* Permite que ambos os inputs ocupem o mesmo espaço */
+}
+
+.mb-3.nome-evento {
+    width: 430px;
+}

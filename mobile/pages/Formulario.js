@@ -47,6 +47,7 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTask, refreshTasks }) {
+  console.log(selectedTask)
   const [tarefaNome, setTarefaNome] = useState('');
   const [tarefaData, setTarefaData] = useState('');
   const [tarefaHorario, setTarefaHorario] = useState('');
@@ -70,11 +71,12 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
         - É chamado sempre que `selectedTask` é alterado;
         - Utilizado para preencher os inputs do formulário com os dados da tarefa sendo editada ou iniciar os inputs vazios para uma nova tarefa.
 */}
-
+  
   useEffect(() => {
     if (selectedTask) {
+      console.log(selectedTask.data) 
       setTarefaNome(selectedTask.titulo || '');
-      setTarefaData(selectedTask.data ? formatDateToYMD(new Date(selectedTask.data)) : formatDateToYMD(new Date()));
+      setTarefaData(selectedTask.data || '');
       setTarefaHorario(selectedTask.horario || formatTime(new Date()));
       setTarefaEtiqueta(selectedTask.etiqueta || '');
       setTarefaDescricao(selectedTask.descricao || '');
@@ -86,6 +88,7 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
       setTarefaDescricao('');
     }
   }, [selectedTask]);
+  
 
   {/*
     Nome da função: formatTime;
@@ -188,9 +191,9 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-
+    console.log("userid", userId)
     try {
-      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +206,7 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
             data: tarefaData,
             horario: tarefaHorario,
             etiqueta: tarefaEtiqueta,
-            lista_id: listaId,
+            lista_id: listaId || null, // Armazena null se listaId não existir
             usuario_id: userId,
           }
         }),
@@ -253,9 +256,8 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-
     try {
-      const resposta = await fetch('http://10.135.60.21:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -263,7 +265,7 @@ function Formulario({ modalVisible, onRequestClose, userId, listaId, selectedTas
         body: JSON.stringify({
           acao: 'editar_tarefa',
           dados: {
-            id: selectedTask.id,
+            tarefaId: selectedTask.id,
             titulo: tarefaNome,
             descricao: tarefaDescricao,
             data: tarefaData,

@@ -72,6 +72,7 @@ function LoginForm() {
         localStorage.setItem('ID', resultado.dadosCadastro.id);
         localStorage.setItem('email', resultado.dadosCadastro.email);
         localStorage.setItem('nome_usuario', resultado.dadosCadastro.nome_usuario);
+        localStorage.setItem('foto_perfil', resultado.dadosCadastro.foto);
         navigate("/kanban");
         // Dados foram processados com sucesso
 

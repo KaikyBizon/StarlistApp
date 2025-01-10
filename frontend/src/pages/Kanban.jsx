@@ -49,8 +49,6 @@
  *     associadas, botões para adicionar tarefas e opções para editar ou excluir listas.
  *   - Inclui modais de confirmação para ações críticas, como exclusões de listas e tarefas.
  */
-
-import Geral from '../components/Geral';
 import Cabecalho from '../components/Cabecalho';
 import Formulario from '../components/Formulario';
 import { useState, useEffect } from 'react';
@@ -495,7 +493,7 @@ function Kanban({ onListaSalva }) {
     const confirmarExclusaoTarefa = () => {
 
         if (tarefaParaExcluir) {
-            handleDeleteTarefa(tarefaParaExcluir.id); // Ajuste conforme necessário
+            handleDeleteTarefa(tarefaParaExcluir.tarefaId); // Ajuste conforme necessário
             handleFecharModalExclusaoTarefa();
         }
     };
@@ -523,16 +521,13 @@ function Kanban({ onListaSalva }) {
         <>
             <Cabecalho />
             <section className='interacao'>
-                <section className='calendario-left'>
-                    <Geral />
-                </section>
-
                 <section className='cartoes-kanban'>
                     {categorias.map((categoria) => (
                         <section key={categoria.id} className="status-kanban">
                             <div className="kanban">
                                 <div className='titulo-lista' onClick={() => handleEditarTitle(categoria.id)}>
                                     <h4 className='status-tarefa'>{categoria.nome}</h4>
+                                    <img className="editarLista" src="../../public/images/editar_lista.png" alt="Editar tarefa"  />
                                 </div>
                                 {tarefasPorCategoria[categoria.id] && tarefasPorCategoria[categoria.id].map((tarefa, index) => (
                                     <div key={index} className="tarefa-item">
@@ -540,21 +535,20 @@ function Kanban({ onListaSalva }) {
                                         <p className='data-hora'>Data: {tarefa.data}</p>
                                         <p className='data-hora'>Hora: {tarefa.horario}</p>
                                         <div className="acoes-tarefa">
-                                            <img className="nova-imagem" src="../../public/images/tres-pontos.png" alt="Status da tarefa" onClick={() => handleAbrirModalStatus(tarefa)} />
                                             <img className="editar-tarefa" src="../../public/images/editar_lista.png" alt="Editar tarefa" onClick={() => handleEditarClick(tarefa)} />
                                             <img className="excluir-tarefa" src="../../public/images/lixeira.png" alt="Excluir tarefa" onClick={() => handleAbrirModalExclusaoTarefa(tarefa)} />
                                         </div>
 
                                     </div>
                                 ))}
-                                <div className="formulario-fixo">'
+                                <div className="formulario-fixo">
                                     <button onClick={() => handleExibirFormulario(categoria.id)} className='nova-tarefa'>Nova tarefa</button>
                                     {exibirFormulario === categoria.id && <Formulario onClose={handleExibirFormulario} listaId={categoria.id} />}
                                     <img src="../../public/images/lixeira.png" alt="Excluir lista" onClick={() => handleDeleteLista(categoria.id)} className='excluir' />
                                 </div>
                             </div>
                             {exibirModal === categoria.id && (
-                                <div className="modal-overlay-editar">'
+                                <div className="modal-overlay-editar">
                                     <div className="modal-conte-editar">
                                         <h3>Editar Nome da Lista</h3>
                                         <form
@@ -610,21 +604,6 @@ function Kanban({ onListaSalva }) {
                                 <button className="botoesConfirmarExclusao" onClick={confirmarExclusaoTarefa}>Confirmar</button>
                                 <button className="botoesConfirmarExclusao" onClick={handleFecharModalExclusaoTarefa}>Cancelar</button>
                             </div>
-                        </div>
-                    </div>
-                )}
-
-                {modalStatusVisivel && (
-                    <div className="modal-status">
-                        <div className="modalContent">
-                            <h3>Status da Tarefa</h3>
-                            <div>
-                                <button onClick={() => setNovoStatus('andamento')}>Andamento</button>
-                                <button onClick={() => setNovoStatus('pausada')}>Pausada</button>
-                                <button onClick={() => setNovoStatus('finalizado')}>Finalizado</button>
-                            </div>
-
-                            <button id="fechar" onClick={handleFecharModalStatus}>Fechar</button>
                         </div>
                     </div>
                 )}

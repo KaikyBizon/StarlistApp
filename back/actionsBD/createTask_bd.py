@@ -6,6 +6,7 @@ def criarTarefa(tarefa, equipe_user):
     cursor = conex.cursor()
 
     # Verifica a condição para incluir o campo ID_EQUIPE
+    print(equipe_user)
     if equipe_user[1] == 4:
         sql = """INSERT INTO tarefa 
                  (TITULO, TEXTO, DATA_TASK, HORA, ETIQUETA, ID_LISTA, ID_USUARIO, ID_EQUIPE) 

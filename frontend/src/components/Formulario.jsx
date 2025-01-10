@@ -32,6 +32,7 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import '../StylesPages/Formulário.css'
 
 function Formulario({ tarefa, onClose, listaId }) {
   const [mensagensErro, setMensagensErro] = useState([]); // Armazena as mensagens de erro retornadas do backend
@@ -141,7 +142,7 @@ function Formulario({ tarefa, onClose, listaId }) {
     e.preventDefault();
 
     try {
-      const resposta = await fetch('http://10.135.60.23:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +193,7 @@ function Formulario({ tarefa, onClose, listaId }) {
               as="textarea"
               rows={3}
               name='descricao'
-              value={dadosTask.texto}
+              value={dadosTask.descricao}
               onChange={handleChange}
             />
           </Form.Group>
@@ -220,7 +221,7 @@ function Formulario({ tarefa, onClose, listaId }) {
               <li key={index}>{mensagem.mensagem_etiqueta}</li>
             ))}
           </ul>
-          <Form.Group className="mb-3 data-evento" controlId="formData">
+          <Form.Group className="mb-3 dataEvento" controlId="formData">
             <Form.Control
               type="date"
               name='data'
@@ -254,7 +255,8 @@ function Formulario({ tarefa, onClose, listaId }) {
                 padding: '7px 20px',
                 border: 'none',
                 outline: 'none',
-                transition: 'none'
+                transition: 'none',
+                borderRadius: '6px',
               }}
             >
               Fechar
@@ -269,6 +271,7 @@ function Formulario({ tarefa, onClose, listaId }) {
                 padding: '7px 15px',
                 outline: 'none',
                 transition: 'background-color 0.3s, color 0.3s',
+                borderRadius: '6px',
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = '#000'; 

@@ -75,6 +75,22 @@ export default function Cadastro({ navigation }) {
     }));
   };
 
+  const reorganizarDados = (cadastro) => {
+    // Move 'dataNascimento' para o início do dicionário
+    const keys = Object.keys(cadastro);
+    if (keys.includes('dataNascimento')) {
+      keys.splice(keys.indexOf('dataNascimento'), 1);
+      keys.unshift('dataNascimento');
+    }
+  
+    // Cria um novo objeto com as chaves reorganizadas
+    return keys.reduce((obj, key) => {
+      obj[key] = cadastro[key];
+      return obj;
+    }, {});
+  };
+  
+
   const [mensagensErro, setMensagensErro] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -100,10 +116,12 @@ export default function Cadastro({ navigation }) {
     const dataToSend = {
       ...formValues,
       dataNascimento: convertDateToISO(formValues.dataNascimento),
+      foto: null,
     };
+    console.log(dataToSend)
 
     try {
-      const resposta = await fetch('http://10.135.60.12:8085/receber-dados', {
+      const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +152,7 @@ export default function Cadastro({ navigation }) {
         setMensagensErro(mensagens);
         setModalVisible(true); // Exibir modal com as mensagens de erro
       } else {
-        navigation.navigate('Login')
+        navigation.navigate('VerificarEmail', dataToSend);
       }
 
     } catch (error) {
@@ -198,7 +216,6 @@ export default function Cadastro({ navigation }) {
             <Picker.Item label="Gratuito" value="gratuito" />
             <Picker.Item label="Mensal" value="mensal" />
             <Picker.Item label="Anual" value="anual" />
-            <Picker.Item label="Empresarial" value="empresarial" />
           </Picker>
         </View>
 

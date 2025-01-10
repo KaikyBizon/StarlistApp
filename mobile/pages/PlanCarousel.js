@@ -43,11 +43,6 @@ const data = [
         title: "R$150 Anual",
         textPlanos: "TUDO DO MENSAL E MAIS; Visualizações: Cronograma e painel; Visualização da Área de Trabalho; Execuções ilimitadas de comandos; Funcionalidade de administração; Suporte prioritário;",
     },
-    {
-        titleHeader: "Empresarial",
-        title: "R$300 Anual",
-        textPlanos: "Áreas de Trabalho ilimitadas; Permissões para toda empresa; Quadros visíveis da empresa; Gerenciamento de quadro público; Convidados de mais de um quadro; Administração de power-ups;",
-    },
 ];
 
 // Componente para cada item do carrossel

@@ -26,6 +26,7 @@ from actionsBD.selectIdEquipeUser import select_id_equipe_user
 from actionsBD.selectUsersEquipe import selecionar_usuarios_equipe
 from actionsBD.excluirUserEquipe import excluir_usuario_equipe
 from validarEmail import send_email_confirm
+import base64
 import datetime
 from validacoes import (
     validar_nome,
@@ -189,6 +190,7 @@ def processar_dados(dados):
                 email = dados_processados.get('email')
                 print(cadastro)
                 dados_cadastro_temp[email] = cadastro
+                print(dados_cadastro_temp)
 
                 # Envia o e-mail de confirmação
                 recipient = dados_processados.get('email')
@@ -259,17 +261,15 @@ def processar_dados(dados):
             email = dados_processados.get('email')
             senha = dados_processados.get('senha')
             user = selecionar_dados_cadastro_login(email, senha)
-
             if user and email == user[0] and senha == user[1]:
-                email, senha, id, nome_usuario, data_nasc = user
+                foto_base64 = base64.b64encode(user[5]).decode('utf-8') if user[5] else None
                 dados_cadastro = {
-                    'error': False,
-                    'email': email,
-                    'id': id,
-                    'nome_usuario': nome_usuario,
-                    'data_nasc': data_nasc
+                    "id": user[2],
+                    "nome_usuario": user[3],
+                    "nascimento": user[4],
+                    "email": user[0],
+                    "foto": foto_base64
                 }
-
             else:
                 dados_cadastro = {
                     'error': True,
@@ -286,7 +286,9 @@ def processar_dados(dados):
         # dados_tarefa - string - retorna que a tarefa foi criada com sucesso
         # Esta condição verifica se a acao indica uma nova tarefa, e caso seja, ele executa a função para inserir os dados no banco
         if acao == 'criar_tarefa':
+            print(dados_processados)
             usuario_id = dados_processados.get('usuario_id')
+            print("equipe", dados_processados)
             equipe_user = select_id_equipe_user(usuario_id)
             if not mensagens_erro_tarefa:
                 criarTarefa(tarefa, equipe_user)
@@ -383,10 +385,7 @@ def processar_dados(dados):
         tarefa.remove(dados_processados.get('usuario_id'))
         tarefa.remove(dados_processados.get('lista_id'))
         # Chama a função de edição com os dados da tarefa, incluindo o ID
-        print(tarefa)
-        print(mensagens_erro_tarefa)
         if not mensagens_erro_tarefa:
-            print(tarefa)
             editar_tarefa(tarefa)
             dados_tarefa = {'error': False, 'Tarefa editada': 'Tarefa editada com sucesso!'}
         else:
@@ -444,16 +443,36 @@ def processar_dados(dados):
             # Recupera os dados temporários e remove do dicionário
             cadastro = dados_cadastro_temp.pop(email, None)
             if cadastro:
-                dados_usuario = inserir_usuario(cadastro)  # Salva no banco
-                print(dados_usuario)
-                dados_cadastro = {'error': False,
-                                  'mensagem': 'Código validado com sucesso!'}
+                inserir_usuario(cadastro)  # Salva no banco
+                dados_cadastro = {'error': False, 'mensagem': 'Código validado com sucesso!'}
             else:
-                dados_cadastro = {
-                    'error': True, 'mensagem': 'Erro ao recuperar os dados de cadastro.'}
+                cadastro = dados_processados.get('cadastro')
+                nome_plano = cadastro.get('plano')
+                id_plano = selecionarPlanos(nome_plano)
+
+                # Verifique se id_plano não está vazio antes de tentar acessar o índice
+                if id_plano and len(id_plano) > 0 and len(id_plano[0]) > 0:
+                    id_plano = id_plano[0][0]
+                else:
+                    id_plano = None
+                    mensagens_erro.append({'erro': True, 'mensagem_plano': 'Plano não encontrado.'})
+
+                if cadastro.get("plano") in ['empresarial', 'gratuito', 'mensal', 'anual']:
+                     # Atualiza o valor de plano em cadastro se a condição for satisfeita
+                    cadastro['plano'] = id_plano
+                cadastro = [
+                    cadastro.get('dataNascimento'),
+                    cadastro.get('nome'),
+                    cadastro.get('email'),
+                    cadastro.get('senha'),
+                    cadastro.get('plano'),
+                    cadastro.get('foto')
+                ]
+                inserir_usuario(cadastro)
+                if not cadastro:
+                    dados_cadastro = {'error': True, 'mensagem': 'Erro ao recuperar os dados de cadastro.'}
         else:
-            dados_cadastro = {'error': True,
-                              'mensagem': 'Código inválido. Tente novamente!'}
+            dados_cadastro = {'error': True, 'mensagem': 'Código inválido. Tente novamente!'}
     # Excluir tarefa
     # Kaiky
     # Alterado em 22/08/24
@@ -484,12 +503,22 @@ def processar_dados(dados):
         if dados_usuario_convidado:
             # Armazena o ID do usuário na variável global
             id_usuario_convidado = dados_usuario_convidado[0]
-            dados_cadastro = {'error': False,
-                              'dados_usuario': dados_usuario_convidado}
+            dados_cadastro = {'error': False, 'dados_usuario': dados_usuario_convidado}
         else:
             dados_cadastro = {
                 'error': True, 'mensagens_erro': 'Usuário não encontrado, verifique o endereço de e-mail.'}
 
+
+    # Enviar convite
+    # Kaiky
+    # Criado em 12/11/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # id_remet, dados_remetente, data_atual, data_convite, hora_convite - valores para serem salvos no banco de dados
+    # mensagem_convite - string - mensagem que será enviada ao usuário
+    # Retorno:
+    # dados_cadastro - retorna se o convite foi enviado ou nao
+    # Esta condição envia um convite de um usuário para outro, para entrar em uma equipe
     elif acao == 'enviar_convite':
         if id_usuario_convidado:
             id_remet = dados_processados.get("id_usuario")
@@ -497,14 +526,11 @@ def processar_dados(dados):
             data_atual = datetime.datetime.now()
             data_convite = data_atual.date()
             hora_convite = data_atual.time()
-            status_convite = "Não lida"
             mensagem_convite = f"{dados_remetente[0]} está te convidando para a equipe {dados_remetente[3]}"
-            print(mensagem_convite)
-            # print("ID_ remet: ", id_remet)
 
+            #envia o convite apenas se houver o id do remetente
             if id_remet:
-                dados_convite = (id_remet, id_usuario_convidado, mensagem_convite,
-                                 hora_convite, data_convite, status_convite)
+                dados_convite = (id_remet, id_usuario_convidado, mensagem_convite, hora_convite, data_convite)
                 enviar_convite(dados_convite)
 
                 dados_cadastro = {'error': False,
@@ -520,10 +546,12 @@ def processar_dados(dados):
                 'mensagem': 'ID do usuário não encontrado. Busque o usuário antes de enviar o convite.'
             }
 
+    # Seleciona o id do plano do usuario logado
     if acao == 'selecionar_plano_id':
         id_usuario = dados_processados.get('id')
         dados_cadastro = selecionarPlanoId(id_usuario)
 
+    #Busca as mensagens do usuario para exibir na tela
     if acao == 'buscar_mensagens':
         id_user = dados_processados.get("id_usuario")
         mensagens = buscar_mensagens(id_user)
@@ -533,6 +561,8 @@ def processar_dados(dados):
             dados_cadastro = {"error": True,
                               "mensagens": "Nenhuma tarefa encontrada!"}
 
+
+    #Resposta do usuário ao convite (recusar ou aceitar)
     if acao == 'resposta_convite':
         id_mensagem = dados_processados.get('id')
         resposta_mensagem = dados_processados.get('aceito')
@@ -543,15 +573,29 @@ def processar_dados(dados):
             email_user = selecionar_dados_cadastro(usuario_id)[0][2]
             salvar_equipe_usuario(id_equipe, email_user)
 
+
+    # Busca todos os usuários presentes em uma equipe para exibir na tela
     if acao == 'buscar_usuarios_equipe':
         usuario_id = dados_processados.get('usuarioId')
-        equipe_user = select_id_equipe_user(usuario_id)[0]
+        dados_equipe_user = select_id_equipe_user(usuario_id)
+        equipe_user = dados_equipe_user[0]
+        cargo_user = dados_equipe_user[2]
         usuarios_da_equipe = selecionar_usuarios_equipe(usuario_id, equipe_user)
         if usuarios_da_equipe:
-            dados_cadastro = {"error": False, "usuarios": usuarios_da_equipe}
+            dados_cadastro = {"error": False, "usuarios": usuarios_da_equipe, "cargo": cargo_user}
         else:
-            dados_cadastro = {"error": True, "usuarios": "Nenhum usuário encontrado. Adicione pessoas a sua equipe"}
+            dados_cadastro = {"error": True, "usuarios": "Nenhum usuário encontrado. Adicione pessoas a sua equipe", "cargo": cargo_user}
+
     
+    # Expulsar usuário
+    # Kaiky
+    # Criado em 05/12/24
+    # Parametros entrada:
+    # acao - string - receber a acao para verificar se deve ser executado este if
+    # nome_user_excluido - string - nome do usuario que vai ser excluido
+    # Retorno:
+    # dados_cadastro - retorna que o usuário foi excluído com sucesso ou houve algum erro
+    # Esta condição executa a expulsão de um membro de uma equipe
     if acao == 'expulsar_usuario':
         nome_user_excluido = dados_processados.get('nomeUsuario')
         dados_cadastro = excluir_usuario_equipe(nome_user_excluido)

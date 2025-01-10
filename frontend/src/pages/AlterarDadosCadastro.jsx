@@ -111,6 +111,7 @@ const AlterarDadosCadastro = () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
             const resposta = await fetch('http://10.135.60.24:8085/delete-usuario', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -176,7 +177,12 @@ const AlterarDadosCadastro = () => {
                     <h1>EDITAR USUÁRIO</h1>
                 </div>
                 <div className="usuario">
-                    <img className='foto_usuario' src="https://cdn-icons-png.flaticon.com/128/5617/5617164.png" alt="user" />
+                    {localStorage.getItem('foto_perfil') && (
+                        <img className='foto_usuario'
+                            src={`data:image/jpeg;base64,${localStorage.getItem('foto_perfil')}`}
+                            alt={`Foto de ${localStorage.getItem('nome_usuario')}`}
+                        />
+                    )}
                     <div className="user_log">
                         <h3>{nomeUsuario}</h3>
                         <p>ID: {localStorage.getItem("ID")}</p>

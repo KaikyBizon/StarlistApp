@@ -31,6 +31,7 @@ function Gerenciarpart() {
     const [usuariosEquipe, setUsuariosEquipe] = useState([]);
     const [mensagemErro, setMensagemErro] = useState('');
     const [usuarioExpulsar, setUsuarioExpulsar] = useState(null);  // Estado para armazenar o usuário a ser expulso
+    const [cargoUser, setCargoUser] = useState('')
 
     const handleShow = () => setShowAddParticipanteModal(true);
     const handleClose = () => setShowAddParticipanteModal(false);
@@ -49,6 +50,10 @@ function Gerenciarpart() {
                 body: JSON.stringify({ acao: "buscar_usuarios_equipe", dados: { usuarioId } })
             });
             const resultado = (await resposta.json()).dadosCadastro;
+            console.log(resultado);
+
+
+            setCargoUser(resultado.cargo)
 
             if (resultado.error) {
                 setMensagemErro(resultado.usuarios);
@@ -66,7 +71,6 @@ function Gerenciarpart() {
     }, []);
 
     const expulsarUsuario = async () => {
-        console.log(usuarioExpulsar)
         try {
             // Aqui você pode enviar o nome do usuário junto com a ação de expulsão
             const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
@@ -81,7 +85,6 @@ function Gerenciarpart() {
             if (resultado.error) {
                 setMensagemErro(resultado.usuarios);
             } else {
-                setUsuariosEquipe(resultado.usuarios);
                 fetchUsersEquipe()
             }
         } catch (error) {
@@ -112,7 +115,13 @@ function Gerenciarpart() {
                                             </div>
                                         </div>
                                         <div id="btn-gerenc-part">
-                                            <Button variant="danger" onClick={() => { setUsuarioExpulsar(usuario[0]); handleShowExpulsar(); }}>Expulsar do time</Button>
+                                            {/* Condicional para exibir o botão de expulsar do time apenas se planoUsuario for 'lider' */}
+                                            {cargoUser === 'lider' && (
+                                                <>
+                                                    <Button variant="danger" onClick={() => { setUsuarioExpulsar(usuario[0]); handleShowExpulsar(); }}>Expulsar do time</Button>
+                                                </>
+                                            )}
+                                            
 
                                             <Modal
                                                 show={show}
@@ -138,15 +147,20 @@ function Gerenciarpart() {
                             <p>{mensagemErro || 'Nenhum participante encontrado.'}</p>  // Exibe a mensagem de erro ou um texto padrão
                         )}
                     </div>
-                    <button
-                        className="addPart"
-                        type="button"
-                        name="botao"
-                        value="addPart"
-                        onClick={handleShow}
-                    >
-                        Adicionar participantes
-                    </button>
+                    {/* Condicional para exibir o botão de adicionar participantes apenas se cargoUser for 'lider' */}
+                    {cargoUser === 'lider' && (
+                        <>
+                            <button
+                                className="addPart"
+                                type="button"
+                                name="botao"
+                                value="addPart"
+                                onClick={handleShow}
+                            >
+                                Adicionar participantes
+                            </button>
+                        </>
+                    )}
                 </div>
             </section>
 
