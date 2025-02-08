@@ -42,7 +42,7 @@ function Gerenciarpart() {
     const fetchUsersEquipe = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function Gerenciarpart() {
     const expulsarUsuario = async () => {
         try {
             // Aqui você pode enviar o nome do usuário junto com a ação de expulsão
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

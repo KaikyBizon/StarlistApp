@@ -35,6 +35,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../StylesPages/Cadastro.css';
+import BASE_URL from './../../config';
 
 function Cadastro() {
     const [formValues, setFormValues] = useState({
@@ -91,7 +92,7 @@ function Cadastro() {
 
         localStorage.setItem('email', formValues.email);
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/save-user', {
+            const resposta = await fetch(`${BASE_URL}/save-user`, {
                 method: 'POST',
                 body: data,
             });

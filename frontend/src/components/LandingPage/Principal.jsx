@@ -1,34 +1,50 @@
-/**
- * Nome do Componente: Principal
- *
- * Descrição Detalhada:
- *   O componente funcional `Principal` serve como a seção principal da
- *   página inicial (Landing Page), apresentando uma introdução que destaca
- *   o propósito do aplicativo, que é ajudar os usuários a organizar suas vidas
- *   de forma eficaz. O componente é construído utilizando elementos semânticos
- *   para garantir acessibilidade e SEO.
- *
- * Estrutura JSX:
- *   - O componente é encapsulado em uma `<main>` com a classe `pg-1`.
- *
- */
+import './Principal.css';
+import { Link } from 'react-router-dom';
 
-import './Principal.css'
 function Principal() {
     return (
-        <>
-            <main className="pg-1">
-                {/*Texto da introdução*/}
+        <div className='container-hero'>
+            {/* Cabeçalho com Navegação */}
+            <header className="menu-home">
+                <div className="cabeca">
+                    <Link to="/" style={{ height: "100%" }}>
+                        <img id="logo" src="../public/images/logo.png" alt="Logo Starlist" />
+                    </Link>
+
+                    {/* Menu de Navegação */}
+                    <nav>
+                        <ul className="main-menu">
+                            <li><a href="#sobre" className="itn-menu">Sobre</a></li>
+                            <li><a href="#suporte" className="itn-menu">Suporte</a></li>
+                            <li><a href="#avl" className="itn-menu">Avaliações</a></li>
+                            <li><Link to="/login" id="login-btn" className="itn-menu">Login</Link></li>
+                            <li><Link to="/cadastro" id="cadastro-btn">Cadastre-se</Link></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+
+            {/* Seção Principal */}
+            <main className="hero">
                 <article className="text-intro">
                     <h1 className="txt-1"><span>Sua Vida Organizada</span></h1>
                     <h1 className="txt-1">Em Um Único</h1>
                     <h1 className="txt-1">APP!</h1>
                 </article>
-                {/*imagem da introdução*/}
 
+                {/* Botões Login e Cadastro (agora ficam aqui no mobile) */}
+                <div className="buttons-container">
+                    <Link to="/login" id="login-btn">Login</Link>
+                    <Link to="/cadastro" id="cadastro-btn">Cadastre-se</Link>
+                </div>
+
+                
+                <div className="img-hero">
+                    <img src="../public/images/Calendar-hero.svg" alt="Imagem calendário" />
+                </div>
             </main>
-        </>
-    )
+        </div>
+    );
 }
 
 export { Principal };

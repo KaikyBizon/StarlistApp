@@ -29,7 +29,6 @@
 
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
-import NotFound from "../pages/NotFound";
 import { LoginForm } from "../pages/Login";
 import { Cadastro } from "../pages/Cadastro";
 import Gerenciarpart from "../pages/Gerenciarpart";

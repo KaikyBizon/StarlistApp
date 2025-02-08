@@ -60,7 +60,7 @@ const AlterarDadosCadastro = () => {
     // Esta função realiza uma requisição POST para buscar os dados do usuário, preenche o formulário com nome, email, data de nascimento e ID, e define o nome do usuário no estado
     const showDados = async () => {
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const AlterarDadosCadastro = () => {
     const handleDelete = async () => {
         try {
             const idUsuario = formAlter.id; // Defina idUsuario a partir do estado formAlter
-            const resposta = await fetch('http://10.135.60.24:8085/delete-usuario', {
+            const resposta = await fetch(`${BASE_URL}/delete-usuario`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const AlterarDadosCadastro = () => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

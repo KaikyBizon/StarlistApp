@@ -104,7 +104,7 @@ function Kanban({ onListaSalva }) {
     const fetchTarefasParaCategoria = async (categoriaId) => {
         const usuario_id = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/tarefas/${categoriaId}/${usuario_id}`, {
+            const resposta = await fetch(`${BASE_URL}/tarefas/${categoriaId}/${usuario_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ function Kanban({ onListaSalva }) {
     const fetchCategoriasETarefas = async () => {
         const usuarioId = localStorage.getItem('ID');
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/lista/${usuarioId}`, {
+            const resposta = await fetch(`${BASE_URL}/lista/${usuarioId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ function Kanban({ onListaSalva }) {
         }
 
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ function Kanban({ onListaSalva }) {
 
     const handleEditList = async (listaId) => {
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -336,7 +336,7 @@ function Kanban({ onListaSalva }) {
  */
     const confirmarExclusao = async () => {
         try {
-            const resposta = await fetch(`http://10.135.60.24:8085/lista/${listaParaExcluir}`, {
+            const resposta = await fetch(`${BASE_URL}/lista/${listaParaExcluir}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -418,7 +418,7 @@ function Kanban({ onListaSalva }) {
     const handleDeleteTarefa = async (tarefaId) => {
         console.log('ID da tarefa:', tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST', // Mantenha ou altere conforme necessário
                 headers: {
                     'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ function AddParticipantes({ show, handleClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ function AddParticipantes({ show, handleClose }) {
         const id_usuario = localStorage.getItem("ID")
         e.preventDefault();
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

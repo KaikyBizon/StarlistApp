@@ -31,6 +31,7 @@ import Options from '../components/Options';
 import Calendario from '../components/Calendario';
 import Formulario from '../components/Formulario';
 import '../StylesPages/todo.css';
+import BASE_URL from './../../config';
 
 function ToDo() {
     const [tarefas, setTarefas] = useState([]);
@@ -67,7 +68,7 @@ function ToDo() {
         const usuarioId = localStorage.getItem('ID');
 
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ function ToDo() {
     const excluirTarefa = async (tarefaId) => {
         console.log(tarefaId);
         try {
-            const resposta = await fetch('http://10.135.60.24:8085/receber-dados', {
+            const resposta = await fetch(`${BASE_URL}/receber-dados`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
