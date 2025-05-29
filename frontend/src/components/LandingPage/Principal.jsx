@@ -9,7 +9,7 @@ function Principal() {
             <header className="menu-home">
                 <div className="cabeca">
                     <Link to="/" style={{ height: "100%" }}>
-                        <img id="logo" src="/public/images/logo.png" alt="Logo Starlist" />
+                        <img id="logo" src="/images/logo.png" alt="Logo Starlist" />
                     </Link>
 
                     {/* Menu de Navegação */}
