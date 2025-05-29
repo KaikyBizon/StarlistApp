@@ -5,7 +5,7 @@ Descrição: Esse componente engloba os componentes Menu e Options, responsávei
 Observações pertinentes: O motivo da criação desse componente foi para uma melhor manipulção do nosso Header*/
 
 
-import Menu from '../components/menu';
+import Menu from '../components/Menu';
 import Options from '../components/Options';
 import '../StylesPages/Cabecalho.css'
 
