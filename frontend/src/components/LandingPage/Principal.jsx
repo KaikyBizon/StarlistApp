@@ -41,7 +41,7 @@ function Principal() {
 
                 
                 <div className="img-hero">
-                    <img src="../public/images/Calendar-hero.svg" alt="Imagem calendário" />
+                    <img src="../../assets/Calendar-hero.svg" alt="Imagem calendário" />
                 </div>
             </motion.main>
         </div>
