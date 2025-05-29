@@ -48,15 +48,15 @@ function Rodape() {
 
                         <div className="rodape-2">
                             <a href="https://www.whatsapp.com/?lang=pt_br" target="_blank">
-                                <img className='redes-sociais' src="/public/images/whatsapp.png" alt="whatsapp" />
+                                <img className='redes-sociais' src="/images/whatsapp.png" alt="whatsapp" />
                             </a>
 
                             <a href="https://www.instagram.com" target="_blank">
-                                <img className='redes-sociais' src="/public/images/instagram.png" alt="instagram" />
+                                <img className='redes-sociais' src="/images/instagram.png" alt="instagram" />
                             </a>
 
                             <a href="https://pt-br.facebook.com" target="_blank">
-                                <img className='redes-sociais' src="/public/images/facebook.png" alt="facebook" />
+                                <img className='redes-sociais' src="/images/facebook.png" alt="facebook" />
                             </a>
                         </div>
                     </div>
