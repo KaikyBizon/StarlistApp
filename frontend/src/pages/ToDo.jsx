@@ -26,7 +26,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
-import Menu from '../components/menu';
+import Menu from '../components/Menu';
 import Options from '../components/Options';
 import Calendario from '../components/Calendario';
 import Formulario from '../components/Formulario';
