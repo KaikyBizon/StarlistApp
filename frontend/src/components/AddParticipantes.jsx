@@ -25,7 +25,7 @@
  */
 
 import { Button, Form, Modal } from 'react-bootstrap';
-import '../StylesPages/AddParticipantes.css'
+import '../StylesPages/addparticipantes.css'
 import { useState } from 'react';
 
 function AddParticipantes({ show, handleClose }) {
