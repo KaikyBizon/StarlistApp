@@ -17,10 +17,6 @@ function Avaliacao() {
     return (
         <>
             <section id="avl">
-                <div className="header">
-                    <h1>Depoimentos</h1>
-                </div>
-
                 <div className="main-content">
                     <div className="general-rating">
                         <div className="rating-box">

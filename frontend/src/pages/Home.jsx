@@ -24,7 +24,7 @@ import { Rodape } from '../components/LandingPage/Rodape';
 
 function Home() {
     return (
-        <>
+        <div style={{ backgroundColor: "rgb(228, 194, 82)", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Principal />
             <Conheca />
             <SobreNos />
@@ -32,7 +32,7 @@ function Home() {
             <Planos />
             <CadastroSecundario />
             <Rodape />
-        </>
+        </div>
     )
 }
 

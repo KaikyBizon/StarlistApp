@@ -1,18 +1,13 @@
 #sobre {
+    width: 100%;
     display: flex;
-    background-image: url(../../../public/images/telasobrenos.png);
-    text-align: center;
     align-items: center;
     height: 700px;
     justify-content: center;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 #sobre-txt {
     line-height: 50px;
     font-size: 40px;
-    color: #faed27;
+    color: #111111;
 }

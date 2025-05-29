@@ -10,49 +10,52 @@
  * Estrutura JSX:
  *   - O componente é encapsulado por uma `<section>` com o ID `conhecer`, que
  *     inclui um título principal e uma grade de cards.
- *
  */
 
+import Accordion from 'react-bootstrap/Accordion';
 import './Conheca.css'
+
 function Conheca() {
     return (
         <>
-        
+            {/* Seção principal identificada por ID 'conhecer' */}
             <section id="conhecer">
-                <h1>CONHEÇA-NOS</h1>
-                
-                <div className="conhecer-grid">
-                    <div className="conhecer-cards">
-                        <h2>Suporte</h2>
-                        <p className="explicação">Ajuda e suporte 24h para auxiliar nas suas dúvidas e problemas.</p>
-                        <img className="img-conhecer" src="/public/images/Active Support-bro.png" alt="" />
-                    </div>
 
-                    <div className="conhecer-cards">
-                        <h2>Usabilidade</h2>
-                        <p className="explicação"> Tem um design simples que ajuda na visualização
-                            das tarefas e faz com que o usuario tenha uma experiencia rapida e pratica.
-                        </p>
-                        <img className="img-conhecer" src="/public/images/Search engines-bro.png" alt="" />
-                    </div>
+                {/* Acordeão com 3 itens, um para cada benefício */}
+                <Accordion className='container-accordion' defaultActiveKey="0">
 
-                    <div className="conhecer-cards">
-                        <h2>Utilidades</h2>
-                        <p className="explicação">Te ajuda a planejar, organizar e gerenciar as suas ideias com
-                            o principal foco em te ajudar a aproveitar melhor seu tempo. </p>
-                        <img className="img-conhecer" src="/public/images/To do list-bro.png" alt="" />
-                    </div>
+                    {/* Primeiro benefício */}
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header className='item-accordion'>
+                            Organização Simplificada
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <strong>Gerencie suas tarefas com eficiência.</strong> Nosso aplicativo permite que você crie, edite e organize suas tarefas em listas personalizadas, garantindo mais produtividade no seu dia a dia.
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                    <div className="conhecer-cards">
-                        <h2>Segurança</h2>
-                        <p className="explicação">Seus planejamentos e dados protegidos com total segurança.</p>
-                        <img className="img-conhecer" src="/public/images/Security On-bro.png" alt="" />
-                    </div>
+                    {/* Segundo benefício */}
+                    <Accordion.Item eventKey="1">
+                        <Accordion.Header className='item-accordion'>
+                            Colaboração em Equipe
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <strong>Trabalhe em equipe sem complicações.</strong> Compartilhe suas listas de tarefas com colegas, atribua responsabilidades e acompanhe o progresso de cada atividade em tempo real.
+                        </Accordion.Body>
+                    </Accordion.Item>
 
+                    {/* Terceiro benefício */}
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header className='item-accordion'>
+                            Integrações Poderosas
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <strong>Conecte-se com suas ferramentas favoritas.</strong> Integre seu fluxo de trabalho com aplicativos como Google Calendar, Slack e muito mais, tornando sua rotina ainda mais eficiente.
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                </div>
+                </Accordion>
             </section>
-
         </>
     )
 }

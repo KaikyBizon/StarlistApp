@@ -1,5 +1,6 @@
 import './Principal.css';
 import { Link } from 'react-router-dom';
+import { motion } from "motion/react"
 
 function Principal() {
     return (
@@ -25,7 +26,7 @@ function Principal() {
             </header>
 
             {/* Seção Principal */}
-            <main className="hero">
+            <motion.main className="hero" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                 <article className="text-intro">
                     <h1 className="txt-1"><span>Sua Vida Organizada</span></h1>
                     <h1 className="txt-1">Em Um Único</h1>
@@ -42,7 +43,7 @@ function Principal() {
                 <div className="img-hero">
                     <img src="../public/images/Calendar-hero.svg" alt="Imagem calendário" />
                 </div>
-            </main>
+            </motion.main>
         </div>
     );
 }

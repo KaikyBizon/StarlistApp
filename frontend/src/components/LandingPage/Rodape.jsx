@@ -19,11 +19,11 @@ import './Rodape.css'
 function Rodape() {
     return (
         <>
-            <footer className="rodape-3">
-                <div className="rodape">
+            <footer className="rodape-background">
+                <div className="container-rodape">
                     <div className="rodape-5">
-                        <p>Venha fazer parte da nossa comunidade</p>
-                        <p>Seus planejamentos do seu jeito!!</p>
+                        <p>Junte-se à nossa comunidade</p>
+                        <p>Planeje do seu jeito, no seu ritmo!</p>
                     </div>
 
 
@@ -60,8 +60,6 @@ function Rodape() {
                             </a>
                         </div>
                     </div>
-
-
                 </div>
             </footer>
 

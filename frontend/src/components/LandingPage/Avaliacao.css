@@ -1,16 +1,9 @@
 #avl {
-    color: #faed27;
-    background-color: #1e1e1e;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-}
-
-.header h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
+    height: 60vh;
 }
 
 .main-content {
@@ -18,6 +11,7 @@
     width: 100%;
     max-width: 1200px;
     gap: 30px;
+    height: 100%;
 }
 
 .general-rating {
@@ -29,7 +23,7 @@
 }
 
 .rating-box {
-    border: 2px solid #fff788;
+    background-color: #111111;
     padding: 20px;
     margin-bottom: 50px;
     width: 325px;
@@ -38,12 +32,8 @@
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.rating-box:hover {
-    transform: scale(1.05);
-    background-color: #1e1e1e;
-}
-
 .rating-box h2 {
+    color: #faed27;
     margin-bottom: 10px;
 }
 
@@ -60,11 +50,12 @@
 }
 
 .rating-number {
+    color: #faed27;
     font-size: 4rem;
 }
 
 .rating-details {
-    border: 2px solid #fff788;
+    background-color: #111111;
     padding: 20px;
     margin-bottom: 50px;
     width: 325px;
@@ -73,12 +64,8 @@
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.rating-details:hover {
-    transform: scale(1.05);
-    background-color: #1e1e1e;
-}
-
 .rating-details h3 {
+    color: #faed27;
     margin-bottom: 10px;
 }
 
@@ -102,7 +89,8 @@
 }
 
 .testimonial-box {
-    border: 2px solid #fff788;
+    border: 2px solid #111111;
+    background-color: #111111;
     padding-top: 12px;
     padding-left: 20px;
     margin-bottom: 20px;
@@ -113,31 +101,13 @@
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.testimonial-box:hover {
-    transform: scale(1.05);
-    background-color: #eedf13;
-    color: #4e4e4e;
-}
-
-.testimonial-box:hover .mensagem-avl {
-    color: #666663; /* Cor alterada ao passar o mouse */
-}
-
-.testimonial-box:hover .estrelas {
-    content: url('/public/images/5estrelas-cinza.png');
-}
-
-.testimonial-box:hover .quatro_estrelas {
-    content: url('/public/images/4estrelas-cinza.png');
-}
-
 .header-box {
     display: flex;
     align-items: center;
 }
 
 .valor {
-    background-color: #3a3a3a;
+    background-color: #faed27;
     border-radius: 10px;
     width: 40px;
     height: 28px;
@@ -177,17 +147,6 @@
     padding-bottom: 10px;
 }
 
-.rating-box h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 1px;
-    background-color: #faed27;
-}
-
 .rating-details h3 {
     font-size: 30px;
 }
@@ -205,11 +164,12 @@
 
 .nome-usuario {
     margin-right: 15px;
+    color: #faed27;
 }
 
 .linha-separadora {
     width: 2px;
     height: 100%;
-    background-color: #faed27;
+    background-color: #111111;
     margin: 0 20px;
 }

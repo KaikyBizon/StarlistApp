@@ -61,10 +61,7 @@ function Cadastro() {
     // Esta função captura o nome e valor do campo alterado e atualiza o estado `formValues` de acordo com as mudanças feitas no formulário de cadastro
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
+        setFormValues((prevValues) => ({...prevValues, [name]: value,}));
     };
 
     // Função handleSubmit para processar o envio do formulário de cadastro
