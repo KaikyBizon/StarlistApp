@@ -19,6 +19,10 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Rota para usar de teste no deploy
+@app.route("/")
+def home():
+    return jsonify({"mensagem": "API funcionando"})
 
 @app.route('/receber-dados', methods=['POST'])
 def receber_dados():
