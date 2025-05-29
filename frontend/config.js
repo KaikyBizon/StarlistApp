@@ -1,3 +1,3 @@
-const BASE_URL = "http://10.0.0.100:8085";
+const BASE_URL = "http://starlistapp.onrender.com";
 
 export default BASE_URL
