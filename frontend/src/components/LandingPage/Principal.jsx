@@ -28,9 +28,7 @@ function Principal() {
             {/* Seção Principal */}
             <motion.main className="hero" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                 <article className="text-intro">
-                    <h1 className="txt-1"><span>Sua Vida Organizada</span></h1>
-                    <h1 className="txt-1">Em Um Único</h1>
-                    <h1 className="txt-1">APP!</h1>
+                    <h1 className="txt-1">Sua Vida Organizada<br/> Em Um Único<br/> APP!</h1>
                 </article>
 
                 {/* Botões Login e Cadastro (agora ficam aqui no mobile) */}

@@ -1,13 +1,29 @@
-#sobre {
+@media screen and (min-width: 768px) {
+  #sobre {
     width: 100%;
     display: flex;
     align-items: center;
     height: 700px;
     justify-content: center;
-}
+  }
 
-#sobre-txt {
+  #sobre-txt {
     line-height: 50px;
     font-size: 40px;
     color: #111111;
+  }
+}
+
+#sobre {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 40px 10px;
+  justify-content: center;
+}
+
+#sobre-txt {
+  font-size: 20px;
+  color: #111111;
 }

@@ -1,11 +1,12 @@
-.rodape-background {
+.background-footer {
     display: flex;
     justify-content: center;
     background-color: #111111;
+    padding: 40px 10px;
     width: 100%;
 }
 
-.container-rodape {
+.container-footer {
     left: 0;
     bottom: 0;
     color: #faed27;
@@ -14,15 +15,13 @@
     align-items: center;
     display: flex;
     justify-content: space-around;
-    width: 70vw;
+    width: 100%;
 }
 
 
 /*Inicio imagens*/
-.container-rodape .redes-sociais {
-    width: 80px;
-    height: 40px;
-    padding: 0px 20px;
+.container-footer .socialmedias-icon {
+    height: 20px;
 }
 
 /*Fim imagens*/
@@ -41,25 +40,11 @@
 }
 
 /*Inicio borda Redes sociais*/
-.rodape-2 {
+.social-medias {
     border: 0px solid #696969;
-    padding: 5px 5px;
-}
-
-/*Fim borda Redes sociais*/
-
-/*Inicio borda Footer*/
-.container-rodape {
-    border: 0px solid #696969;
-    padding: 30px 30px;
+    width: 100%;
+    display: flex;
+    gap: 15px;
 }
 
 /*Fim borda Footer*/
-
-/*Inicio borda frase*/
-.rodape-5 {
-    border: 0px solid #696969;
-    padding: 30px 30px;
-}
-
-/*Fim borda frase*/

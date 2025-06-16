@@ -1,12 +1,8 @@
 .botao .submit_btn {
     display: flex;
-    justify-content: right;
-    font-size: 50px;
-    font-size: 30px;
     border-radius: 20px;
     padding: 15px 80px;
     background-color: #111111;
-
 }
 
 .submit_btn span {
@@ -30,14 +26,15 @@
 .cadastro2 {
     display: flex;
     font-size: 30px;
-    padding: 10px;
-    width: 50%;
+    width: 80%;
 }
 
 .cadastro {
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    width: 70vw;
-    height: 60vh;
+    padding: 40px 10px;
+    width: 100%;
+    height: 100%;
 }

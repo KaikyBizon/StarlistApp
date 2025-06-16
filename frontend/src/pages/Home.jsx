@@ -20,7 +20,7 @@ import { SobreNos } from '../components/LandingPage/SobreNos';
 import { Avaliacao } from '../components/LandingPage/Avaliacao';
 import { Planos } from '../components/LandingPage/Planos';
 import { CadastroSecundario } from '../components/LandingPage/CadastroSecundario';
-import { Rodape } from '../components/LandingPage/Rodape';
+import Footer from '../components/LandingPage/Footer';
 
 function Home() {
     return (
@@ -31,7 +31,7 @@ function Home() {
             <Avaliacao />
             <Planos />
             <CadastroSecundario />
-            <Rodape />
+            <Footer />
         </div>
     )
 }
