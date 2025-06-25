@@ -25,28 +25,28 @@ O Starlist é uma lista de tarefas e agenda que tem tanto uma versão para naveg
 Após clonar o repositório, acesse:
 
 ```bash
-    cd frontend
+cd frontend
 ```
 Na pasta frontend, instale as dependências com:
 ```bash
-    npm install
+npm install
 ```
 
 ### 🛠️ Backend
 Após terminar a instalação, abra outro terminal e acesse:
 ```bash
-    cd backend
+cd backend
 ```
 Na pasta backend, crie um ambiente virtual com:
 ```bash
-    python -m venv venv
+python -m venv venv
 ```
 Depois de instalado, ative o ambiente virtual com:
 ```bash
-    venv\Scripts\activate
+venv\Scripts\activate
 ```
 
-### Banco de Dados
+### 💾 Banco de Dados
 
 **Para instalar o banco de dados, você deve ter o XAMPP instalado**
 
@@ -68,7 +68,7 @@ No campo para selecionar o arquivo a ser importado, você deve selecionar o arqu
 
 Após estar com tudo instalado, acesse novamente o seu terminal na pasta frontend e digite:
 ```bash
-    npm run dev
+npm run dev
 ```
 Depois de tudo carregado, acesse seu navegador e na barra de pequisa digite: http://localhost:5173.
 
@@ -78,7 +78,7 @@ No entanto, ainda precisamos rodar nosso backend para que tudo funcione corretam
 
 Acesse seu terminal na pasta backend e com o ambiente virtual venv ativado (você verá escrito "(venv)" antes do caminho do arquivo no terminal) digite:
 ```bash
-    python app.py
+python app.py
 ```
 
 ⛔ ATENÇÃO! Ao executar esse comando, o Python irá mostrar uma URL no terminal semelhante a "http://10.0.0.100:8085". Acesse o arquivo "frontend/src/config.js" e veja se a URL da const BASE_URL é igual a fornecida no terminal. Caso seja diferente, copie a URL do terminal e cole na const BASE_URL.
