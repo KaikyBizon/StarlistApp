@@ -81,7 +81,7 @@ Acesse seu terminal na pasta backend e com o ambiente virtual venv ativado (voc�
 python app.py
 ```
 
-⛔ ATENÇÃO! Ao executar esse comando, o Python irá mostrar uma URL no terminal semelhante a "http://10.0.0.100:8085". Acesse o arquivo "frontend/src/config.js" e veja se a URL da const BASE_URL é igual a fornecida no terminal. Caso seja diferente, copie a URL do terminal e cole na const BASE_URL.
+⛔ ATENÇÃO! Ao executar esse comando, o Python irá mostrar uma URL no terminal semelhante a "http://10.0.0.100:8085". Acesse o arquivo "frontend/config.js" e veja se a URL da const BASE_URL é igual a fornecida no terminal. Caso seja diferente, copie a URL do terminal e cole na const BASE_URL.
 
 **Agora sim, você pode usar o site normalmente! Tenha uma boa experiência.**
 
